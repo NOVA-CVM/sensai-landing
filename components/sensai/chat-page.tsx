@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, useMemo } from "react"
 import { Send, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -11,10 +11,14 @@ interface Message {
 
 const QUICK_ACTIONS = [
   "What is Sensai?",
-  "How does it work?",
-  "Who is it for?",
+  "We're an iGaming operator",
+  "How can Sensai help with fraud?",
   "Book a demo",
 ]
+
+function generateSessionId() {
+  return `chat_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
+}
 
 export function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -22,6 +26,7 @@ export function ChatPage() {
   const [streaming, setStreaming] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const sessionId = useMemo(() => generateSessionId(), [])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -51,6 +56,7 @@ export function ChatPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          sessionId,
           messages: newMessages.map((m) => ({
             role: m.role,
             content: m.content,
