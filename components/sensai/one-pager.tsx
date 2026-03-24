@@ -47,7 +47,7 @@ function Logo({ className = "", showMascot = false }: { className?: string; show
         className={`tracking-[0.08em] ${className}`}
         style={{ fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 600 }}
       >
-        sensAi
+        sens<span style={{ textTransform: 'none', fontSize: '1.15em', fontWeight: 700 }}>A</span>i
       </span>
     </span>
   )
@@ -78,16 +78,10 @@ export function SensAiOnePager() {
               Adaptive Intelligence for iGaming
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.1]">
-              Your analysts shouldn&apos;t be the bottleneck.
+              Your AI Customer Value Manager.
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-              sensAi is an adaptive intelligence engine for iGaming operators. It
-              senses what&apos;s happening in your player base, puts it in your
-              team&apos;s hands to act on, and learns from every decision they make.
-            </p>
-            {/* Change 4: credibility line */}
-            <p className="mt-3 text-sm text-muted-foreground/80">
-              Built by a team with 17 years in iGaming CRM and player intelligence.
+              sensAi watches your players, spots what matters &mdash; abuse, churn, value shifts &mdash; and acts through your existing stack. Your team gives feedback, sensAi learns. Repeat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-start gap-4">
               <button
@@ -97,16 +91,6 @@ export function SensAiOnePager() {
                 Book a Demo
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <span className="text-sm text-muted-foreground self-center">
-                Now onboarding select iGaming operators
-              </span>
-            </div>
-            {/* Change 2: plugs into your stack */}
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-muted/50 border border-border/50 rounded-full">
-              <Link2 className="w-3.5 h-3.5 text-primary shrink-0" />
-              <span className="text-xs text-muted-foreground">
-                Plugs into your existing CRM, case management, and risk tools. Not a replacement — the brain behind them.
-              </span>
             </div>
           </div>
           {/* Change 1: blurred product screenshots */}
@@ -128,11 +112,11 @@ export function SensAiOnePager() {
         </div>
       </section>
 
-      {/* The Gap — Change 6: tighter spacing */}
-      <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
+      {/* The Gap — tighter spacing */}
+      <section className="py-10 md:py-14 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
-            The gap every operator feels
+            Sound familiar?
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Data-rich. Insight-poor.
@@ -140,26 +124,26 @@ export function SensAiOnePager() {
           <div className="grid md:grid-cols-3 gap-6">
             <GapCard
               icon={<BarChart3 className="w-5 h-5" />}
-              title="Insights are trapped in your people."
-              description="Your analysts can't keep up with the pace. The queue is piling up. Teams stopped asking because they know it'll take days. The knowledge your business needs is stuck — in backlogs, in heads, in spreadsheets no one reads."
+              title="Insights trapped in people"
+              description="Every question goes through analysts. Tickets pile up. Teams stopped asking."
             />
             <GapCard
               icon={<Cog className="w-5 h-5" />}
-              title="Your CRM is acting on yesterday's logic."
-              description="Customer behavior drifted. New abuse patterns emerged. VIP signals shifted. But your triggers and flows still run on rules written months ago. The system executes — just not on the right cases anymore."
+              title="Logic that fell behind"
+              description="New promotions, new flows, new risks — but your rules and models haven't caught up."
             />
             <GapCard
               icon={<AlertTriangle className="w-5 h-5" />}
-              title="By the time you see it, it's too late."
-              description="A network of abusers has been exploiting a loophole — some have already cashed out. A high-value player already churned. The data had the answer — but it was buried in a queue, waiting for someone to look."
+              title="Blind spots"
+              description="Abuse networks, churning VIPs, shifting segments — found too late."
             />
           </div>
         </div>
       </section>
 
 
-      {/* How sensAi Works — Change 6: tighter spacing */}
-      <section className="py-14 md:py-20 px-6 md:px-10">
+      {/* How sensAi Works */}
+      <section className="py-10 md:py-14 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             How sensAi works

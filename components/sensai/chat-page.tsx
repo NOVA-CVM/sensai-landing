@@ -219,7 +219,7 @@ export function ChatPage() {
             className="text-xl tracking-[0.08em] text-foreground"
             style={{ fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 600 }}
           >
-            sensAi
+            sens<span style={{ fontSize: '1.15em', fontWeight: 700 }}>A</span>i
           </span>
         </div>
         {messages.length > 0 && (
