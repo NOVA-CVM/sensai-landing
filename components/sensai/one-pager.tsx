@@ -293,9 +293,6 @@ export function SensaiOnePager() {
               <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary ml-auto transition-colors" />
             </div>
           </button>
-          <p className="mt-4 text-sm text-muted-foreground text-center">
-            amit@novacvm.com
-          </p>
         </div>
       </section>
 
