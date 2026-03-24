@@ -41,19 +41,19 @@ function Logo({ className = "", showMascot = false }: { className?: string; show
   return (
     <span className="inline-flex items-center gap-2.5">
       {showMascot && (
-        <img src="/sensai-mascot.png" alt="Sensai" className="w-14 h-14 rounded-xl" />
+        <img src="/sensai-mascot.png" alt="sensAi" className="w-14 h-14 rounded-xl" />
       )}
       <span
-        className={`tracking-[0.08em] lowercase ${className}`}
+        className={`tracking-[0.08em] ${className}`}
         style={{ fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 600 }}
       >
-        sensai
+        sensAi
       </span>
     </span>
   )
 }
 
-export function SensaiOnePager() {
+export function SensAiOnePager() {
   return (
     <div className="w-full">
       {/* Navigation */}
@@ -65,7 +65,7 @@ export function SensaiOnePager() {
             className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20"
           >
             <MessageSquare className="w-4 h-4" />
-            Talk to Sensai
+            Talk to sensAi
           </Link>
         </div>
       </nav>
@@ -81,7 +81,7 @@ export function SensaiOnePager() {
               Your analysts shouldn&apos;t be the bottleneck.
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-              Sensai is an adaptive intelligence engine for iGaming operators. It
+              sensAi is an adaptive intelligence engine for iGaming operators. It
               senses what&apos;s happening in your player base, puts it in your
               team&apos;s hands to act on, and learns from every decision they make.
             </p>
@@ -114,12 +114,12 @@ export function SensaiOnePager() {
             <div className="relative">
               <img
                 src="/screenshots/HomePage.png"
-                alt="Sensai Dashboard"
+                alt="sensAi Dashboard"
                 className="rounded-2xl shadow-2xl border border-border/30 w-full"
               />
               <img
                 src="/screenshots/KPIs.png"
-                alt="Sensai KPI Monitor"
+                alt="sensAi KPI Monitor"
                 className="absolute -bottom-8 -left-8 w-[70%] rounded-2xl shadow-2xl border border-border/30"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent rounded-2xl pointer-events-none" />
@@ -158,11 +158,11 @@ export function SensaiOnePager() {
       </section>
 
 
-      {/* How Sensai Works — Change 6: tighter spacing */}
+      {/* How sensAi Works — Change 6: tighter spacing */}
       <section className="py-14 md:py-20 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
-            How Sensai works
+            How sensAi works
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Sense. Act. Learn. Repeat.
@@ -188,7 +188,7 @@ export function SensaiOnePager() {
                 step="03"
                 label="LEARN"
                 icon={<Brain className="w-5 h-5" />}
-                description="Your team teaches Sensai in plain language. The system gets smarter with every decision they make."
+                description="Your team teaches sensAi in plain language. The system gets smarter with every decision they make."
               />
             </div>
           </div>
@@ -227,8 +227,8 @@ export function SensaiOnePager() {
             />
             <FeatureCard
               icon={<MessageSquare className="w-5 h-5" />}
-              title="Teach Sensai"
-              description="Give feedback in plain language. 'This player is about to churn.' Sensai learns and adapts."
+              title="Teach sensAi"
+              description="Give feedback in plain language. 'This player is about to churn.' sensAi learns and adapts."
             />
             <FeatureCard
               icon={<Target className="w-5 h-5" />}
@@ -253,7 +253,7 @@ export function SensaiOnePager() {
               step="1"
               icon={<Radar className="w-6 h-6" />}
               title="Signal detected"
-              description="Sensai flags unusual activity on a game — high volume from players with risk indicators."
+              description="sensAi flags unusual activity on a game — high volume from players with risk indicators."
             />
             <WalkthroughStep
               step="2"
@@ -271,7 +271,7 @@ export function SensaiOnePager() {
               step="4"
               icon={<Brain className="w-6 h-6" />}
               title="System learns"
-              description="Sensai adds the pattern to your risk systems and catches this type of abuse going forward. The system just got smarter."
+              description="sensAi adds the pattern to your risk systems and catches this type of abuse going forward. The system just got smarter."
             />
           </div>
           <p className="mt-8 text-center text-primary font-semibold text-lg">
@@ -280,11 +280,11 @@ export function SensaiOnePager() {
         </div>
       </section>
 
-      {/* Why Operators Choose Sensai — Change 4 + Change 8 */}
+      {/* Why Operators Choose sensAi — Change 4 + Change 8 */}
       <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
-            Why operators choose Sensai
+            Why operators choose sensAi
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Built for production. Built for you.
@@ -298,7 +298,7 @@ export function SensaiOnePager() {
             <WhyCard
               icon={<Rocket className="w-5 h-5" />}
               title="Connected in days, not months."
-              description="Give us access to your raw tables — keep them in your cloud. We build the pipeline. Your team is using Sensai within two weeks."
+              description="Give us access to your raw tables — keep them in your cloud. We build the pipeline. Your team is using sensAi within two weeks."
             />
             <WhyCard
               icon={<Brain className="w-5 h-5" />}

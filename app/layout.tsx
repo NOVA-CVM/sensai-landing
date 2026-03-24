@@ -6,8 +6,8 @@ import './globals.css'
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: 'Sensai - Adaptive Intelligence for iGaming',
-  description: 'Sensai is an adaptive intelligence engine for iGaming operators. Sense, Act, Learn from your player data.',
+  title: 'sensAi - Adaptive Intelligence for iGaming',
+  description: 'sensAi is an adaptive intelligence engine for iGaming operators. Sense, Act, Learn from your player data.',
   generator: 'v0.app',
   icons: {
     icon: [

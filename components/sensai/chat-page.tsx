@@ -10,10 +10,10 @@ interface Message {
 }
 
 const QUICK_ACTIONS = [
-  "Is Sensai only for iGaming?",
-  "How does Sensai detect bonus abuse?",
-  "What happens to my existing CRM?",
-  "How fast can we go live?",
+  "What is sensAi?",
+  "How does sensAi detect bonus abuse?",
+  "Is sensAi only for iGaming?",
+  "Do I need to change my CRM platform?",
 ]
 
 function generateSessionId() {
@@ -214,12 +214,12 @@ export function ChatPage() {
           <ArrowLeft className="w-4 h-4 text-muted-foreground" />
         </Link>
         <div className="flex items-center gap-2.5 flex-1">
-          <img src="/sensai-mascot.png" alt="Sensai" className="w-8 h-8 rounded-lg" />
+          <img src="/sensai-mascot.png" alt="sensAi" className="w-8 h-8 rounded-lg" />
           <span
-            className="text-xl tracking-[0.08em] lowercase text-foreground"
+            className="text-xl tracking-[0.08em] text-foreground"
             style={{ fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 600 }}
           >
-            sensai
+            sensAi
           </span>
         </div>
         {messages.length > 0 && (
@@ -237,12 +237,12 @@ export function ChatPage() {
       <div className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-6">
-            <img src="/sensai-mascot.png" alt="Sensai" className="w-20 h-20 rounded-2xl mb-6 animate-fade-in" />
+            <img src="/sensai-mascot.png" alt="sensAi" className="w-20 h-20 rounded-2xl mb-6 animate-fade-in" />
             <h1 className="text-2xl font-semibold text-foreground mb-2">
-              Hi! I&apos;m Sensai
+              Hi! I&apos;m sensAi
             </h1>
             <p className="text-base text-muted-foreground mb-8 max-w-md">
-              Your adaptive intelligence assistant. Ask me anything about how Sensai can help your iGaming operation.
+              Your adaptive intelligence assistant. Ask me anything about how sensAi can help your iGaming operation.
             </p>
             <div className="flex flex-wrap gap-3 justify-center max-w-lg">
               {QUICK_ACTIONS.map((action) => (
@@ -272,7 +272,7 @@ export function ChatPage() {
                 {msg.role === "assistant" && (
                   <img
                     src="/sensai-mascot.png"
-                    alt="Sensai"
+                    alt="sensAi"
                     className="w-8 h-8 rounded-lg mt-1 shrink-0"
                   />
                 )}
@@ -300,26 +300,7 @@ export function ChatPage() {
               </div>
             ))}
 
-            {/* Show quick actions inline after first response */}
-            {!streaming && messages.length === 2 && showQuickActions === false && (
-              <div className="flex items-start gap-3 animate-fade-in" style={{ animationDelay: "200ms" }}>
-                <div className="w-8 shrink-0" />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {["Tell me more about fraud detection", "How does the learning loop work?", "What CRM platforms do you integrate with?"].map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => {
-                        setInput(q)
-                        inputRef.current?.focus()
-                      }}
-                      className="px-3 py-1.5 text-xs font-medium border border-border rounded-full hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all cursor-pointer text-muted-foreground"
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* No follow-up suggestions — let the user type freely */}
 
             <div ref={messagesEndRef} />
           </div>
@@ -335,7 +316,7 @@ export function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything about Sensai..."
+              placeholder="Ask me anything about sensAi..."
               rows={1}
               className="flex-1 bg-transparent text-[15px] text-foreground placeholder:text-muted-foreground resize-none outline-none max-h-32"
               style={{ minHeight: "28px" }}
@@ -349,7 +330,7 @@ export function ChatPage() {
             </button>
           </div>
           <p className="text-[10px] text-muted-foreground/40 text-center mt-2">
-            Powered by Sensai AI
+            Powered by sensAi
           </p>
         </div>
       </div>
