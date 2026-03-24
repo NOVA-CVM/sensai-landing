@@ -1,14 +1,19 @@
 "use client"
 
 import { CycleDiagram } from "./cycle-diagram"
+import Link from "next/link"
 import {
   AlertTriangle,
   BarChart3,
   Brain,
+  CheckCircle,
   Cog,
   Eye,
+  GitBranch,
   Layers,
+  Link2,
   MessageSquare,
+  Radar,
   Rocket,
   Shield,
   Target,
@@ -55,20 +60,20 @@ export function SensaiOnePager() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border/50">
         <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-22">
           <Logo className="text-4xl font-semibold text-foreground" showMascot />
-          <button
-            onClick={openBooking}
-            className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20 cursor-pointer"
+          <Link
+            href="/chat"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-full hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20"
           >
-            <Calendar className="w-4 h-4" />
-            Book a Demo
-          </button>
+            <MessageSquare className="w-4 h-4" />
+            Talk to Sensai
+          </Link>
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="pt-32 pb-20 md:pt-44 md:pb-32 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl">
+      {/* Hero — Change 1: screenshots + Change 2: stack messaging + Change 4: credibility */}
+      <section className="pt-32 pb-12 md:pt-40 md:pb-20 px-6 md:px-10">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div>
             <p className="text-primary font-medium text-sm tracking-wider uppercase mb-4">
               Adaptive Intelligence for iGaming
             </p>
@@ -80,7 +85,11 @@ export function SensaiOnePager() {
               senses what&apos;s happening in your player base, puts it in your
               team&apos;s hands to act on, and learns from every decision they make.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-start gap-4">
+            {/* Change 4: credibility line */}
+            <p className="mt-3 text-sm text-muted-foreground/80">
+              Built by a team with 17 years in iGaming CRM and player intelligence.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-start gap-4">
               <button
                 onClick={openBooking}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-medium rounded-full hover:bg-primary/90 transition-all hover:shadow-xl hover:shadow-primary/20 text-base cursor-pointer"
@@ -92,17 +101,40 @@ export function SensaiOnePager() {
                 Now onboarding select iGaming operators
               </span>
             </div>
+            {/* Change 2: plugs into your stack */}
+            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-muted/50 border border-border/50 rounded-full">
+              <Link2 className="w-3.5 h-3.5 text-primary shrink-0" />
+              <span className="text-xs text-muted-foreground">
+                Plugs into your existing CRM, case management, and risk tools. Not a replacement — the brain behind them.
+              </span>
+            </div>
+          </div>
+          {/* Change 1: blurred product screenshots */}
+          <div className="relative hidden lg:block">
+            <div className="relative">
+              <img
+                src="/screenshots/HomePage.png"
+                alt="Sensai Dashboard"
+                className="rounded-2xl shadow-2xl border border-border/30 w-full"
+              />
+              <img
+                src="/screenshots/KPIs.png"
+                alt="Sensai KPI Monitor"
+                className="absolute -bottom-8 -left-8 w-[70%] rounded-2xl shadow-2xl border border-border/30"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent rounded-2xl pointer-events-none" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* The Gap */}
-      <section className="py-20 md:py-28 px-6 md:px-10 bg-muted/30">
+      {/* The Gap — Change 6: tighter spacing */}
+      <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             The gap every operator feels
           </p>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-12 max-w-xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Data-rich. Insight-poor.
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -125,13 +157,14 @@ export function SensaiOnePager() {
         </div>
       </section>
 
-      {/* How Sensai Works */}
-      <section className="py-20 md:py-28 px-6 md:px-10">
+
+      {/* How Sensai Works — Change 6: tighter spacing */}
+      <section className="py-14 md:py-20 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             How Sensai works
           </p>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-16 max-w-xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Sense. Act. Learn. Repeat.
           </h2>
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -162,13 +195,13 @@ export function SensaiOnePager() {
         </div>
       </section>
 
-      {/* What Your Team Gets */}
-      <section className="py-20 md:py-28 px-6 md:px-10 bg-muted/30">
+      {/* What Your Team Gets — Change 6: tighter spacing */}
+      <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             What your team gets
           </p>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-12 max-w-xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Intelligence that works for you.
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -206,8 +239,8 @@ export function SensaiOnePager() {
         </div>
       </section>
 
-      {/* See It In Action */}
-      <section className="py-20 md:py-28 px-6 md:px-10">
+      {/* Change 7: See It In Action — visual walkthrough */}
+      <section className="py-14 md:py-20 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             See it in action
@@ -215,37 +248,52 @@ export function SensaiOnePager() {
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             From signal to action in minutes.
           </h2>
-          <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-sm max-w-4xl">
-            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-              Sensai identifies unusual activity on a game — high volume from
-              players with risk indicators. It flags the accounts, maps the
-              connections between them, and surfaces an organized network of
-              abusers. Your fraud team reviews the case in Q Center, approves the
-              pattern, and Sensai immediately adds it to your risk systems —
-              excluding the accounts from promotions and flagging the loophole for
-              future detection.
-            </p>
-            <p className="mt-6 text-primary font-semibold text-lg">
-              All within minutes. No SQL. No analyst ticket.
-            </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <WalkthroughStep
+              step="1"
+              icon={<Radar className="w-6 h-6" />}
+              title="Signal detected"
+              description="Sensai flags unusual activity on a game — high volume from players with risk indicators."
+            />
+            <WalkthroughStep
+              step="2"
+              icon={<GitBranch className="w-6 h-6" />}
+              title="Network mapped"
+              description="Connects the dots between accounts and surfaces an organized network of abusers."
+            />
+            <WalkthroughStep
+              step="3"
+              icon={<CheckCircle className="w-6 h-6" />}
+              title="Team reviews"
+              description="Your fraud team reviews the case in Q Center, confirms the pattern, and approves the action."
+            />
+            <WalkthroughStep
+              step="4"
+              icon={<Brain className="w-6 h-6" />}
+              title="System learns"
+              description="Sensai adds the pattern to your risk systems and catches this type of abuse going forward. The system just got smarter."
+            />
           </div>
+          <p className="mt-8 text-center text-primary font-semibold text-lg">
+            All within minutes. No SQL. No analyst ticket.
+          </p>
         </div>
       </section>
 
-      {/* Why Operators Choose Sensai */}
-      <section className="py-20 md:py-28 px-6 md:px-10 bg-muted/30">
+      {/* Why Operators Choose Sensai — Change 4 + Change 8 */}
+      <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             Why operators choose Sensai
           </p>
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-12 max-w-xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
             Built for production. Built for you.
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <WhyCard
               icon={<Eye className="w-5 h-5" />}
               title="Live in production."
-              description="Not a concept. An adaptive intelligence system already in live production."
+              description="Not a concept. Processing millions of player data points daily in live production."
             />
             <WhyCard
               icon={<Rocket className="w-5 h-5" />}
@@ -255,14 +303,14 @@ export function SensaiOnePager() {
             <WhyCard
               icon={<Brain className="w-5 h-5" />}
               title="ROI from week one."
-              description="Bonus abuse detection alone pays for itself. Everything else is upside. Built on 17 years of customer analytics in iGaming and deep data science research."
+              description="Run a quick scan of your customer base to find bonus abuse rings and under-the-radar VIPs within 48 hours. Everything else is upside. Built on 17 years of customer analytics in iGaming and deep data science research."
             />
           </div>
         </div>
       </section>
 
-      {/* Early Operator Program + CTA */}
-      <section className="py-24 md:py-36 px-6 md:px-10">
+      {/* Early Operator Program + CTA — Change 6: tighter spacing */}
+      <section className="py-16 md:py-24 px-6 md:px-10">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-4">
             Early Operator Program
@@ -270,7 +318,7 @@ export function SensaiOnePager() {
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-6">
             Unlock the full potential of your player data.
           </h2>
-          <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground leading-relaxed mb-10 max-w-2xl mx-auto">
             We&apos;re onboarding a small number of operators who want to shape the
             product with us. Favorable terms, direct access to the founding team,
             and a system built around your workflow.
@@ -403,6 +451,29 @@ function WhyCard({
       <p className="text-sm text-muted-foreground leading-relaxed">
         {description}
       </p>
+    </div>
+  )
+}
+
+function WalkthroughStep({
+  step,
+  icon,
+  title,
+  description,
+}: {
+  step: string
+  icon: React.ReactNode
+  title: string
+  description: string
+}) {
+  return (
+    <div className="bg-card border border-border rounded-2xl p-6 shadow-sm text-center">
+      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-4">
+        {icon}
+      </div>
+      <div className="text-xs text-muted-foreground/50 font-medium mb-1">Step {step}</div>
+      <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
     </div>
   )
 }
