@@ -146,6 +146,25 @@ Format it as: [Book a 30-minute demo](https://calendar.app.google/K15ZBdA3E6WBxb
 - Sound human, not robotic
 - Ask ONE follow-up question per response to keep the conversation going`
 
+// Rate limiting — per IP, in-memory (resets on cold start, but good enough for Vercel)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT_WINDOW = 60_000 // 1 minute
+const RATE_LIMIT_MAX = 10 // max 10 messages per minute per IP
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW })
+    return false
+  }
+
+  entry.count++
+  if (entry.count > RATE_LIMIT_MAX) return true
+  return false
+}
+
 // Initialize Supabase client
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -189,16 +208,31 @@ async function saveConversation(
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  if (isRateLimited(ip)) {
+    return Response.json(
+      { error: "Too many messages. Please wait a moment." },
+      { status: 429 }
+    )
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     return Response.json({ error: "API key not configured" }, { status: 500 })
   }
 
+  // Limit conversation length to prevent abuse
+  const body = await req.json()
+  const { messages, sessionId } = body
+
+  if (!messages || !Array.isArray(messages) || messages.length > 50) {
+    return Response.json({ error: "Invalid request" }, { status: 400 })
+  }
+
   const client = new Anthropic({ apiKey })
 
   try {
-    const { messages, sessionId } = await req.json()
-
     // Save conversation to Supabase (non-blocking)
     if (sessionId) {
       saveConversation(sessionId, messages)
