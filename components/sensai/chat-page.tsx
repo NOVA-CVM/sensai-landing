@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { Send, ArrowLeft } from "lucide-react"
+import { Send, ArrowLeft, RotateCcw } from "lucide-react"
 import Link from "next/link"
 
 interface Message {
@@ -26,7 +26,13 @@ export function ChatPage() {
   const [streaming, setStreaming] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const sessionId = useMemo(() => generateSessionId(), [])
+  const [sessionId, setSessionId] = useState(() => generateSessionId())
+
+  function clearChat() {
+    setMessages([])
+    setInput("")
+    setSessionId(generateSessionId())
+  }
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -153,7 +159,7 @@ export function ChatPage() {
         >
           <ArrowLeft className="w-4 h-4 text-muted-foreground" />
         </Link>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 flex-1">
           <img src="/sensai-mascot.png" alt="Sensai" className="w-8 h-8 rounded-lg" />
           <span
             className="text-xl tracking-[0.08em] lowercase text-foreground"
@@ -162,6 +168,15 @@ export function ChatPage() {
             sensai
           </span>
         </div>
+        {messages.length > 0 && (
+          <button
+            onClick={clearChat}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            New chat
+          </button>
+        )}
       </header>
 
       {/* Chat area */}
