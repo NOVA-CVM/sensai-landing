@@ -1,14 +1,16 @@
 "use client"
 
 import Link from "next/link"
+import { MessageSquare } from "lucide-react"
 
 export function ChatWidget() {
   return (
     <Link
       href="/chat"
-      className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center"
+      className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all font-medium text-sm"
     >
-      <img src="/sensai-mascot.png" alt="Chat with Sensai" className="w-10 h-10 rounded-full" />
+      <MessageSquare className="w-4 h-4" />
+      Chat with Sensai
     </Link>
   )
 }

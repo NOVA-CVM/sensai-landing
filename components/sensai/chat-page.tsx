@@ -114,6 +114,28 @@ export function ChatPage() {
     }
   }
 
+  function renderMessage(text: string) {
+    // Convert markdown links [text](url) to clickable links
+    const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+    return parts.map((part, i) => {
+      const match = part.match(/\[([^\]]+)\]\(([^)]+)\)/)
+      if (match) {
+        return (
+          <a
+            key={i}
+            href={match[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:opacity-80"
+          >
+            {match[1]}
+          </a>
+        )
+      }
+      return <span key={i}>{part}</span>
+    })
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -186,7 +208,7 @@ export function ChatPage() {
                       : "bg-muted text-foreground rounded-bl-md"
                   }`}
                 >
-                  {msg.content}
+                  {msg.role === "assistant" ? renderMessage(msg.content) : msg.content}
                   {msg.role === "assistant" && msg.content === "" && streaming && (
                     <span className="inline-flex gap-1 py-1">
                       <span className="w-1.5 h-1.5 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
