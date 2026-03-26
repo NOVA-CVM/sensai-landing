@@ -70,7 +70,7 @@ export function SensAiOnePager() {
         </div>
       </nav>
 
-      {/* Hero — Change 1: screenshots + Change 2: stack messaging + Change 4: credibility */}
+      {/* Hero - Change 1: screenshots + Change 2: stack messaging + Change 4: credibility */}
       <section className="pt-32 pb-12 md:pt-40 md:pb-20 px-6 md:px-10">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
@@ -78,10 +78,10 @@ export function SensAiOnePager() {
               Adaptive Intelligence for iGaming
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-foreground leading-[1.1]">
-              Your AI Customer Value Manager.
+              The brain behind your player management.
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-              sensAi watches your players, spots what matters &mdash; abuse, churn, value shifts &mdash; and acts through your existing stack. Your team gives feedback, sensAi learns. Repeat.
+              sensAi watches your players, spots what matters - abuse, churn, value shifts - and acts through your existing stack. Your team gives feedback, sensAi learns. Repeat.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-start gap-4">
               <button
@@ -112,7 +112,7 @@ export function SensAiOnePager() {
         </div>
       </section>
 
-      {/* The Gap — tighter spacing */}
+      {/* The Gap - tighter spacing */}
       <section className="py-10 md:py-14 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
@@ -130,12 +130,12 @@ export function SensAiOnePager() {
             <GapCard
               icon={<Cog className="w-5 h-5" />}
               title="Logic that fell behind"
-              description="New promotions, new flows, new risks — but your rules and models haven't caught up."
+              description="New promotions, new flows, new risks - but your rules and models haven't caught up."
             />
             <GapCard
               icon={<AlertTriangle className="w-5 h-5" />}
               title="Blind spots"
-              description="Abuse networks, churning VIPs, shifting segments — found too late."
+              description="Abuse networks, churning VIPs, shifting segments - found too late."
             />
           </div>
         </div>
@@ -160,13 +160,13 @@ export function SensAiOnePager() {
                 step="01"
                 label="SENSE"
                 icon={<Eye className="w-5 h-5" />}
-                description="Continuously analyzes your customer base and detects patterns — value shifts, abuse signals, churn risk. Always current, never stale."
+                description="Continuously analyzes your customer base and detects patterns - value shifts, abuse signals, churn risk. Always current, never stale."
               />
               <CycleStep
                 step="02"
                 label="ACT"
                 icon={<Zap className="w-5 h-5" />}
-                description="Proactively alerts and pushes intelligence to your CRM, case management, and risk systems. Your team acts with full context — no analyst in the loop."
+                description="Proactively alerts and pushes intelligence to your CRM, case management, and risk systems. Your team acts with full context - no analyst in the loop."
               />
               <CycleStep
                 step="03"
@@ -179,51 +179,100 @@ export function SensAiOnePager() {
         </div>
       </section>
 
-      {/* What Your Team Gets — Change 6: tighter spacing */}
+      {/* Use Cases - one engine, multiple domains */}
+      <section className="py-14 md:py-20 px-6 md:px-10">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
+            Use Cases
+          </p>
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
+            One engine. Multiple use cases.
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="rounded-xl border bg-card p-6 text-left">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Shield className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">Risk & Fraud</h3>
+              <p className="text-sm text-muted-foreground">Bonus abuse networks, suspicious patterns, coordinated accounts</p>
+            </div>
+            <div className="rounded-xl border bg-card p-6 text-left">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <TrendingUp className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">VIP & Player Value</h3>
+              <p className="text-sm text-muted-foreground">Hidden VIPs, lifetime value, churn prevention</p>
+            </div>
+            <div className="rounded-xl border bg-card p-6 text-left">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Layers className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">Segmentation</h3>
+              <p className="text-sm text-muted-foreground">Behavioral clusters that stay current as players change</p>
+            </div>
+            <div className="rounded-xl border bg-card p-6 text-left">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <BarChart3 className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">KPI Monitoring</h3>
+              <p className="text-sm text-muted-foreground">Anomaly detection across your business metrics</p>
+            </div>
+            <div className="rounded-xl border bg-card p-6 text-left">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <Zap className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">Game Intelligence</h3>
+              <p className="text-sm text-muted-foreground">Player-game fit, recommendations, engagement signals</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Your Team Gets - Change 6: tighter spacing */}
       <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
-            What your team gets
+            How your team works with sensAi
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
-            Intelligence that works for you.
+            The tools your team uses every day.
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <FeatureCard
-              icon={<Shield className="w-5 h-5" />}
-              title="Risk Engine"
-              description="Catch bonus abuse before it hits your P&L. Automated detection and flagging."
+              icon={<Eye className="w-5 h-5" />}
+              title="Customer 360"
+              description="Full player view - context, history, risk profile, value signals - all in one place."
             />
             <FeatureCard
-              icon={<TrendingUp className="w-5 h-5" />}
-              title="Value Engine"
-              description="Find your hidden VIPs. Predict lifetime value. Know who to protect, who to grow."
+              icon={<BarChart3 className="w-5 h-5" />}
+              title="Analysis"
+              description="Deep dives into your player base without waiting for the data team."
             />
             <FeatureCard
               icon={<Layers className="w-5 h-5" />}
               title="Q Center"
-              description="Your team's daily command center. Cases, context, and one-click actions in one place."
+              description="Your team's daily command center. Cases, context, and one-click actions."
             />
             <FeatureCard
-              icon={<Zap className="w-5 h-5" />}
-              title="Smart Triggers"
-              description="Big win. Big loss. Churn signal. Your team knows what changed and acts on it."
-            />
-            <FeatureCard
-              icon={<MessageSquare className="w-5 h-5" />}
-              title="Teach sensAi"
-              description="Give feedback in plain language. 'This player is about to churn.' sensAi learns and adapts."
+              icon={<TrendingUp className="w-5 h-5" />}
+              title="KPI Monitor"
+              description="Proactive alerts when metrics shift - before it hits the weekly report."
             />
             <FeatureCard
               icon={<Target className="w-5 h-5" />}
               title="Works With Your Stack"
-              description="Pushes intelligence to your systems. Not a replacement — the brain behind them."
+              description="Pushes intelligence to your CRM, risk tools, Zendesk. The brain behind them."
+            />
+            <FeatureCard
+              icon={<Brain className="w-5 h-5" />}
+              title="Adaptive Intelligence"
+              description="Your team gives feedback, sensAi learns and evolves. Gets smarter with every decision."
             />
           </div>
         </div>
       </section>
 
-      {/* Change 7: See It In Action — visual walkthrough */}
+      {/* Change 7: See It In Action - visual walkthrough */}
       <section className="py-14 md:py-20 px-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
@@ -237,7 +286,7 @@ export function SensAiOnePager() {
               step="1"
               icon={<Radar className="w-6 h-6" />}
               title="Signal detected"
-              description="sensAi flags unusual activity on a game — high volume from players with risk indicators."
+              description="sensAi flags unusual activity on a game - high volume from players with risk indicators."
             />
             <WalkthroughStep
               step="2"
@@ -264,14 +313,14 @@ export function SensAiOnePager() {
         </div>
       </section>
 
-      {/* Why Operators Choose sensAi — Change 4 + Change 8 */}
+      {/* Why Operators Choose sensAi - Change 4 + Change 8 */}
       <section className="py-14 md:py-20 px-6 md:px-10 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-3">
             Why operators choose sensAi
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-10 max-w-xl">
-            Built for production. Built for you.
+            Built for teams who want to own the customer.
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <WhyCard
@@ -282,7 +331,7 @@ export function SensAiOnePager() {
             <WhyCard
               icon={<Rocket className="w-5 h-5" />}
               title="Connected in days, not months."
-              description="Give us access to your raw tables — keep them in your cloud. We build the pipeline. Your team is using sensAi within two weeks."
+              description="Give us access to your raw tables - keep them in your cloud. We build the pipeline. Your team is using sensAi within two weeks."
             />
             <WhyCard
               icon={<Brain className="w-5 h-5" />}
@@ -293,7 +342,7 @@ export function SensAiOnePager() {
         </div>
       </section>
 
-      {/* Early Operator Program + CTA — Change 6: tighter spacing */}
+      {/* Early Operator Program + CTA - Change 6: tighter spacing */}
       <section className="py-16 md:py-24 px-6 md:px-10">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-primary font-medium text-sm tracking-wider uppercase mb-4">
