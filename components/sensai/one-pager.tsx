@@ -1707,9 +1707,18 @@ function Founders() {
 export function SensAiOnePager() {
   return (
     <div className="sensai-page" style={{ background: SENS.bg, color: SENS.ink, width: '100%', minHeight: '100vh' }}>
+      {/*
+        ─── PARKED SECTIONS (defined above, currently NOT rendered) ───
+        <SocialProof />  — "Live · 400K+ accounts · 100s sensors" strip.
+                           Removed because we don't want to advertise these
+                           specific numbers publicly yet.
+        <Founders />     — Amit + Maor founder cards.
+                           Removed for now; may bring back closer to launch.
+        Re-enable by dropping <SocialProof /> and/or <Founders /> back into
+        the section list below.
+      */}
       <Nav />
       <Hero />
-      <SocialProof />
       <GapSection />
       <WhatItDoesSection />
       <HowItWorks />
@@ -1717,7 +1726,6 @@ export function SensAiOnePager() {
       <UseCases />
       <Walkthrough />
       <Why />
-      <Founders />
       <CTA />
       <Footer />
     </div>
