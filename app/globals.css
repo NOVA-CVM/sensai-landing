@@ -178,12 +178,12 @@
     padding-left: 24px !important;
     padding-right: 24px !important;
   }
-  /* 4-col grids → 2-col */
-  .sensai-page [style*="repeat(4, 1fr)"] {
+  /* 4-col grids → 2-col (except inside scaled visuals) */
+  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *) {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  /* 5-col grids → 2-col */
-  .sensai-page [style*="repeat(5, 1fr)"] {
+  /* 5-col grids → 2-col (except inside scaled visuals) */
+  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *) {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
@@ -199,11 +199,11 @@
     padding-bottom: 56px !important;
   }
 
-  /* All multi-col grids stack on mobile (except inside the scaled demo, which keeps its desktop layout) */
-  .sensai-page [style*="repeat(2, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
-  .sensai-page [style*="repeat(3, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
-  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
-  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame) {
+  /* All multi-col grids stack on mobile (except inside scaled visuals, which keep their desktop layout) */
+  .sensai-page [style*="repeat(2, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
+  .sensai-page [style*="repeat(3, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
+  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
+  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture) {
     grid-template-columns: 1fr !important;
     gap: 14px !important;
   }
@@ -280,9 +280,16 @@
   }
 
   /* Hide complex absolute-positioned diagrams on mobile */
-  .sensai-page .sensai-architecture,
   .sensai-page .sensai-cycle-diagram {
     display: none !important;
+  }
+
+  /* Architecture visual: keep desktop layout but scale down to fit */
+  .sensai-page .sensai-architecture {
+    width: 540px !important;
+    max-width: 540px !important;
+    zoom: 0.62;
+    margin: 0 auto;
   }
 
   /* Use case cards: keep vertical (stacked) layout but compact padding */
@@ -306,10 +313,21 @@
     margin-bottom: 4px !important;
   }
 
-  /* Walkthrough cards: shorter text area + image on mobile */
+  /* Walkthrough cards: drop the white card chrome on mobile — just text + screenshot */
+  .sensai-page .sensai-walkthrough-card {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
   .sensai-page .sensai-walkthrough-text {
-    padding: 16px !important;
+    padding: 4px 0 12px !important;
     height: auto !important;
+    border-bottom: none !important;
+  }
+  .sensai-page .sensai-walkthrough-card > div:nth-child(2) {
+    background: transparent !important;
+    padding: 0 !important;
   }
   .sensai-page .sensai-walkthrough-image {
     height: 130px !important;
@@ -324,14 +342,16 @@
   }
 }
 
-/* Even smaller phones — scale demo more */
+/* Even smaller phones — scale visuals more */
 @media (max-width: 480px) {
-  .sensai-page .sensai-demo-frame {
+  .sensai-page .sensai-demo-frame,
+  .sensai-page .sensai-architecture {
     zoom: 0.52;
   }
 }
 @media (max-width: 380px) {
-  .sensai-page .sensai-demo-frame {
+  .sensai-page .sensai-demo-frame,
+  .sensai-page .sensai-architecture {
     zoom: 0.46;
   }
 }
