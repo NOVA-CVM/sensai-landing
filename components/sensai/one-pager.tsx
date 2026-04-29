@@ -270,19 +270,14 @@ function Nav() {
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
         <Logo className="text-xl sm:text-2xl md:text-4xl font-semibold text-foreground" showMascot />
-        <div className="flex items-center gap-6">
-          <a href="#about" className="hidden sm:inline text-sm font-medium" style={{ color: SENS.inkSoft }}>
-            About sensAi
-          </a>
-          <Link
-            href="/chat"
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full text-white transition-all hover:opacity-90"
-            style={{ background: SENS.blue }}
-          >
-            <MessageSquare className="w-4 h-4" />
-            Talk to sensAi
-          </Link>
-        </div>
+        <Link
+          href="/chat"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full text-white transition-all hover:opacity-90"
+          style={{ background: SENS.blue }}
+        >
+          <MessageSquare className="w-4 h-4" />
+          Talk to sensAi
+        </Link>
       </div>
     </nav>
   )
@@ -1652,6 +1647,60 @@ function Footer() {
 // Animations are defined in globals.css
 
 // ═══════════════════════════════════════════════════════════════════
+// SOCIAL PROOF (right after hero)
+// ═══════════════════════════════════════════════════════════════════
+
+function SocialProof() {
+  const proofs = [
+    { stat: 'Live', label: 'In production today' },
+    { stat: '400K+', label: 'Accounts analyzed nightly' },
+    { stat: '100s', label: 'AI sensors running daily' },
+  ]
+  return (
+    <section style={{ padding: '32px 80px', background: SENS.bg, borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}` }}>
+      <div className="max-w-[1280px] mx-auto" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, alignItems: 'center' }}>
+        {proofs.map((p, i) => (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 4 }}>
+            <div style={{ fontSize: 26, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5 }}>{p.stat}</div>
+            <div style={{ fontSize: 13, color: SENS.inkSoft, fontWeight: 500 }}>{p.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FOUNDERS (before CTA)
+// ═══════════════════════════════════════════════════════════════════
+
+function Founders() {
+  const team = [
+    { name: 'Amit Assa', role: 'CEO', bio: '17 years in customer value management across iGaming and digital platforms.' },
+    { name: 'Maor Grinberg', role: 'CTO', bio: 'PhD in Complex Systems. Deep expertise in ML and data engineering.' },
+  ]
+  return (
+    <SectionShell padY={96}>
+      <Eyebrow>Who&rsquo;s building this</Eyebrow>
+      <SectionTitle max={620}>Operators and engineers, not just AI people.</SectionTitle>
+
+      <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 880 }}>
+        {team.map(t => (
+          <div key={t.name} style={{
+            background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 14,
+            padding: 24, display: 'flex', flexDirection: 'column', gap: 8,
+          }}>
+            <div style={{ fontSize: 18, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3 }}>{t.name}</div>
+            <div style={{ fontSize: 13, color: SENS.blueBright, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t.role}</div>
+            <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, marginTop: 4 }}>{t.bio}</div>
+          </div>
+        ))}
+      </div>
+    </SectionShell>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // EXPORTED PAGE COMPONENT
 // ═══════════════════════════════════════════════════════════════════
 
@@ -1660,6 +1709,7 @@ export function SensAiOnePager() {
     <div className="sensai-page" style={{ background: SENS.bg, color: SENS.ink, width: '100%', minHeight: '100vh' }}>
       <Nav />
       <Hero />
+      <SocialProof />
       <GapSection />
       <WhatItDoesSection />
       <HowItWorks />
@@ -1667,6 +1717,7 @@ export function SensAiOnePager() {
       <UseCases />
       <Walkthrough />
       <Why />
+      <Founders />
       <CTA />
       <Footer />
     </div>
