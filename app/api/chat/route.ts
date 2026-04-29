@@ -17,8 +17,18 @@ if (!process.env.ANTHROPIC_API_KEY) {
   } catch {}
 }
 
-// Load system prompt from file — single source of truth
-const SYSTEM_PROMPT = readFileSync(resolve(process.cwd(), "system-prompt.md"), "utf-8")
+// Load system prompt + FAQ knowledge base — combined into one system prompt
+const SYSTEM_PROMPT_BASE = readFileSync(resolve(process.cwd(), "system-prompt.md"), "utf-8")
+const FAQ_KB = (() => {
+  try {
+    return readFileSync(resolve(process.cwd(), "FAQ-DEEP-QUESTIONS.md"), "utf-8")
+  } catch {
+    return ""
+  }
+})()
+const SYSTEM_PROMPT = FAQ_KB
+  ? `${SYSTEM_PROMPT_BASE}\n\n## DEEP KNOWLEDGE BASE\n\nThe following Q&A covers sophisticated questions from operators with data teams, CRM heads, and analytics leads. Use this as your knowledge base when visitors ask deep technical, commercial, or competitive questions. Answer in your own voice — concise, with formatting — don't quote verbatim. The FAQ structure is just for organizing the knowledge.\n\n${FAQ_KB}`
+  : SYSTEM_PROMPT_BASE
 
 // Rate limiting — per IP, in-memory (resets on cold start, but good enough for Vercel)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
