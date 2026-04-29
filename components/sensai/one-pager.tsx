@@ -377,7 +377,7 @@ function GapSection() {
   return (
     <SectionShell bg={SENS.bgDeeper}>
       <Eyebrow>Sound familiar?</Eyebrow>
-      <SectionTitle>Drowning in data. Starving for insight.</SectionTitle>
+      <SectionTitle>Data is everywhere. Insights aren&rsquo;t.</SectionTitle>
       <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
         <GapCard icon={<IconBars />} title="Bottlenecked insights" body="Every analysis starts with a brief and a queue. Bandwidth is limited &mdash; questions wait." />
         <GapCard icon={<IconCog />} title="Black-box outputs" body="When teams can&rsquo;t understand why a model reached its answer, they stop trusting it &mdash; and stop using it." />
