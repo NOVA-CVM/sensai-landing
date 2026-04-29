@@ -164,20 +164,204 @@
   animation: spin 0.7s linear infinite;
 }
 
-/* Responsive section padding */
+/* ─── Chat shell: full viewport, dvh-aware for mobile ─── */
+.sensai-chat-shell {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* ─── Responsive: tablet (≤1024px) ─── */
 @media (max-width: 1024px) {
-  .sensai-page section {
+  .sensai-page section,
+  .sensai-page footer,
+  .sensai-page header {
     padding-left: 24px !important;
     padding-right: 24px !important;
   }
-  .sensai-page footer {
-    padding-left: 24px !important;
-    padding-right: 24px !important;
+  /* 4-col grids → 2-col */
+  .sensai-page [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* 5-col grids → 2-col */
+  .sensai-page [style*="repeat(5, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+/* ─── Responsive: mobile (≤768px) ─── */
 @media (max-width: 768px) {
-  .sensai-page section {
+  .sensai-page section,
+  .sensai-page footer,
+  .sensai-page header {
     padding-left: 16px !important;
     padding-right: 16px !important;
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+  }
+
+  /* All multi-col grids stack on mobile (except inside the scaled demo, which keeps its desktop layout) */
+  .sensai-page [style*="repeat(2, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
+  .sensai-page [style*="repeat(3, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
+  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame),
+  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame) {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Two-column hero / explainer / CTA grids → stack */
+  .sensai-page [style*="1fr 1fr"],
+  .sensai-page [style*="1fr 1.05fr"],
+  .sensai-page [style*="1fr 1.15fr"],
+  .sensai-page [style*="460px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  /* Tailwind two-col hero */
+  .sensai-page .lg\:grid-cols-\[1fr_1\.05fr\] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Hero shrink */
+  .sensai-page h1 {
+    font-size: 36px !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1.1 !important;
+  }
+  .sensai-page h2 {
+    font-size: 28px !important;
+    letter-spacing: -0.3px !important;
+  }
+
+  /* Hero/CTA giant headlines that use inline fontSize 56–64 */
+  .sensai-page [style*="font-size:64px"],
+  .sensai-page [style*="font-size:56px"],
+  .sensai-page [style*="font-size:48px"] {
+    font-size: 36px !important;
+    letter-spacing: -0.5px !important;
+  }
+  .sensai-page [style*="font-size:44px"] {
+    font-size: 26px !important;
+  }
+
+  /* Hide nav links on mobile (keep only logo + CTA) */
+  .sensai-page nav .sensai-nav-links {
+    display: none !important;
+  }
+
+  /* Hero illustration / right-side decorations: hide */
+  .sensai-page .sensai-hero-aside {
+    display: none !important;
+  }
+
+  /* Make wide fixed-width elements fluid */
+  .sensai-page [style*="width:600px"],
+  .sensai-page [style*="width:560px"],
+  .sensai-page [style*="width:520px"],
+  .sensai-page [style*="width:480px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Reduce nav bar padding */
+  .sensai-page nav {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Inline padding on nav inner div */
+  .sensai-page nav > div[style*="18px 80px"] {
+    padding: 14px 16px !important;
+  }
+
+  /* Hero section padding */
+  .sensai-page section[style*="72px 80px"] {
+    padding: 100px 16px 56px !important;
+  }
+
+  /* Hide complex absolute-positioned diagrams on mobile */
+  .sensai-page .sensai-architecture,
+  .sensai-page .sensai-cycle-diagram {
+    display: none !important;
+  }
+
+  /* Use case cards: keep vertical (stacked) layout but compact padding */
+  .sensai-page .sensai-usecase-card {
+    display: block !important;
+    padding: 18px !important;
+  }
+  .sensai-page .sensai-usecase-card > div {
+    display: block !important;
+    width: auto !important;
+    grid-column: auto !important;
+  }
+  .sensai-page .sensai-usecase-card .sensai-usecase-icon {
+    margin-bottom: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: grid !important;
+  }
+  .sensai-page .sensai-usecase-card .sensai-usecase-title {
+    font-size: 15px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Walkthrough cards: shorter text area + image on mobile */
+  .sensai-page .sensai-walkthrough-text {
+    padding: 16px !important;
+    height: auto !important;
+  }
+  .sensai-page .sensai-walkthrough-image {
+    height: 130px !important;
+  }
+
+  /* Keep the chat demo looking like a desktop dashboard, just scaled down to fit */
+  .sensai-page .sensai-demo-frame {
+    width: 580px !important;
+    max-width: 580px !important;
+    zoom: 0.62;
+    margin: 0 auto;
+  }
+}
+
+/* Even smaller phones — scale demo more */
+@media (max-width: 480px) {
+  .sensai-page .sensai-demo-frame {
+    zoom: 0.52;
+  }
+}
+@media (max-width: 380px) {
+  .sensai-page .sensai-demo-frame {
+    zoom: 0.46;
+  }
+}
+
+/* ─── Chat page mobile (≤640px) ─── */
+@media (max-width: 640px) {
+  /* Header */
+  header[style*="padding: 14px 24px"] {
+    padding: 10px 14px !important;
+  }
+  /* Empty state padding */
+  div[style*="padding: 0 24px"] {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  /* Messages container */
+  div[style*="padding: 24px 24px"] {
+    padding: 16px 12px !important;
+  }
+  /* Input area */
+  div[style*="padding: 16px 24px"] {
+    padding: 12px 12px !important;
+  }
+  /* Empty state heading */
+  div[style*="padding: 0 24px"] h1 {
+    font-size: 22px !important;
+  }
+  /* Quick action pills wrap nicer */
+  div[style*="padding: 0 24px"] button {
+    font-size: 12px !important;
+    padding: 8px 14px !important;
   }
 }

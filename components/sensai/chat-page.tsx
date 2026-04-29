@@ -214,8 +214,8 @@ export function ChatPage() {
   }
 
   return (
-    <div style={{
-      height: '100vh', display: 'flex', flexDirection: 'column',
+    <div className="sensai-chat-shell" style={{
+      display: 'flex', flexDirection: 'column',
       background: SENS.bg,
       fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif",
       color: SENS.ink,

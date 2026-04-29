@@ -269,7 +269,7 @@ function Nav() {
       borderColor: SENS.rule,
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
-        <Logo className="text-4xl font-semibold text-foreground" showMascot />
+        <Logo className="text-xl sm:text-2xl md:text-4xl font-semibold text-foreground" showMascot />
         <div className="flex items-center gap-6">
           <a href="#about" className="hidden sm:inline text-sm font-medium" style={{ color: SENS.inkSoft }}>
             About sensAi
@@ -585,7 +585,7 @@ function ArchitectureDiagram() {
   ]
 
   return (
-    <div style={{ position: 'relative', height: 480 }}>
+    <div className="sensai-architecture" style={{ position: 'relative', height: 480 }}>
       {/* RAW DATA eyebrow */}
       <div style={{ position: 'absolute', top: -22, left: 0, fontSize: 10, color: SENS.muted, textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 600 }}>Raw Data</div>
 
@@ -709,7 +709,7 @@ function HowItWorks() {
 
       <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: '460px 1fr', gap: 80, alignItems: 'center' }}>
         {/* Circular cycle diagram */}
-        <div style={{ position: 'relative', width: 460, height: 460 }}>
+        <div className="sensai-cycle-diagram" style={{ position: 'relative', width: 460, height: 460 }}>
           <svg width="460" height="460" viewBox="0 0 460 460" style={{ position: 'absolute', inset: 0 }}>
             <defs>
               <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -1079,7 +1079,7 @@ function AskSensAi() {
         </div>
 
         {/* Right: Q Center app chrome mock */}
-        <div style={{
+        <div className="sensai-demo-frame" style={{
           background: '#fff', borderRadius: 16, border: `1px solid ${SENS.rule}`,
           boxShadow: '0 30px 60px -28px rgba(15,28,70,0.25)',
           overflow: 'hidden', position: 'relative',
@@ -1103,7 +1103,7 @@ function AskSensAi() {
               <div style={{ background: '#fff', borderRadius: 6, padding: '6px 10px', fontSize: 11, color: SENS.muted, border: `1px solid ${SENS.rule}` }}>Account &middot; {current.ctx.accountId}</div>
               <div style={{ background: '#fff', borderRadius: 6, padding: '6px 10px', fontSize: 11, color: SENS.muted, border: `1px solid ${SENS.rule}` }}>{current.ctx.tag}</div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 14, opacity: 0.7 }}>
+            <div className="sensai-demo-kpis" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 14, opacity: 0.7 }}>
               {current.ctx.kpis.map(k => (
                 <div key={k.l} style={{ background: '#fff', borderRadius: 6, padding: '8px 10px', border: `1px solid ${SENS.rule}` }}>
                   <div style={{ fontSize: 9, color: SENS.muted, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{k.l}</div>
@@ -1361,14 +1361,14 @@ function UseCases() {
 
       <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14 }}>
         {cases.map(c => (
-          <div key={c.t} style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 14, padding: 22 }}>
-            <div style={{
+          <div key={c.t} className="sensai-usecase-card" style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 14, padding: 22 }}>
+            <div className="sensai-usecase-icon" style={{
               width: 36, height: 36, borderRadius: 8, background: SENS.bgDeeper,
               marginBottom: 18, display: 'grid', placeItems: 'center',
             }}>
               <UseCaseIcon kind={c.kind} />
             </div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: SENS.ink, marginBottom: 6, letterSpacing: -0.2 }}>{c.t}</div>
+            <div className="sensai-usecase-title" style={{ fontSize: 15, fontWeight: 600, color: SENS.ink, marginBottom: 6, letterSpacing: -0.2 }}>{c.t}</div>
             <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.5 }}>{c.s}</div>
           </div>
         ))}
@@ -1507,8 +1507,8 @@ function WalkthroughCard({ step, title, body, screenshot }: {
   step: string; title: string; body: string; screenshot: string
 }) {
   return (
-    <div style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: 22, borderBottom: `1px solid ${SENS.rule}`, height: 140, display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+    <div className="sensai-walkthrough-card" style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <div className="sensai-walkthrough-text" style={{ padding: 22, borderBottom: `1px solid ${SENS.rule}`, height: 140, display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
         <div style={{ fontSize: 11, color: SENS.muted, textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600, fontFamily: "'JetBrains Mono', ui-monospace, monospace", marginBottom: 6 }}>Step {step}</div>
         <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, marginBottom: 6 }}>{title}</div>
         <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.55, overflow: 'hidden' }}>{body}</div>
@@ -1524,7 +1524,7 @@ function WalkthroughCard({ step, title, body, screenshot }: {
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e' }} />
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840' }} />
           </div>
-          <div style={{ height: 170, overflow: 'hidden' }}>
+          <div className="sensai-walkthrough-image" style={{ height: 170, overflow: 'hidden' }}>
             <img src={screenshot} alt={title}
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top left', display: 'block' }} />
           </div>
