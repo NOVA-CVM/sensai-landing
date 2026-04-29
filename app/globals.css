@@ -126,3 +126,58 @@
     scroll-behavior: smooth;
   }
 }
+
+/* ─── sensAi landing page animations ─── */
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1 }
+  51%, 100% { opacity: 0 }
+}
+@keyframes dotPulse {
+  0%, 60%, 100% { opacity: 0.3; transform: scale(1) }
+  30% { opacity: 1; transform: scale(1.3) }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(2px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px) }
+  to { opacity: 1; transform: translateY(0) }
+}
+@keyframes spin {
+  to { transform: rotate(360deg) }
+}
+
+.sensai-cursor-blink {
+  animation: cursorBlink 1s steps(2) infinite;
+}
+.sensai-dot-pulse {
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+.sensai-fade-in {
+  animation: fadeIn 0.4s ease;
+}
+.sensai-msg-in {
+  animation: msgIn 0.32s ease-out;
+}
+.sensai-spin {
+  animation: spin 0.7s linear infinite;
+}
+
+/* Responsive section padding */
+@media (max-width: 1024px) {
+  .sensai-page section {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+  .sensai-page footer {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+@media (max-width: 768px) {
+  .sensai-page section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
