@@ -76,6 +76,9 @@ async function supabaseRequest(path: string, method: string, body?: unknown, que
   return true
 }
 
+// Per-project label so we can tell .net (sensai) chats apart from .com (abuse)
+const CHAT_SOURCE_LABEL = "sensai"
+
 async function saveConversation(
   sessionId: string,
   messages: Array<{ role: string; content: string }>
@@ -93,13 +96,14 @@ async function saveConversation(
       await supabaseRequest(
         "conversations",
         "PATCH",
-        { messages: JSON.stringify(messages), updated_at: new Date().toISOString() },
+        { messages: JSON.stringify(messages), updated_at: new Date().toISOString(), notes: CHAT_SOURCE_LABEL },
         `session_id=eq.${sessionId}`
       )
     } else {
       await supabaseRequest("conversations", "POST", {
         session_id: sessionId,
         messages: JSON.stringify(messages),
+        notes: CHAT_SOURCE_LABEL,
       })
     }
   } catch (err) {
