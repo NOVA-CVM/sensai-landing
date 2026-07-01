@@ -17,8 +17,22 @@ if (!process.env.ANTHROPIC_API_KEY) {
   } catch {}
 }
 
-// Load system prompt + FAQ knowledge base — combined into one system prompt
-const SYSTEM_PROMPT_BASE = readFileSync(resolve(process.cwd(), "system-prompt.md"), "utf-8")
+// Load system prompt + FAQ knowledge base — combined into one system prompt.
+// Both wrapped in try/catch so a missing/unreadable file can never crash
+// module init and take the whole route down with a hard 500.
+const FALLBACK_PROMPT =
+  "You are sensAi — a smart, curious AI on the sensAi landing page. " +
+  "You help visitors understand sensAi, an adaptive intelligence engine for iGaming operators. " +
+  "Be concise, direct, and never share operator-specific numbers or customer names."
+
+const SYSTEM_PROMPT_BASE = (() => {
+  try {
+    return readFileSync(resolve(process.cwd(), "system-prompt.md"), "utf-8")
+  } catch (err) {
+    console.error("Failed to load system-prompt.md, using fallback:", err)
+    return FALLBACK_PROMPT
+  }
+})()
 const FAQ_KB = (() => {
   try {
     return readFileSync(resolve(process.cwd(), "FAQ-DEEP-QUESTIONS.md"), "utf-8")
@@ -29,6 +43,9 @@ const FAQ_KB = (() => {
 const SYSTEM_PROMPT = FAQ_KB
   ? `${SYSTEM_PROMPT_BASE}\n\n## DEEP KNOWLEDGE BASE\n\nThe following Q&A covers sophisticated questions from operators with data teams, CRM heads, and analytics leads. Use this as your knowledge base when visitors ask deep technical, commercial, or competitive questions. Answer in your own voice — concise, with formatting — don't quote verbatim. The FAQ structure is just for organizing the knowledge.\n\n${FAQ_KB}`
   : SYSTEM_PROMPT_BASE
+
+// Model — kept in one place so future bumps are one-line changes.
+const CHAT_MODEL = "claude-sonnet-4-5-20250929"
 
 // Rate limiting — per IP, in-memory (resets on cold start, but good enough for Vercel)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
@@ -112,6 +129,19 @@ async function saveConversation(
 }
 
 export async function POST(req: NextRequest) {
+  try {
+    return await handlePost(req)
+  } catch (err) {
+    // Top-level safety net so we never hand back Vercel's hard 500 HTML page.
+    console.error("Chat API top-level error:", err)
+    return Response.json(
+      { error: "Server error", detail: err instanceof Error ? err.message : String(err) },
+      { status: 500 }
+    )
+  }
+}
+
+async function handlePost(req: NextRequest) {
   // Rate limiting
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
   if (isRateLimited(ip)) {
@@ -143,7 +173,7 @@ export async function POST(req: NextRequest) {
     }
 
     const stream = await client.messages.stream({
-      model: "claude-sonnet-4-20250514",
+      model: CHAT_MODEL,
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages,
