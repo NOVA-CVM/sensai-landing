@@ -1818,20 +1818,24 @@ function HowItWorks() {
 }
 
 function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
-  // Raw data → (read access) → sensAi over the player base → (actions out) → the teams' systems.
+  // Source tables → (read access) → sensAi inside the player base → (actions out) → the teams' systems.
   const sources = [
     { name: 'Players', glyph: 'person' },
     { name: 'Deposits & payments', glyph: 'card' },
     { name: 'Gaming activity', glyph: 'dice' },
+    { name: 'Sports data', glyph: 'ball' },
     { name: 'Bonuses & promos', glyph: 'gift' },
     { name: 'Sessions', glyph: 'clock' },
     { name: 'Other', glyph: 'dots' },
   ]
-  const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Other']
-  const srcYs = [92, 170, 248, 326, 404, 482]
-  const outYs = [120, 205, 290, 375, 460]
-  const cx = 550, gy = 372, R = 148
+  const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Compliance', 'Other']
+  const srcYs = [84, 158, 232, 306, 380, 454, 528]
+  const outYs = [120, 194, 268, 342, 416, 490]
+  // Ball + node centered between the chip columns (left edge 252, right edge 872)
+  const cx = 562, gy = 320, R = 148
   const nodeY = gy
+  const nodeL = cx - 98
+  const nodeR = cx + 98
   const dots: React.ReactNode[] = []
   for (let lat = -75; lat <= 75; lat += 15) {
     const th = (lat * Math.PI) / 180
@@ -1859,14 +1863,15 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
       case 'person': return <g {...stroke}><circle cx={x + 10} cy={y - 4} r="4" /><path d={`M ${x + 2} ${y + 9} c 0 -5 4 -7 8 -7 s 8 2 8 7`} /></g>
       case 'card': return <g {...stroke}><rect x={x} y={y - 7} width="20" height="14" rx="2.5" /><path d={`M ${x} ${y - 2} h 20`} /></g>
       case 'dice': return <g {...stroke}><rect x={x + 1} y={y - 8} width="17" height="17" rx="3.5" /><circle cx={x + 6} cy={y - 3} r="1" fill={SENS.inkSoft} /><circle cx={x + 13} cy={y + 4} r="1" fill={SENS.inkSoft} /></g>
+      case 'ball': return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 1} ${y} h 16 M ${x + 9} ${y - 8} c 4 5 4 11 0 16 M ${x + 9} ${y - 8} c -4 5 -4 11 0 16`} /></g>
       case 'gift': return <g {...stroke}><rect x={x} y={y - 3} width="20" height="11" rx="2" /><path d={`M ${x} ${y - 3} h 20 M ${x + 10} ${y - 3} v 11 M ${x + 5} ${y - 3} c -1 -6 5 -7 5 -1 M ${x + 15} ${y - 3} c 1 -6 -5 -7 -5 -1`} /></g>
       case 'dots': return <g fill={SENS.inkSoft} opacity="0.9"><circle cx={x + 3} cy={y} r="1.6" /><circle cx={x + 10} cy={y} r="1.6" /><circle cx={x + 17} cy={y} r="1.6" /></g>
       default: return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 9} ${y - 4} v 4 l 3 2`} /></g>
     }
   }
   return (
-    <svg viewBox="0 0 1100 560" style={{ width: '100%', height: 'auto', display: 'block' }}
-      aria-label="Raw data tables flowing into sensAi over the player base, with actions pushed out to the teams' systems">
+    <svg viewBox="0 0 1100 600" style={{ width: '100%', height: 'auto', display: 'block' }}
+      aria-label="Source tables flowing into sensAi at the center of the player base, with actions pushed out to the teams' systems">
       <defs>
         <radialGradient id="globe-glow" cx="50%" cy="42%" r="60%">
           <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.22" />
@@ -1883,40 +1888,40 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
       </defs>
 
       {/* zone labels */}
-      <text x="336" y="38" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
+      <text x={(252 + nodeL) / 2} y="30" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">READ ACCESS IN</text>
-      <text x="762" y="38" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
+      <text x={(nodeR + 872) / 2} y="30" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">ACTIONS OUT</text>
 
-      {/* connectors: raw data → node (terminate at node's left edge) */}
+      {/* connectors: source tables → node edge */}
       {srcYs.map((sy, i) => {
-        const ty = nodeY - 25 + i * 10
-        return <path key={`in${i}`} d={`M 252 ${sy} C 350 ${sy}, 360 ${ty}, 452 ${ty}`}
+        const ty = nodeY - 27 + i * 9
+        return <path key={`in${i}`} d={`M 252 ${sy} C 360 ${sy}, 370 ${ty}, ${nodeL} ${ty}`}
           stroke="url(#conn)" strokeWidth="1.4" fill="none" />
       })}
-      {/* connectors: node's right edge → systems */}
+      {/* connectors: node edge → systems */}
       {outYs.map((oy, i) => {
-        const sy2 = nodeY - 18 + i * 9
-        return <path key={`out${i}`} d={`M 648 ${sy2} C 750 ${sy2}, 770 ${oy}, 872 ${oy}`}
+        const sy2 = nodeY - 22 + i * 9
+        return <path key={`out${i}`} d={`M ${nodeR} ${sy2} C 760 ${sy2}, 770 ${oy}, 872 ${oy}`}
           stroke="url(#conn-out)" strokeWidth="1.4" fill="none" />
       })}
       {/* flow pulses: every pipe, brisk pace */}
       {animate && srcYs.map((sy, i) => (
         <circle key={`pin${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
-          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.35) % 2.1}s`}
-            path={`M 252 ${sy} C 350 ${sy}, 360 ${nodeY - 25 + i * 10}, 452 ${nodeY - 25 + i * 10}`} />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.35) % 2.1}s`} />
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.32) % 2.1}s`}
+            path={`M 252 ${sy} C 360 ${sy}, 370 ${nodeY - 27 + i * 9}, ${nodeL} ${nodeY - 27 + i * 9}`} />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.32) % 2.1}s`} />
         </circle>
       ))}
       {animate && outYs.map((oy, i) => (
         <circle key={`pout${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
-          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(0.6 + i * 0.4) % 2.1}s`}
-            path={`M 648 ${nodeY - 18 + i * 9} C 750 ${nodeY - 18 + i * 9}, 770 ${oy}, 872 ${oy}`} />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(0.6 + i * 0.4) % 2.1}s`} />
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(0.55 + i * 0.37) % 2.1}s`}
+            path={`M ${nodeR} ${nodeY - 22 + i * 9} C 760 ${nodeY - 22 + i * 9}, 770 ${oy}, 872 ${oy}`} />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(0.55 + i * 0.37) % 2.1}s`} />
         </circle>
       ))}
 
-      {/* the player base — globe of players */}
+      {/* the player base with sensAi at its center */}
       <circle cx={cx} cy={gy} r={R + 40} fill="url(#globe-glow)" />
       {dots}
       <circle cx={cx + 62} cy={gy - 38} r="3.4" fill={SENS.blueBright} />
@@ -1926,11 +1931,11 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
       </circle>
       <circle cx={cx - 84} cy={gy + 30} r="3" fill={SENS.blue} />
       <circle cx={cx + 8} cy={gy + 88} r="2.8" fill={SENS.blue} />
-      <text x={cx} y={gy + R + 34} textAnchor="middle" fill={SENS.muted} fontSize="11.5"
+      <text x={cx} y={gy + R + 40} textAnchor="middle" fill={SENS.muted} fontSize="11.5"
         letterSpacing="0.14em" style={{ textTransform: 'uppercase' }}>THE PLAYER BASE · EVERY DOT A PLAYER</text>
 
-      {/* raw-data chips */}
-      <text x="30" y="66" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">RAW TABLES</text>
+      {/* source-table chips */}
+      <text x="30" y="52" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">SOURCE TABLES</text>
       {sources.map((s, i) => (
         <g key={s.name}>
           <rect x="30" y={srcYs[i] - 26} width="222" height="52" rx="12"
@@ -1940,23 +1945,30 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
         </g>
       ))}
 
-      {/* sensAi node — white card */}
+      {/* sensAi node, centered in the base it watches */}
       <g>
-        <rect x="452" y={nodeY - 34} width="196" height="68" rx="16" fill="#ffffff" stroke={SENS.rule}
+        <rect x={nodeL} y={nodeY - 34} width="196" height="68" rx="16" fill="#ffffff" stroke={SENS.rule}
           style={{ filter: 'drop-shadow(0 16px 28px rgba(15,28,70,0.22))' }} />
-        <text x="550" y={nodeY + 3} textAnchor="middle" fill="#0b1530" fontSize="23" fontWeight="700"
+        <text x={cx} y={nodeY + 3} textAnchor="middle" fill="#0b1530" fontSize="23" fontWeight="700"
           letterSpacing="0.06em">sens<tspan fontSize="26">A</tspan>i</text>
-        <text x="550" y={nodeY + 22} textAnchor="middle" fill="#7a849c" fontSize="10.5"
+        <text x={cx} y={nodeY + 22} textAnchor="middle" fill="#7a849c" fontSize="10.5"
           letterSpacing="0.12em">WATCHING EVERY PLAYER</text>
       </g>
 
       {/* system chips */}
-      <text x="872" y="106" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">YOUR SYSTEMS</text>
+      <text x="872" y="52" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">YOUR SYSTEMS</text>
       {outputs.map((o, i) => (
         <g key={o}>
           <rect x="872" y={outYs[i] - 26} width="198" height="52" rx="12"
             fill="#ffffff" stroke={SENS.rule} />
-          <text x="971" y={outYs[i] + 5} textAnchor="middle" fill={SENS.ink} fontSize="14" fontWeight="500">{o}</text>
+          {o === 'Other' ? (
+            <>
+              {glyph('dots', 916, outYs[i])}
+              <text x="950" y={outYs[i] + 5} fill={SENS.ink} fontSize="14" fontWeight="500">Other</text>
+            </>
+          ) : (
+            <text x="971" y={outYs[i] + 5} textAnchor="middle" fill={SENS.ink} fontSize="14" fontWeight="500">{o}</text>
+          )}
         </g>
       ))}
     </svg>
