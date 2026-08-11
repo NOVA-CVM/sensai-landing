@@ -22,6 +22,7 @@ const SENS = {
 } as const
 
 const BOOKING_URL = "https://calendar.app.google/K15ZBdA3E6WBxbWXA"
+const goBook = () => { window.location.href = '/book' }
 
 // ─── Performance hooks: pause animations off-viewport, honor reduced motion ───
 function useInView(margin = '200px') {
@@ -330,13 +331,6 @@ function Nav() {
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
         <Logo className="text-xl sm:text-2xl md:text-4xl font-semibold text-white" showMascot />
-        <button
-          onClick={openBooking}
-          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all hover:opacity-90"
-          style={{ background: '#fff', color: SENS.ink, border: 'none', cursor: 'pointer' }}
-        >
-          Book a walkthrough
-        </button>
       </div>
     </nav>
   )
@@ -428,13 +422,13 @@ function Hero() {
             margin: '26px auto 0', fontSize: 18, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 640,
           }}>
-            Sensai analyzes every account, continuously &mdash; value, risk, churn,
-            engagement &mdash; and pushes the actions into the systems your teams
+            Sensai analyzes every account, continuously: value, risk, churn,
+            engagement. It pushes the actions into the systems your teams
             already use.
           </p>
           <div style={{ marginTop: 36, display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
             <button
-              onClick={openBooking}
+              onClick={goBook}
               style={{
                 background: '#fff', color: SENS.ink, border: 'none',
                 padding: '15px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
@@ -714,6 +708,47 @@ function ArchitectureDiagram() {
   )
 }
 
+function RoleSection() {
+  const duties = [
+    { t: 'Grow the player’s value', s: 'LTV prediction, VIP identification and health, upsell, engagement, next best action.' },
+    { t: 'Protect from risk and abuse', s: 'Bonus abuse, multi-accounting, coordinated rings, detected across the whole base.' },
+    { t: 'Catch churn early', s: 'Early signals on the players worth keeping, before the value walks out the door.' },
+  ]
+  return (
+    <section style={{ padding: '96px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{
+          color: SENS.blueBright, fontSize: 13, fontWeight: 500,
+          letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
+          display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
+          The role
+        </div>
+        <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
+          A digital customer manager for every player.
+        </h2>
+        <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 680 }}>
+          It watches value, risk, churn and engagement, continuously, across every account,
+          and acts through the systems your teams already use. A role no B2C company could
+          ever staff. Sensai makes it possible for the first time.
+        </p>
+        <div style={{ marginTop: 36, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, maxWidth: 1060 }}>
+          {duties.map(d => (
+            <div key={d.t}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: SENS.blueBright, flexShrink: 0 }} />
+                <span style={{ fontSize: 16, fontWeight: 600, color: SENS.ink, letterSpacing: -0.2 }}>{d.t}</span>
+              </div>
+              <div className="sensai-card-body" style={{ fontSize: 13.5, color: SENS.inkSoft, lineHeight: 1.55, paddingLeft: 17 }}>{d.s}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 const Spark = ({ d, color }: { d: string; color: string }) => (
   <svg viewBox="0 0 100 28" style={{ width: 88, height: 24, flexShrink: 0 }} preserveAspectRatio="none">
     <path d={d} stroke={color} strokeWidth="2.2" fill="none" strokeLinecap="round" />
@@ -771,21 +806,24 @@ function ValueSection() {
   const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     {
       n: '01', t: 'Bonus abuse & fraud prevention',
-      s: 'Multi-accounting, coordinated rings, promo cycling — caught across the whole base, delivered as cases: the accounts, the pattern, the evidence.',
+      s: 'Multi-accounting, coordinated rings, promo cycling, caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
-          <div style={{ position: 'relative' }}>
-            <img src="/screenshots/raf-network-new.png" alt="Ring-network graph of linked accounts"
-              style={{ width: '100%', borderRadius: 8, display: 'block' }} />
-            <div style={{
-              position: 'absolute', left: 8, bottom: 8, right: 8,
-              background: 'rgba(11,21,48,0.92)', border: '1px solid rgba(143,168,224,0.35)', borderRadius: 8,
-              padding: '7px 10px', fontSize: 11, color: '#dfe7f8', lineHeight: 1.4,
-            }}>
-              <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", color: '#8fa8e0' }}>CASE C-2481</span>
-              {' '}· 12 linked accounts · shared payment fingerprint → Risk queue
-            </div>
-          </div>
+          <MonoLabel>A ring, delivered as a case</MonoLabel>
+          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <ellipse cx="120" cy="55" rx="92" ry="44" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 4" opacity="0.6" />
+            {[[120,55],[78,36],[74,74],[128,22],[160,42],[158,74],[112,86],[186,58]].map(([x,y],i) => (
+              <g key={i}>
+                {i > 0 && <line x1="120" y1="55" x2={x} y2={y} stroke={SENS.ink} strokeWidth="0.9" opacity="0.35" />}
+                <circle cx={x} cy={y} r={i === 0 ? 6 : 3.6} fill={i === 0 ? SENS.blueBright : '#fff'}
+                  stroke={i === 0 ? 'none' : SENS.ink} strokeWidth="1.1" />
+              </g>
+            ))}
+            <path d="M226 55 h44" stroke={SENS.blueBright} strokeWidth="1.3" />
+            <rect x="272" y="41" width="40" height="28" rx="6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" />
+            <path d="M280 55 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
       ),
     },
@@ -794,103 +832,113 @@ function ValueSection() {
       s: 'Lifetime-value models on every account. Tomorrow’s VIPs flagged in their first weeks; today’s VIPs watched daily for health.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Lifetime value per player — refreshed daily, with reasoning attached</MonoLabel>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={rowStyle}>
-              <span style={idStyle}>#48291</span>
-              <span style={{ color: SENS.ink, fontWeight: 600 }}>$2,140</span>
-              <span style={{ color: SENS.blueBright, fontWeight: 600 }}>Tier A</span>
-              <Spark d="M2 22 L20 20 L38 16 L56 14 L74 8 L98 4" color={SENS.blueBright} />
-            </div>
-            <div style={{ fontSize: 11, color: SENS.muted, fontStyle: 'italic', paddingLeft: 2 }}>
-              deposits steady 6 weeks · session depth rising · flagged day 9
-            </div>
-            <div style={rowStyle}>
-              <span style={idStyle}>#55107</span>
-              <span style={{ color: SENS.ink, fontWeight: 600 }}>$860</span>
-              <span style={{ color: SENS.inkSoft }}>Tier B</span>
-              <Spark d="M2 14 L20 15 L38 13 L56 15 L74 12 L98 13" color="#8fa8e0" />
-            </div>
-            <div style={rowStyle}>
-              <span style={idStyle}>#61220</span>
-              <span style={{ color: SENS.ink, fontWeight: 600 }}>$310</span>
-              <span style={{ color: SENS.inkSoft }}>Tier C</span>
-              <Spark d="M2 8 L20 10 L38 14 L56 16 L74 20 L98 22" color="#8fa8e0" />
-            </div>
-          </div>
+          <MonoLabel>Lifetime value, refreshed daily</MonoLabel>
+          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            {['A','B','C'].map((tier, i) => (
+              <g key={tier}>
+                <line x1="16" y1={22 + i * 32} x2="270" y2={22 + i * 32} stroke={SENS.rule} strokeWidth="1" />
+                <text x="284" y={26 + i * 32} fontSize="11" fill={i === 0 ? SENS.blueBright : SENS.muted} fontWeight="600">{tier}</text>
+              </g>
+            ))}
+            <path d="M20 96 C 90 92, 150 78, 200 54 S 258 26, 268 22" fill="none" stroke={SENS.blueBright} strokeWidth="1.8" strokeLinecap="round" />
+            <circle cx="268" cy="22" r="4.5" fill={SENS.blueBright} />
+            <circle cx="268" cy="22" r="9" fill="none" stroke={SENS.blueBright} strokeWidth="1" opacity="0.4" />
+            <path d="M96 90 C 150 88, 205 80, 262 55" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.35" strokeDasharray="3 3" />
+            <circle cx="262" cy="55" r="3" fill="none" stroke={SENS.ink} strokeWidth="1.1" opacity="0.5" />
+          </svg>
           <OutChip>→ worked as cases · VIP review</OutChip>
         </ArtifactCard>
       ),
     },
     {
       n: '03', t: 'Churn prevention',
-      s: 'Early disengagement signals on the players worth keeping, with the next action attached — before the value walks out the door.',
+      s: 'Early disengagement signals on the players worth keeping, with the next action attached, before the value walks out the door.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Early signal · worked as a case</MonoLabel>
-          <div style={rowStyle}>
-            <span style={idStyle}>#33418</span>
-            <span style={{ color: SENS.ink, fontWeight: 600 }}>Churn risk 87%</span>
-            <Spark d="M2 4 L20 6 L38 10 L56 14 L74 19 L98 24" color={SENS.ink} />
-          </div>
-          <div style={{ fontSize: 11.5, color: SENS.muted, marginTop: 6 }}>
-            sessions shortening · last deposit 12d
-          </div>
+          <MonoLabel>The signal, before the drop</MonoLabel>
+          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <line x1="16" y1="92" x2="304" y2="92" stroke={SENS.rule} strokeWidth="1" />
+            <path d="M20 30 C 80 28, 130 32, 170 40 S 240 68, 292 88" fill="none" stroke={SENS.ink} strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+            <circle cx="292" cy="88" r="4" fill="none" stroke={SENS.ink} strokeWidth="1.3" opacity="0.6" />
+            <line x1="170" y1="18" x2="170" y2="92" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 3" />
+            <circle cx="170" cy="40" r="5" fill={SENS.blueBright} />
+            <circle cx="170" cy="40" r="10" fill="none" stroke={SENS.blueBright} strokeWidth="1" opacity="0.4" />
+            <path d="M170 18 h58" stroke={SENS.blueBright} strokeWidth="1.1" />
+            <path d="M224 14 l6 4 -6 4" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           <OutChip>→ CRM: retention journey, next 24h</OutChip>
         </ArtifactCard>
       ),
     },
     {
       n: '04', t: 'Game & content recommendations',
-      s: 'For each player: the games they haven’t tried but will likely love — fed to your CRM campaigns and lobby tools.',
+      s: 'For each player: the games they haven’t tried but will likely love, fed to your CRM campaigns and lobby tools.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Player #7723 · loves: high-volatility slots → recommended</MonoLabel>
-          <div style={{ display: 'flex', gap: 10 }}>
-            {[
-              { name: 'Ember Rush', g: 'linear-gradient(135deg, #2a3f76, #1a2a55)' },
-              { name: 'Nova Strike', g: 'linear-gradient(135deg, #33487f, #1c2d5c)' },
-              { name: 'Volt 7s', g: 'linear-gradient(135deg, #2c4170, #16264e)' },
-            ].map(game => (
-              <div key={game.name} style={{
-                flex: 1, height: 62, borderRadius: 8, background: game.g,
-                display: 'flex', alignItems: 'flex-end', padding: 8,
-              }}>
-                <span style={{ fontSize: 10.5, fontWeight: 600, color: '#dfe7f8' }}>{game.name}</span>
-              </div>
+          <MonoLabel>Player to games, matched</MonoLabel>
+          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <circle cx="42" cy="55" r="12" fill="none" stroke={SENS.ink} strokeWidth="1.4" />
+            <circle cx="42" cy="50" r="4" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
+            <path d="M34 63 c 0 -5 4 -7 8 -7 s 8 2 8 7" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
+            {[0, 1, 2].map(i => (
+              <g key={i}>
+                <path d={`M 58 55 C 100 ${30 + i * 25}, 140 ${26 + i * 26}, 182 ${26 + i * 26}`}
+                  fill="none" stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth={i === 0 ? 1.5 : 1.1} />
+                <rect x="184" y={12 + i * 26} width="108" height="22" rx="6"
+                  fill={i === 0 ? 'rgba(26,68,168,0.08)' : '#fff'} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="1.1" />
+                <circle cx="198" cy={23 + i * 26} r="3.4" fill={i === 0 ? SENS.blueBright : SENS.rule} />
+                <line x1="208" y1={23 + i * 26} x2="280" y2={23 + i * 26} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="2.4" strokeLinecap="round" opacity={i === 0 ? 0.5 : 0.6} />
+              </g>
             ))}
-          </div>
+          </svg>
           <OutChip>→ CRM campaigns · lobby tools</OutChip>
         </ArtifactCard>
       ),
     },
     {
       n: '05', t: 'Player-profile enrichment',
-      s: 'Every system you run gets a deeper picture of the player: value tier, risk signals, churn risk, game affinities — written into your CRM, risk tools and warehouse. Hundreds of enrichment columns, added to every player.',
+      s: 'Every system you run gets a deeper picture of the player: value tier, risk signals, churn risk, game affinities, written into your CRM, risk tools and warehouse. Hundreds of enrichment columns, added to every player.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Player #29054 · profile</MonoLabel>
-          <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, lineHeight: 1.8 }}>
-            <div style={{ color: SENS.muted }}>id: 29054 · joined: 2025-11 · market: MT</div>
-            <div style={{ color: SENS.blueBright }}>+ value_tier: <span style={{ color: SENS.ink }}>A</span> · churn_risk: <span style={{ color: SENS.ink }}>low</span></div>
-            <div style={{ color: SENS.blueBright }}>+ affinity: <span style={{ color: SENS.ink }}>live casino</span> · risk_flags: <span style={{ color: SENS.ink }}>none</span></div>
-          </div>
+          <MonoLabel>Columns added to every player</MonoLabel>
+          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            {[0, 1, 2].map(row => (
+              <g key={row}>
+                <circle cx="24" cy={26 + row * 30} r="7" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
+                {[0, 1, 2, 3].map(col => (
+                  <rect key={col} x={48 + col * 30} y={19 + row * 30} width="22" height="14" rx="3"
+                    fill="#fff" stroke={SENS.rule} strokeWidth="1.1" />
+                ))}
+                {[4, 5, 6, 7].map(col => (
+                  <rect key={col} x={48 + col * 30 + 8} y={19 + row * 30} width="22" height="14" rx="3"
+                    fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.1" />
+                ))}
+                <text x={296} y={30 + row * 30} fontSize="12" fill={SENS.blueBright} fontWeight="600">+</text>
+              </g>
+            ))}
+          </svg>
           <OutChip>→ written to CRM · DWH</OutChip>
         </ArtifactCard>
       ),
     },
     {
       n: '06', t: 'Evidence-backed answers',
-      s: 'Ask about any player, segment or pattern — and get an answer built on the full context of the base, with the evidence attached.',
+      s: 'Ask about any player, segment or pattern, and get an answer built on the full context of the base, with the evidence attached.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Q Center</MonoLabel>
-          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12.5, color: SENS.inkSoft, marginBottom: 6 }}>&ldquo;Which VIPs cooled off this week?&rdquo;</div>
-              <div style={{ fontSize: 13, color: SENS.ink, fontWeight: 600 }}>7 VIPs · sessions −40% vs their norm</div>
-              <div style={{ fontSize: 11, color: SENS.muted, marginTop: 4 }}>evidence: session log · deposit cadence · 90d baseline</div>
-            </div>
+          <MonoLabel>A question, answered with evidence</MonoLabel>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <svg viewBox="0 0 190 100" style={{ width: 190, flexShrink: 0 }}>
+              <rect x="8" y="10" width="120" height="30" rx="10" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.6" />
+              <text x="24" y="30" fontSize="15" fill={SENS.ink} opacity="0.7" fontWeight="600">?</text>
+              <line x1="42" y1="25" x2="112" y2="25" stroke={SENS.ink} strokeWidth="2.2" strokeLinecap="round" opacity="0.25" />
+              <path d="M50 40 v14" stroke={SENS.blueBright} strokeWidth="1.2" />
+              <path d="M46 50 l4 6 4 -6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="8" y="62" width="164" height="30" rx="10" fill="rgba(26,68,168,0.06)" stroke={SENS.blueBright} strokeWidth="1.2" />
+              <path d="M22 77 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="48" y1="77" x2="120" y2="77" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.55" />
+              <line x1="130" y1="77" x2="158" y2="77" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.3" />
+            </svg>
             <MiniRadar />
           </div>
         </ArtifactCard>
@@ -958,12 +1006,12 @@ function ValueSection() {
         </div>
 
         <div style={{ marginTop: 30, fontSize: 16, fontWeight: 600, color: SENS.blueBright, maxWidth: 720, lineHeight: 1.5 }}>
-          All of it lands in the systems you already run &mdash; as cases, lists, triggers and enriched profiles. No new tool.
+          All of it lands in the systems you already run: cases, lists, triggers and enriched profiles. No new tool.
         </div>
 
         <div style={{ marginTop: 40 }}>
           <button
-            onClick={openBooking}
+            onClick={goBook}
             style={{
               background: SENS.blue, color: '#fff', border: 'none',
               padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
@@ -980,8 +1028,8 @@ function ValueSection() {
 }
 
 const MarkShallow = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M2 7c3-2.5 6-2.5 9 0s6 2.5 9 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+  <svg width="34" height="34" viewBox="0 0 22 22" fill="none">
+    <path d="M2 7c3-2.5 6-2.5 9 0s6 2.5 9 0" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
     <circle cx="6" cy="13" r="1" fill="currentColor" opacity="0.55"/>
     <circle cx="11" cy="15" r="1" fill="currentColor" opacity="0.35"/>
     <circle cx="16" cy="13.5" r="1" fill="currentColor" opacity="0.45"/>
@@ -989,31 +1037,32 @@ const MarkShallow = () => (
     <circle cx="14" cy="18.5" r="1" fill="currentColor" opacity="0.15"/>
   </svg>
 )
-const MarkRigid = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M3 19V9h6V3h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M7 19v-6h6V7h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.4"/>
+const MarkDrifting = () => (
+  <svg width="34" height="34" viewBox="0 0 22 22" fill="none">
+    <path d="M2 11h12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    <path d="M2 11c5 0 8-1.5 11-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="3 2.5" opacity="0.7"/>
+    <circle cx="17" cy="11" r="1.6" fill="currentColor"/>
+    <circle cx="16" cy="4.5" r="1.6" fill="currentColor" opacity="0.5"/>
   </svg>
 )
 const MarkUntrusted = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M2 16c4-1 7-4 9-8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="3 3"/>
-    <path d="M2 16c5 0 10 1 18 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-    <path d="M14 4l4 4M18 4l-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.7"/>
+  <svg width="34" height="34" viewBox="0 0 22 22" fill="none">
+    <path d="M2 11c2.6-3.6 5.8-5.5 9-5.5s6.4 1.9 9 5.5c-2.6 3.6-5.8 5.5-9 5.5S4.6 14.6 2 11z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+    <circle cx="11" cy="11" r="2.4" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M4 19L18 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
   </svg>
 )
 
 function ProblemSection() {
   const tiles = [
-    { mark: <MarkRigid />, t: 'Rigid', s: 'Every change in the logic needs a data person in the loop. The analysis never keeps up with the business.' },
-    { mark: <MarkUntrusted />, t: 'Untrusted', s: 'So the models drift from reality — and the teams stop believing them.' },
-    { mark: <MarkShallow />, t: 'Shallow', s: 'Left without models they trust, teams fall back on segments and averages. Approximations, not understanding.' },
+    { mark: <MarkDrifting />, t: 'Drifting', s: <>Every change in the logic needs a data person in the loop. The models drift behind the business.</> },
+    { mark: <MarkUntrusted />, t: 'Untrusted', s: <>So the teams stop believing what the models say.</> },
+    { mark: <MarkShallow />, t: 'Shallow', s: <>Left without models they trust, teams fall back on segments and averages.<span className="sensai-card-body"> Approximations, not understanding.</span></> },
   ]
   const stats = [
-    { v: '5% → ~67%', l: 'of players → share of revenue; top 10% → ~80%', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
-    { v: '2% → 83%', l: 'at one operator, 2% of customers made 83% of deposits', f: 'UK Gambling Commission, 2020' },
-    { v: '10–20%', l: 'of promotional spend lost to bonus abuse — gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
-    { v: '55%', l: 'of a typical base sits churned; re-engaged 3 months late, worth 87% less', f: 'Optimove 2024 (5.3M players)' },
+    { v: '5% → 67%', l: 'of players generate 67% of revenue', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
+    { v: '10–20%', l: 'of promotional spend lost to bonus abuse, gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
+    { v: '~30%', l: 'of VIPs fall below the radar', f: '' },
   ]
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
@@ -1046,7 +1095,7 @@ function ProblemSection() {
         {/* Slim proof-strip */}
         <div className="sensai-proof-strip" style={{
           marginTop: 64, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0,
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
           borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}`,
         }}>
           {stats.map((s, i) => (
@@ -1057,7 +1106,7 @@ function ProblemSection() {
             }}>
               <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
               <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
-              <div className="sensai-card-body" style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>
+              {s.f && <div className="sensai-card-body" style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
             </div>
           ))}
         </div>
@@ -1067,65 +1116,59 @@ function ProblemSection() {
 }
 
 function ResolutionVisual({ animate = true }: { animate?: boolean }) {
-  // A field of "players": blurred pixel blocks on the left resolving into
-  // sharp individuals on the right. Deterministic — no randomness.
-  const cols = 26
+  // One continuous field: focus and brightness ramp smoothly left to right.
+  // Shape morphs blocky→round via rx, blur steps are dithered per-cell so no
+  // tier seams are visible. Deterministic.
+  const cols = 30
   const rows = 6
   const w = 1040
   const h = 240
   const cellW = w / cols
   const cellH = h / rows
-  const cells: Array<{ x: number; y: number; t: number; jx: number; jy: number; seed: number }> = []
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+  const hexLerp = (c1: string, c2: string, t: number) => {
+    const p = (c: string) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]
+    const [r1, g1, b1] = p(c1); const [r2, g2, b2] = p(c2)
+    return `rgb(${Math.round(lerp(r1, r2, t))},${Math.round(lerp(g1, g2, t))},${Math.round(lerp(b1, b2, t))})`
+  }
+  const cells: React.ReactNode[] = []
+  let focusCx = 0, focusCy = 0
   for (let c = 0; c < cols; c++) {
     for (let r = 0; r < rows; r++) {
-      const t = c / (cols - 1)
       const seed = (c * 7 + r * 13) % 17
-      cells.push({
-        x: c * cellW + cellW / 2,
-        y: r * cellH + cellH / 2,
-        t,
-        jx: ((seed % 5) - 2) * (2 + t * 2),
-        jy: (((seed * 3) % 5) - 2) * (2 + t * 2),
-        seed,
-      })
+      const noise = ((seed / 17) - 0.5) * 0.12
+      const t = Math.min(1, Math.max(0, c / (cols - 1) + noise))
+      const ease = t * t * (3 - 2 * t)
+      const x = Number((c * cellW + cellW / 2 + ((seed % 5) - 2) * (2 + t * 3)).toFixed(1))
+      const y = Number((r * cellH + cellH / 2 + (((seed * 3) % 5) - 2) * (2 + t * 3)).toFixed(1))
+      const size = Number(lerp(cellW * 0.92, 6.4, ease).toFixed(1))
+      const rx = Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))
+      const blur = ease < 0.22 ? 'url(#res-b3)' : ease < 0.45 ? 'url(#res-b2)' : ease < 0.68 ? 'url(#res-b1)' : undefined
+      const color = ease < 0.55 ? hexLerp('#5f7cc0', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
+      const opacity = Number((0.16 + ease * 0.84).toFixed(3))
+      const isFocus = c === cols - 3 && r === 2
+      if (isFocus) { focusCx = x; focusCy = y }
+      cells.push(
+        <rect key={`${c}-${r}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
+          width={size} height={size} rx={rx} fill={color} opacity={opacity} filter={blur} />
+      )
+      if (ease > 0.9) {
+        cells.push(<rect key={`g${c}-${r}`} x={Number((x - size).toFixed(1))} y={Number((y - size).toFixed(1))}
+          width={size * 2} height={size * 2} rx={size} fill="#ffffff" opacity={0.12} filter="url(#res-b1)" />)
+      }
     }
   }
-  const focus = cells[cols * rows - rows - 2]
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="A blurred field of players resolving into sharp individuals">
+    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="A blurred field of players resolving smoothly into sharp individuals">
       <defs>
-        <filter id="res-blur-heavy"><feGaussianBlur stdDeviation="7" /></filter>
-        <filter id="res-blur-mid"><feGaussianBlur stdDeviation="3.5" /></filter>
-        <filter id="res-blur-soft"><feGaussianBlur stdDeviation="1.4" /></filter>
+        <filter id="res-b3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6.5" /></filter>
+        <filter id="res-b2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" /></filter>
+        <filter id="res-b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.2" /></filter>
       </defs>
-      {cells.map((cell, i) => {
-        const { x, y, t, jx, jy, seed } = cell
-        const opacity = 0.18 + t * 0.55 + (seed % 3) * 0.04
-        if (t < 0.33) {
-          const size = cellW * (0.95 - t * 0.5)
-          return <rect key={i} x={x - size / 2 + jx} y={y - size / 2 + jy} width={size} height={size}
-            fill="#5f7cc0" opacity={opacity * 0.4} filter={t < 0.18 ? 'url(#res-blur-heavy)' : 'url(#res-blur-mid)'} />
-        }
-        if (t < 0.62) {
-          const size = 10 - (t - 0.33) * 12
-          return <rect key={i} x={x - size / 2 + jx} y={y - size / 2 + jy} width={size} height={size} rx={2}
-            fill="#7e97d0" opacity={opacity * 0.6} filter="url(#res-blur-soft)" />
-        }
-        const r = 3.4 - (seed % 3) * 0.4
-        if (t > 0.82) {
-          return (
-            <g key={i}>
-              <circle cx={x + jx} cy={y + jy} r={r * 2.4} fill="#ffffff" opacity={0.18} filter="url(#res-blur-soft)" />
-              <circle cx={x + jx} cy={y + jy} r={r} fill="#ffffff" opacity={1} />
-            </g>
-          )
-        }
-        return <circle key={i} cx={x + jx} cy={y + jy} r={r} fill="#8fa8e0" opacity={opacity * 0.75} />
-      })}
-      <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="5" fill="#fff" />
-      <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="11" fill="none" stroke="#aebfe8" strokeWidth="1.4" opacity="0.9">
+      {cells}
+      <circle cx={focusCx} cy={focusCy} r="11" fill="none" stroke="#ffffff" strokeWidth="1.3" opacity="0.85">
         {animate && <animate attributeName="r" values="9;13;9" dur="3.2s" repeatCount="indefinite" />}
-        {animate && <animate attributeName="opacity" values="0.9;0.3;0.9" dur="3.2s" repeatCount="indefinite" />}
+        {animate && <animate attributeName="opacity" values="0.85;0.3;0.85" dur="3.2s" repeatCount="indefinite" />}
       </circle>
     </svg>
   )
@@ -1141,10 +1184,9 @@ function TurnSection() {
           Your base, in high resolution.
         </h2>
         <p style={{ margin: '22px auto 0', fontSize: 17, lineHeight: 1.65, color: '#b6c1dd', maxWidth: 700 }}>
-          Sensai&rsquo;s models work on context &mdash; the full picture of each account &mdash; so
-          they adapt the way only a human analyst could until now. When your business changes, the
-          analysis changes with it: no data project in between. Out of a blur of a million players:
-          every single one, in focus.
+          Sensai&rsquo;s models work on the full picture of each account, and adapt the way
+          only a human analyst could. When your business changes, the analysis changes with it.
+          No data project in between. Out of a blur of a million players: every single one, in focus.
         </p>
       </div>
       <div ref={ref} style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -1245,23 +1287,23 @@ interface PromptData {
 function AskSensAi() {
   const prompts: PromptData[] = [
     {
-      q: "Analyze the risk profile of account 16062290",
+      q: "Analyze the risk profile of account 41205",
       ctx: {
-        accountId: '16062290',
+        accountId: '41205',
         tag: 'Red risk · root invitee',
         kpis: [
-          { l: 'Total NGR', v: '−$12.4k', neg: true },
-          { l: 'Network', v: '1,221' },
-          { l: 'Red risk', v: '1,206', neg: true },
-          { l: 'Invites', v: '1,384' },
+          { l: 'Total NGR', v: '−$8.2k', neg: true },
+          { l: 'Network', v: '23' },
+          { l: 'Red risk', v: '19', neg: true },
+          { l: 'Invites', v: '31' },
         ],
       },
       reply: {
-        title: "High bonus-abuse risk · 1,206 red nodes",
+        title: "High bonus-abuse risk · 19 red nodes",
         bullets: [
-          "Root of a 1,221-account RAF cluster · −$12.4k aggregate NGR",
-          "1,384 invites in a single referral chain · 8 ghost accounts never made a real deposit",
-          "97% of downstream activity within 24h of bonus claim",
+          "Root of a 23-account RAF cluster · −$8.2k aggregate NGR",
+          "31 invites in a single referral chain · 5 ghost accounts never made a real deposit",
+          "9 of 10 downstream actions within 24h of bonus claim",
         ],
         visual: 'network',
         action: "Flag cluster · Restrict promos · Open in RAF",
@@ -1282,7 +1324,7 @@ function AskSensAi() {
       reply: {
         title: "12 new accounts · velocity-deposit signature forming",
         bullets: [
-          "3 deposits of $200 within 8 min, then max bet — across all 12",
+          "3 deposits of $200 within 8 min, then max bet, across all 12",
           "All accounts created in last 72h · same deposit timing window",
           "Behavioral match to historic March cluster · sensAi remembers",
         ],
@@ -1461,7 +1503,7 @@ function AskSensAi() {
 
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
-              { t: 'Plain-language questions', s: 'Risk profiles, segments, anomalies — ask in your own words.' },
+              { t: 'Plain-language questions', s: 'Risk profiles, segments, anomalies. Ask in your own words.' },
               { t: 'Evidence, not just answers', s: 'Every response is grounded in the underlying data and traceable.' },
               { t: 'One click to act', s: 'Push to CRM, open a case, or route a journey from inside the answer.' },
             ].map(it => (
@@ -1782,10 +1824,11 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
     { name: 'Gaming activity', glyph: 'dice' },
     { name: 'Bonuses & promos', glyph: 'gift' },
     { name: 'Sessions', glyph: 'clock' },
+    { name: 'Other', glyph: 'dots' },
   ]
-  const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI']
-  const srcYs = [92, 170, 248, 326, 404]
-  const outYs = [140, 225, 310, 395]
+  const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Other']
+  const srcYs = [92, 170, 248, 326, 404, 482]
+  const outYs = [120, 205, 290, 375, 460]
   const nodeY = 228
   const cx = 550, gy = 372, R = 148
   const dots: React.ReactNode[] = []
@@ -1816,6 +1859,7 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
       case 'card': return <g {...stroke}><rect x={x} y={y - 7} width="20" height="14" rx="2.5" /><path d={`M ${x} ${y - 2} h 20`} /></g>
       case 'dice': return <g {...stroke}><rect x={x + 1} y={y - 8} width="17" height="17" rx="3.5" /><circle cx={x + 6} cy={y - 3} r="1" fill={SENS.inkSoft} /><circle cx={x + 13} cy={y + 4} r="1" fill={SENS.inkSoft} /></g>
       case 'gift': return <g {...stroke}><rect x={x} y={y - 3} width="20" height="11" rx="2" /><path d={`M ${x} ${y - 3} h 20 M ${x + 10} ${y - 3} v 11 M ${x + 5} ${y - 3} c -1 -6 5 -7 5 -1 M ${x + 15} ${y - 3} c 1 -6 -5 -7 -5 -1`} /></g>
+      case 'dots': return <g fill={SENS.inkSoft} opacity="0.9"><circle cx={x + 3} cy={y} r="1.6" /><circle cx={x + 10} cy={y} r="1.6" /><circle cx={x + 17} cy={y} r="1.6" /></g>
       default: return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 9} ${y - 4} v 4 l 3 2`} /></g>
     }
   }
@@ -1845,29 +1889,29 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
 
       {/* connectors: raw data → node (terminate at node's left edge) */}
       {srcYs.map((sy, i) => {
-        const ty = nodeY - 22 + i * 11
+        const ty = nodeY - 25 + i * 10
         return <path key={`in${i}`} d={`M 252 ${sy} C 350 ${sy}, 360 ${ty}, 452 ${ty}`}
           stroke="url(#conn)" strokeWidth="1.4" fill="none" />
       })}
       {/* connectors: node's right edge → systems */}
       {outYs.map((oy, i) => {
-        const sy2 = nodeY - 16 + i * 11
+        const sy2 = nodeY - 18 + i * 9
         return <path key={`out${i}`} d={`M 648 ${sy2} C 750 ${sy2}, 770 ${oy}, 872 ${oy}`}
           stroke="url(#conn-out)" strokeWidth="1.4" fill="none" />
       })}
-      {/* flow pulses */}
-      {animate && [1, 3].map(i => (
-        <circle key={`pin${i}`} r="2.4" fill={SENS.blueBright} opacity="0">
-          <animateMotion dur="3.4s" repeatCount="indefinite" begin={`${i * 0.9}s`}
-            path={`M 252 ${srcYs[i]} C 350 ${srcYs[i]}, 360 ${nodeY - 22 + i * 11}, 452 ${nodeY - 22 + i * 11}`} />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="3.4s" repeatCount="indefinite" begin={`${i * 0.9}s`} />
+      {/* flow pulses: every pipe, brisk pace */}
+      {animate && srcYs.map((sy, i) => (
+        <circle key={`pin${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.35) % 2.1}s`}
+            path={`M 252 ${sy} C 350 ${sy}, 360 ${nodeY - 25 + i * 10}, 452 ${nodeY - 25 + i * 10}`} />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.35) % 2.1}s`} />
         </circle>
       ))}
-      {animate && [0, 2].map(i => (
-        <circle key={`pout${i}`} r="2.4" fill={SENS.blueBright} opacity="0">
-          <animateMotion dur="3.4s" repeatCount="indefinite" begin={`${1.4 + i * 0.8}s`}
-            path={`M 648 ${nodeY - 16 + i * 11} C 750 ${nodeY - 16 + i * 11}, 770 ${outYs[i]}, 872 ${outYs[i]}`} />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="3.4s" repeatCount="indefinite" begin={`${1.4 + i * 0.8}s`} />
+      {animate && outYs.map((oy, i) => (
+        <circle key={`pout${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(0.6 + i * 0.4) % 2.1}s`}
+            path={`M 648 ${nodeY - 18 + i * 9} C 750 ${nodeY - 18 + i * 9}, 770 ${oy}, 872 ${oy}`} />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(0.6 + i * 0.4) % 2.1}s`} />
         </circle>
       ))}
 
@@ -1931,14 +1975,14 @@ function IntegrationSection() {
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
         }}>Integration</div>
         <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
-          Integration is light.<br />Your data stays in your cloud.
+          Light integration.<br />Your data stays in your cloud.
         </h2>
         <p style={{ margin: '20px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
-          Read access to the source tables &mdash; we take it from there. Outputs pushed
-          back through a write channel into the tools your teams run.
+          Read access to the source tables. We take it from there. Outputs pushed
+          back into the tools your teams run.
         </p>
         <div style={{ marginTop: 30, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {['Read-only source access', 'No PII required', 'Runs in your cloud', 'Days, not months'].map(chip => (
+          {['Read-only source access', 'No PII required', 'Runs in your cloud', 'Live within 4 weeks'].map(chip => (
             <span key={chip} style={{
               border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
               padding: '9px 18px', fontSize: 13, fontWeight: 500, color: SENS.inkSoft,
@@ -2233,7 +2277,7 @@ function CTA() {
           <div style={{
             color: '#8fa8e0', fontSize: 13, fontWeight: 500, letterSpacing: '0.14em',
             textTransform: 'uppercase', marginBottom: 16,
-          }}>Design partnership</div>
+          }}>Quick customer base scan</div>
           <div style={{ fontSize: 15, color: '#b6c1dd', marginBottom: 14, fontStyle: 'italic' }}>
             What if you could check?
           </div>
@@ -2241,15 +2285,14 @@ function CTA() {
             See what&rsquo;s leaking. In 48 hours.
           </h2>
           <p style={{ marginTop: 20, fontSize: 17, lineHeight: 1.6, color: '#b6c1dd' }}>
-            Give us a sample of your data &mdash; read access is all we need, and we take it
-            from there. Once the sample is in, 48 hours later you have sensAi&rsquo;s first
+            Give us a sample of your data. 48 hours later you get sensAi&rsquo;s first
             analysis of your base: value, risk and churn, player by player. No integration,
-            no commitment, nothing to prepare.
+            nothing to prepare.
           </p>
 
           <div style={{ marginTop: 36 }}>
             <button
-              onClick={openBooking}
+              onClick={goBook}
               style={{
                 background: '#fff', color: SENS.ink, border: 'none',
                 padding: '16px 30px', borderRadius: 999, fontSize: 15, fontWeight: 600,
@@ -2267,11 +2310,12 @@ function CTA() {
             fontSize: 13.5, lineHeight: 1.7, color: '#9aa6c4', maxWidth: 680,
             marginLeft: 'auto', marginRight: 'auto',
           }}>
-            Built by operators &mdash; <span style={{ color: '#d7deef' }}>Amit Assa</span>, 17 years leading CRM,
+            Built by people who spent years inside online gaming.
+            {' '}<span style={{ color: '#d7deef' }}>Amit Assa</span>, 17 years leading CRM,
             customer value management and analytics at 888 and other major operators, and{' '}
             <span style={{ color: '#d7deef' }}>Gabi Dvir</span>, 20+ years in tech leadership, ex-VP DevOps at 888 and Fiverr.
             <div style={{ marginTop: 10, color: '#8fa8e0', fontWeight: 500 }}>
-              Live with one operator today &middot; Onboarding a 1M+ MAU multi-brand group
+              Live in production.
             </div>
           </div>
         </div>
@@ -2373,6 +2417,7 @@ export function SensAiOnePagerV2() {
       <Hero />
       <ProblemSection />
       <TurnSection />
+      <RoleSection />
       <ValueSection />
       <div id="how-it-works">
         <AskSensAi />

@@ -466,6 +466,12 @@
     height: 130px !important;
   }
 
+  /* Book-a-demo form stacks on mobile */
+  .sensai-book-grid {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+  }
+
   /* v2 value rows: compact number column on mobile */
   .sensai-page .sensai-value-row {
     grid-template-columns: 44px 1fr 22px !important;

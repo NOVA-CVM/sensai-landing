@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 
 const isVercel = process.env.VERCEL === '1'
 import './globals.css'
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// Site-wide typeface: Space Grotesk — nearest freely-licensed equivalent to
+// getmodus.com's GT Planar (commercial). Keeps the --font-inter variable name
+// so the existing font-sans chain picks it up unchanged.
+const inter = Space_Grotesk({ subsets: ["latin"], variable: "--font-inter" });
 
 export const viewport: Viewport = {
   width: 'device-width',
