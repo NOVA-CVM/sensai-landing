@@ -1,29 +1,29 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import './sense.css'
 
-// /sense runs Space Grotesk (nearest free equivalent of Modus's GT Planar).
+// /sense runs Geist: a sober neutral grotesque, the true-register match for Modus's GT Planar.
 // Scoped here so the existing homepage keeps its Inter setup untouched.
-const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' })
+const grotesk = Geist({ subsets: ['latin'], variable: '--font-grotesk' })
 
 export const metadata: Metadata = {
-  title: 'You have the data. What’s missing is an expert who knows every player. | sensAi',
+  title: 'A million players. An expert on every one. | sensAi',
   description:
-    'Sensai analyzes every account, continuously: value, risk, churn, engagement. It pushes the actions into the systems your teams already use.',
+    'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
   robots: { index: false, follow: false },
   openGraph: {
-    title: 'You have the data. What’s missing is an expert who knows every player.',
+    title: 'A million players. An expert on every one.',
     description:
-      'Sensai analyzes every account, continuously: value, risk, churn, engagement. It pushes the actions into the systems your teams already use.',
+      'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
     images: ['/og-sense.png'],
     siteName: 'sensAi',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'You have the data. What’s missing is an expert who knows every player.',
+    title: 'A million players. An expert on every one.',
     description:
-      'Sensai analyzes every account, continuously: value, risk, churn, engagement. It pushes the actions into the systems your teams already use.',
+      'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
     images: ['/og-sense.png'],
   },
 }

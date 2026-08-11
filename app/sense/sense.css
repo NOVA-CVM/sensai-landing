@@ -344,3 +344,26 @@
 @media (prefers-reduced-motion: reduce) {
   .sensai-heartbeat { animation: none !important; }
 }
+
+/* Hero field: one-time left-to-right resolve on load */
+@keyframes sensaiFieldReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.sensai-hero-field {
+  animation: sensaiFieldReveal 2.6s cubic-bezier(0.3, 0, 0.2, 1) 0.2s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sensai-hero-field { animation: none !important; clip-path: none !important; }
+}
+@media (max-width: 768px) {
+  /* Hero CTAs: full-width stacked on mobile */
+  .sensai-page .sensai-hero-ctas {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .sensai-page .sensai-hero-ctas button {
+    width: 100% !important;
+  }
+}

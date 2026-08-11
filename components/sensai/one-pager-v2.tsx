@@ -380,59 +380,102 @@ function HeroField() {
   )
 }
 
+function HeroResolutionField() {
+  // The hero's full-bleed resolution field: sparse blur on the left resolving
+  // into a dense crowd of sharp players, a few showing state colors. Deterministic.
+  const cols = 44
+  const w = 1440
+  const h = 760
+  const colW = w / cols
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+  const hexLerp = (c1: string, c2: string, t: number) => {
+    const p = (c: string) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]
+    const [r1, g1, b1] = p(c1); const [r2, g2, b2] = p(c2)
+    return `rgb(${Math.round(lerp(r1, r2, t))},${Math.round(lerp(g1, g2, t))},${Math.round(lerp(b1, b2, t))})`
+  }
+  const cells: React.ReactNode[] = []
+  for (let c = 0; c < cols; c++) {
+    const tCol = c / (cols - 1)
+    const easeCol = tCol * tCol * (3 - 2 * tCol)
+    const count = Math.round(lerp(3, 13, easeCol))
+    for (let i = 0; i < count; i++) {
+      const seed = (c * 7 + i * 13) % 17
+      const noise = ((seed / 17) - 0.5) * 0.1
+      const t = Math.min(1, Math.max(0, tCol + noise))
+      const ease = t * t * (3 - 2 * t)
+      const x = Number((c * colW + colW / 2 + ((seed % 5) - 2) * (3 + t * 4)).toFixed(1))
+      const y = Number(((i + 0.5) * (h / count) + (((seed * 3) % 5) - 2) * 4).toFixed(1))
+      const size = Number(lerp(30, 5.6, ease).toFixed(1))
+      const rx = Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))
+      const blur = ease < 0.22 ? 'url(#hero-b3)' : ease < 0.45 ? 'url(#hero-b2)' : ease < 0.68 ? 'url(#hero-b1)' : undefined
+      let color = ease < 0.55 ? hexLerp('#42598f', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
+      if (ease > 0.85) {
+        if (seed === 3) color = '#5d8a72'
+        else if (seed === 9) color = '#8a6b45'
+        else if (seed === 14) color = '#8a5058'
+      }
+      const opacity = Number((0.1 + ease * 0.5).toFixed(3))
+      cells.push(
+        <rect key={`${c}-${i}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
+          width={size} height={size} rx={rx} fill={color} opacity={opacity} filter={blur} />
+      )
+    }
+  }
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid slice"
+      style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden>
+      <defs>
+        <filter id="hero-b3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" /></filter>
+        <filter id="hero-b2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" /></filter>
+        <filter id="hero-b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.3" /></filter>
+      </defs>
+      {cells}
+    </svg>
+  )
+}
+
 function Hero() {
   const scrollToHow = () => {
     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
   }
   return (
-    <section style={{ padding: '72px 80px 110px', paddingTop: 180, background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
-      {/* faint dot-grid texture */}
+    <section style={{ padding: '72px 80px 120px', paddingTop: 170, background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
+      {/* full-bleed resolution field, slowly revealing left to right */}
+      <div aria-hidden className="sensai-hero-field" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <HeroResolutionField />
+      </div>
+      {/* scrim for text legibility over the field */}
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1px)',
-        backgroundSize: '26px 26px',
-        maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0) 85%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0) 85%)',
+        background: 'radial-gradient(ellipse 62% 55% at 50% 44%, rgba(11,21,48,0.88) 0%, rgba(11,21,48,0.55) 55%, rgba(11,21,48,0) 100%)',
       }} />
-      {/* soft radial glows */}
-      <div aria-hidden style={{
-        position: 'absolute', width: 980, height: 980, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(26,68,168,0.36) 0%, rgba(26,68,168,0) 65%)',
-        top: -380, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-      }} />
-      {/* atmospheric resolution field — blurred at the edges, sharpening toward focus */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.5 }}>
-        <HeroField />
-      </div>
       <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
-        <div style={{ textAlign: 'center', maxWidth: 920, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: 860, margin: '0 auto' }}>
           <div style={{
-            color: 'rgba(255,255,255,0.85)', fontSize: 15, fontWeight: 600,
-            letterSpacing: '0.18em', marginBottom: 28,
+            color: '#7d89a8', fontSize: 12, fontWeight: 500,
+            letterSpacing: '0.14em', marginBottom: 22,
           }}>THE DIGITAL CUSTOMER MANAGER FOR GAMING OPERATORS</div>
           <h1 style={{
-            margin: 0, fontSize: 58, lineHeight: 1.12, letterSpacing: -1.6,
+            margin: 0, fontSize: 66, lineHeight: 1.08, letterSpacing: -1.8,
             fontWeight: 600, color: '#fff',
           }}>
-            You have the data.<br />
-            What&rsquo;s missing is an expert who knows{' '}
-            <span style={{ color: '#8fa8e0' }}>every player</span>.
+            A million players.<br />An expert on every one.
           </h1>
-          <p style={{
-            margin: '26px auto 0', fontSize: 18, lineHeight: 1.6, color: '#b6c1dd',
-            maxWidth: 640,
+          <p className="sensai-hero-subline" style={{
+            margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
+            maxWidth: 560,
           }}>
-            Sensai analyzes every account, continuously: value, risk, churn,
-            engagement. It pushes the actions into the systems your teams
+            sensAi is that expert: it grows each player&rsquo;s value, protects from risk
+            and abuse, and catches churn early, acting through the systems your teams
             already use.
           </p>
-          <div style={{ marginTop: 36, display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
             <button
               onClick={goBook}
               style={{
                 background: '#fff', color: SENS.ink, border: 'none',
-                padding: '15px 28px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
+                padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 600,
+                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                 boxShadow: '0 18px 44px -14px rgba(0,0,0,0.5)',
               }}
             >
@@ -441,13 +484,12 @@ function Hero() {
             <button
               onClick={scrollToHow}
               style={{
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                fontSize: 15, fontWeight: 500, color: '#8fa8e0',
-                display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0,
+                background: 'transparent', color: '#dfe7f8', border: '1.5px solid rgba(255,255,255,0.35)',
+                padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               }}
             >
               How it works
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
           </div>
         </div>
@@ -728,6 +770,9 @@ function RoleSection() {
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
           A digital customer manager for every player.
         </h2>
+        <p style={{ margin: '16px 0 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft }}>
+          It is not a better model.<br />It is a different thing.
+        </p>
         <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 680 }}>
           It watches value, risk, churn and engagement, continuously, across every account,
           and acts through the systems your teams already use. A role no B2C company could
@@ -1104,7 +1149,7 @@ function ProblemSection() {
             letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 20,
           }}>Problem</div>
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
-            Nobody can watch a million players.<br />So the value leaks.
+            That expert never existed.<br />So the value leaks.
           </h2>
           <p style={{ margin: '22px auto 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 520 }}>
             The problem is not too little data.<br />
@@ -1133,25 +1178,52 @@ function ProblemSection() {
           <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
           The price of low resolution
         </div>
-        <div className="sensai-proof-strip" style={{
-          marginTop: 0, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
-          borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}`,
+        <LeakDiagram />
+        <div style={{
+          marginTop: 18, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
+          fontSize: 10, color: SENS.muted, lineHeight: 1.5,
         }}>
-          {stats.map((s, i) => (
-            <div key={i} style={{
-              padding: '20px 22px',
-              borderLeft: i > 0 ? `1px solid ${SENS.rule}` : 'none',
-              display: 'flex', flexDirection: 'column', gap: 5,
-            }}>
-              <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
-              <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
-              {s.f && <div style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
-            </div>
-          ))}
+          J. Gambling Studies 2024 (139k accounts, 7 UK operators) · UKGC Patterns of Play 2022 ·
+          LexisNexis Risk Solutions 2026 (n=993) · SEON 2026 · VIP figure: based on our experience
         </div>
       </div>
     </section>
+  )
+}
+
+function LeakDiagram() {
+  return (
+    <div style={{ maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto' }}>
+      <svg viewBox="0 0 1060 270" style={{ width: '100%', height: 'auto', display: 'block' }}
+        aria-label="A revenue stream with leaks branching off: promotional spend lost to abuse, VIPs below the radar">
+        {/* concentration framing: the full base, and the thin slice carrying the stream */}
+        <rect x="20" y="52" width="26" height="150" rx="6" fill="none" stroke={SENS.rule} strokeWidth="1.2" />
+        <rect x="20" y="52" width="26" height="34" rx="6" fill="rgba(26,68,168,0.15)" stroke={SENS.blueBright} strokeWidth="1.3" />
+        <text x="33" y="222" textAnchor="middle" fontSize="9" fill={SENS.muted}
+          fontFamily="'JetBrains Mono', ui-monospace, monospace">PLAYERS</text>
+        <text x="60" y="46" fontSize="10" fill={SENS.blueBright} fontWeight="600"
+          fontFamily="'JetBrains Mono', ui-monospace, monospace">5% OF PLAYERS → 67% OF REVENUE</text>
+
+        {/* the revenue stream */}
+        <path d="M 46 69 C 120 60, 180 56, 260 56 L 1020 64 L 1020 118 L 260 128 C 180 128, 120 116, 46 86 Z"
+          fill="rgba(26,68,168,0.09)" stroke={SENS.blueBright} strokeWidth="1.4" strokeLinejoin="round" />
+        <text x="640" y="98" textAnchor="middle" fontSize="12" fill={SENS.blueBright} fontWeight="600" letterSpacing="0.08em">REVENUE</text>
+
+        {/* leak 1: promo spend to abuse */}
+        <path d="M 380 126 C 390 168, 402 196, 424 224" fill="none" stroke="#8a5058" strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M 402 127 C 412 166, 424 192, 446 218" fill="none" stroke="#8a5058" strokeWidth="1.1" strokeLinecap="round" opacity="0.6" />
+        <rect x="376.8" y="122.8" width="6.4" height="6.4" transform="rotate(45 380 126)" fill="#fff" stroke="#8a5058" strokeWidth="1.3" />
+        <text x="452" y="238" fontSize="10.5" fill="#8a5058" fontWeight="600"
+          fontFamily="'JetBrains Mono', ui-monospace, monospace">10–20% OF PROMOTIONAL SPEND · LOST TO ABUSE</text>
+
+        {/* leak 2: VIPs below the radar, fading out of sight */}
+        <path d="M 700 122 C 712 160, 728 188, 752 212" fill="none" stroke="#5d8a72" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="5 4" opacity="0.85" />
+        <path d="M 722 123 C 734 158, 748 182, 772 204" fill="none" stroke="#5d8a72" strokeWidth="1.1" strokeLinecap="round" strokeDasharray="3 4" opacity="0.45" />
+        <rect x="696.8" y="118.8" width="6.4" height="6.4" transform="rotate(45 700 122)" fill="#fff" stroke="#5d8a72" strokeWidth="1.3" />
+        <text x="778" y="228" fontSize="10.5" fill="#5d8a72" fontWeight="600"
+          fontFamily="'JetBrains Mono', ui-monospace, monospace">~30% OF VIPS · BELOW THE RADAR</text>
+      </svg>
+    </div>
   )
 }
 
@@ -1226,6 +1298,44 @@ function ResolutionVisual({ animate = true }: { animate?: boolean }) {
   )
 }
 
+function EchoBand({ animate = true }: { animate?: boolean }) {
+  const n = 42
+  const w = 900
+  const h = 64
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+  const dots: React.ReactNode[] = []
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1)
+    const ease = t * t * (3 - 2 * t)
+    const seed = (i * 7) % 17
+    const x = Number((14 + t * (w - 28)).toFixed(1))
+    const y = Number((h / 2 + (((seed * 3) % 5) - 2) * 5).toFixed(1))
+    const size = Number(lerp(16, 4.6, ease).toFixed(1))
+    const blur = ease < 0.3 ? 'url(#echo-b2)' : ease < 0.6 ? 'url(#echo-b1)' : undefined
+    let color = ease > 0.8 ? '#ffffff' : '#8fa8e0'
+    if (ease > 0.85) {
+      if (seed === 3) color = '#5d8a72'
+      else if (seed === 9) color = '#8a6b45'
+    }
+    dots.push(<rect key={i} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
+      width={size} height={size} rx={Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))}
+      fill={color} opacity={Number((0.2 + ease * 0.75).toFixed(3))} filter={blur} />)
+  }
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-hidden>
+      <defs>
+        <filter id="echo-b2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.4" /></filter>
+        <filter id="echo-b1" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.3" /></filter>
+      </defs>
+      {dots}
+      <circle cx={w - 22} cy={h / 2} r="9" fill="none" stroke="#ffffff" strokeWidth="1.2" opacity="0.8">
+        {animate && <animate attributeName="r" values="7;11;7" dur="3.2s" repeatCount="indefinite" />}
+        {animate && <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3.2s" repeatCount="indefinite" />}
+      </circle>
+    </svg>
+  )
+}
+
 function TurnSection() {
   const { ref, inView } = useInView()
   const reduced = useReducedMotion()
@@ -1240,9 +1350,12 @@ function TurnSection() {
           only a human analyst could. When your business changes, the analysis changes with it.
           No data project in between. Out of a blur of a million players: every single one, in focus.
         </p>
+        <div style={{ margin: '22px auto 0', fontSize: 17, fontWeight: 600, color: '#8fa8e0', maxWidth: 640, lineHeight: 1.5 }}>
+          Your most precious asset, the customer base, managed at a level that was never possible before.
+        </div>
       </div>
-      <div ref={ref} style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
-        <ResolutionVisual animate={inView && !reduced} />
+      <div ref={ref} style={{ marginTop: 48, maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
+        <EchoBand animate={inView && !reduced} />
       </div>
     </SectionShell>
   )
@@ -2084,7 +2197,12 @@ function IntegrationSection() {
           Read access to the source tables. We take it from there. Outputs pushed
           back into the tools your teams run.
         </p>
-        <div style={{ marginTop: 30, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+        {/* Trust row (Gabi). 'Encrypted in transit and at rest' is built but HELD until
+            AA/Gabi confirm the phrasing is accurate; prepend it to this list to enable. */}
+        <div style={{ marginTop: 26, fontSize: 12.5, color: SENS.muted, letterSpacing: '0.02em' }}>
+          {['Read-only access', 'Pseudonymized data only', 'No PII'].join(' · ')}
+        </div>
+        <div style={{ marginTop: 18, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
           {['Read-only source access', 'No PII required', 'Pseudonymized data only', 'Live within 4 weeks'].map(chip => (
             <span key={chip} style={{
               border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
@@ -2390,7 +2508,39 @@ function CTA() {
             to prepare.
           </p>
 
-          <div style={{ marginTop: 36 }}>
+          {/* the scan mini-path: sample in → 48h → the scan itself */}
+          <div className="sensai-scan-path" style={{
+            marginTop: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap',
+          }}>
+            <span style={{
+              border: '1px solid rgba(255,255,255,0.22)', borderRadius: 999, padding: '8px 16px',
+              fontSize: 13, color: '#dfe7f8', fontWeight: 500,
+            }}>Sample in</span>
+            <svg width="26" height="10" viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l5 4-5 4" stroke="#8fa8e0" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <span style={{
+              border: '1px solid rgba(255,255,255,0.22)', borderRadius: 999, padding: '8px 16px',
+              fontSize: 13, color: '#dfe7f8', fontWeight: 500,
+            }}>48 hours</span>
+            <svg width="26" height="10" viewBox="0 0 26 10" fill="none"><path d="M0 5h22M18 1l5 4-5 4" stroke="#8fa8e0" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              border: '1px solid rgba(143,168,224,0.45)', background: 'rgba(143,168,224,0.08)',
+              borderRadius: 12, padding: '8px 14px',
+            }}>
+              <svg width="26" height="32" viewBox="0 0 26 32" fill="none">
+                <rect x="1" y="1" width="24" height="30" rx="4" stroke="#8fa8e0" strokeWidth="1.2" />
+                <line x1="5" y1="8" x2="17" y2="8" stroke="#8fa8e0" strokeWidth="1.6" strokeLinecap="round" />
+                <line x1="5" y1="14" x2="21" y2="14" stroke="#5d8a72" strokeWidth="1.6" strokeLinecap="round" />
+                <line x1="5" y1="19" x2="19" y2="19" stroke="#8a6b45" strokeWidth="1.6" strokeLinecap="round" />
+                <line x1="5" y1="24" x2="15" y2="24" stroke="#8a5058" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+              <span style={{ fontSize: 12.5, color: '#dfe7f8', lineHeight: 1.4, textAlign: 'left' }}>
+                Your scan: value, risk, churn,<br />player by player
+              </span>
+            </span>
+          </div>
+
+          <div style={{ marginTop: 32 }}>
             <button
               onClick={goBook}
               style={{
@@ -2411,9 +2561,6 @@ function CTA() {
             marginLeft: 'auto', marginRight: 'auto',
           }}>
             Built by people who spent years inside online gaming.
-            <div style={{ marginTop: 10, color: '#8fa8e0', fontWeight: 500 }}>
-              Live in production.
-            </div>
           </div>
         </div>
       </div>
