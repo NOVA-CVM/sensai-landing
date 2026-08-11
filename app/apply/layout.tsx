@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import '../sense/sense.css'
 
-const grotesk = Geist({ subsets: ['latin'], variable: '--font-grotesk' })
+const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' })
 
 export const metadata: Metadata = {
   title: 'Apply to the design partnership | sensAi',

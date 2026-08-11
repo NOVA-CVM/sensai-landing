@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import './sense.css'
 
-// /sense runs Geist: a sober neutral grotesque, the true-register match for Modus's GT Planar.
+// Space Grotesk, RELOCKED by AA (round 8.1) — no font changes without an explicit AA order.
 // Scoped here so the existing homepage keeps its Inter setup untouched.
-const grotesk = Geist({ subsets: ['latin'], variable: '--font-grotesk' })
+const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' })
 
 export const metadata: Metadata = {
   title: 'A million players. An expert on every one. | sensAi',

@@ -381,9 +381,10 @@ function HeroField() {
 }
 
 function HeroResolutionField() {
-  // The hero's full-bleed resolution field: sparse blur on the left resolving
-  // into a dense crowd of sharp players, a few showing state colors. Deterministic.
-  const cols = 44
+  // A clearly readable left-to-right gradient: few large blurred blobs on the
+  // left resolving into a dense, crisp crowd on the right, a few players in
+  // state colors at the sharp end. Structured, not bokeh. Deterministic.
+  const cols = 56
   const w = 1440
   const h = 760
   const colW = w / cols
@@ -396,25 +397,22 @@ function HeroResolutionField() {
   const cells: React.ReactNode[] = []
   for (let c = 0; c < cols; c++) {
     const tCol = c / (cols - 1)
-    const easeCol = tCol * tCol * (3 - 2 * tCol)
-    const count = Math.round(lerp(3, 13, easeCol))
+    const ease = tCol * tCol * (3 - 2 * tCol)
+    const count = Math.round(lerp(2, 17, ease))
     for (let i = 0; i < count; i++) {
       const seed = (c * 7 + i * 13) % 17
-      const noise = ((seed / 17) - 0.5) * 0.1
-      const t = Math.min(1, Math.max(0, tCol + noise))
-      const ease = t * t * (3 - 2 * t)
-      const x = Number((c * colW + colW / 2 + ((seed % 5) - 2) * (3 + t * 4)).toFixed(1))
+      const x = Number((c * colW + colW / 2 + ((seed % 3) - 1) * 4).toFixed(1))
       const y = Number(((i + 0.5) * (h / count) + (((seed * 3) % 5) - 2) * 4).toFixed(1))
-      const size = Number(lerp(30, 5.6, ease).toFixed(1))
-      const rx = Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))
-      const blur = ease < 0.22 ? 'url(#hero-b3)' : ease < 0.45 ? 'url(#hero-b2)' : ease < 0.68 ? 'url(#hero-b1)' : undefined
+      const size = Number(lerp(30, 5, ease).toFixed(1))
+      const rx = Number(Math.min(size / 2, size / 2 * ease * 2.4 + 1).toFixed(1))
+      const blur = ease < 0.2 ? 'url(#hero-b3)' : ease < 0.42 ? 'url(#hero-b2)' : ease < 0.64 ? 'url(#hero-b1)' : undefined
       let color = ease < 0.55 ? hexLerp('#42598f', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
-      if (ease > 0.85) {
+      if (ease > 0.86) {
         if (seed === 3) color = '#5d8a72'
         else if (seed === 9) color = '#8a6b45'
         else if (seed === 14) color = '#8a5058'
       }
-      const opacity = Number((0.1 + ease * 0.5).toFixed(3))
+      const opacity = Number((0.1 + ease * 0.68).toFixed(3))
       cells.push(
         <rect key={`${c}-${i}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
           width={size} height={size} rx={rx} fill={color} opacity={opacity} filter={blur} />
@@ -447,7 +445,7 @@ function Hero() {
       {/* scrim for text legibility over the field */}
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 62% 55% at 50% 44%, rgba(11,21,48,0.88) 0%, rgba(11,21,48,0.55) 55%, rgba(11,21,48,0) 100%)',
+        background: 'radial-gradient(ellipse 58% 60% at 50% 42%, rgba(11,21,48,0.95) 0%, rgba(11,21,48,0.72) 52%, rgba(11,21,48,0) 100%)',
       }} />
       <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
         <div style={{ textAlign: 'center', maxWidth: 860, margin: '0 auto' }}>
@@ -770,9 +768,6 @@ function RoleSection() {
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
           A digital customer manager for every player.
         </h2>
-        <p style={{ margin: '16px 0 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft }}>
-          It is not a better model.<br />It is a different thing.
-        </p>
         <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 680 }}>
           It watches value, risk, churn and engagement, continuously, across every account,
           and acts through the systems your teams already use. A role no B2C company could
@@ -1178,52 +1173,25 @@ function ProblemSection() {
           <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
           The price of low resolution
         </div>
-        <LeakDiagram />
-        <div style={{
-          marginTop: 18, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
-          fontSize: 10, color: SENS.muted, lineHeight: 1.5,
+        <div className="sensai-proof-strip" style={{
+          marginTop: 0, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
+          borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}`,
         }}>
-          J. Gambling Studies 2024 (139k accounts, 7 UK operators) · UKGC Patterns of Play 2022 ·
-          LexisNexis Risk Solutions 2026 (n=993) · SEON 2026 · VIP figure: based on our experience
+          {stats.map((s, i) => (
+            <div key={i} style={{
+              padding: '20px 22px',
+              borderLeft: i > 0 ? `1px solid ${SENS.rule}` : 'none',
+              display: 'flex', flexDirection: 'column', gap: 5,
+            }}>
+              <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
+              <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
+              {s.f && <div style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
-
-function LeakDiagram() {
-  return (
-    <div style={{ maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto' }}>
-      <svg viewBox="0 0 1060 270" style={{ width: '100%', height: 'auto', display: 'block' }}
-        aria-label="A revenue stream with leaks branching off: promotional spend lost to abuse, VIPs below the radar">
-        {/* concentration framing: the full base, and the thin slice carrying the stream */}
-        <rect x="20" y="52" width="26" height="150" rx="6" fill="none" stroke={SENS.rule} strokeWidth="1.2" />
-        <rect x="20" y="52" width="26" height="34" rx="6" fill="rgba(26,68,168,0.15)" stroke={SENS.blueBright} strokeWidth="1.3" />
-        <text x="33" y="222" textAnchor="middle" fontSize="9" fill={SENS.muted}
-          fontFamily="'JetBrains Mono', ui-monospace, monospace">PLAYERS</text>
-        <text x="60" y="46" fontSize="10" fill={SENS.blueBright} fontWeight="600"
-          fontFamily="'JetBrains Mono', ui-monospace, monospace">5% OF PLAYERS → 67% OF REVENUE</text>
-
-        {/* the revenue stream */}
-        <path d="M 46 69 C 120 60, 180 56, 260 56 L 1020 64 L 1020 118 L 260 128 C 180 128, 120 116, 46 86 Z"
-          fill="rgba(26,68,168,0.09)" stroke={SENS.blueBright} strokeWidth="1.4" strokeLinejoin="round" />
-        <text x="640" y="98" textAnchor="middle" fontSize="12" fill={SENS.blueBright} fontWeight="600" letterSpacing="0.08em">REVENUE</text>
-
-        {/* leak 1: promo spend to abuse */}
-        <path d="M 380 126 C 390 168, 402 196, 424 224" fill="none" stroke="#8a5058" strokeWidth="1.6" strokeLinecap="round" />
-        <path d="M 402 127 C 412 166, 424 192, 446 218" fill="none" stroke="#8a5058" strokeWidth="1.1" strokeLinecap="round" opacity="0.6" />
-        <rect x="376.8" y="122.8" width="6.4" height="6.4" transform="rotate(45 380 126)" fill="#fff" stroke="#8a5058" strokeWidth="1.3" />
-        <text x="452" y="238" fontSize="10.5" fill="#8a5058" fontWeight="600"
-          fontFamily="'JetBrains Mono', ui-monospace, monospace">10–20% OF PROMOTIONAL SPEND · LOST TO ABUSE</text>
-
-        {/* leak 2: VIPs below the radar, fading out of sight */}
-        <path d="M 700 122 C 712 160, 728 188, 752 212" fill="none" stroke="#5d8a72" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="5 4" opacity="0.85" />
-        <path d="M 722 123 C 734 158, 748 182, 772 204" fill="none" stroke="#5d8a72" strokeWidth="1.1" strokeLinecap="round" strokeDasharray="3 4" opacity="0.45" />
-        <rect x="696.8" y="118.8" width="6.4" height="6.4" transform="rotate(45 700 122)" fill="#fff" stroke="#5d8a72" strokeWidth="1.3" />
-        <text x="778" y="228" fontSize="10.5" fill="#5d8a72" fontWeight="600"
-          fontFamily="'JetBrains Mono', ui-monospace, monospace">~30% OF VIPS · BELOW THE RADAR</text>
-      </svg>
-    </div>
   )
 }
 
@@ -1350,9 +1318,6 @@ function TurnSection() {
           only a human analyst could. When your business changes, the analysis changes with it.
           No data project in between. Out of a blur of a million players: every single one, in focus.
         </p>
-        <div style={{ margin: '22px auto 0', fontSize: 17, fontWeight: 600, color: '#8fa8e0', maxWidth: 640, lineHeight: 1.5 }}>
-          Your most precious asset, the customer base, managed at a level that was never possible before.
-        </div>
       </div>
       <div ref={ref} style={{ marginTop: 48, maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
         <EchoBand animate={inView && !reduced} />
@@ -2153,10 +2118,6 @@ function PartnershipSection() {
         <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
           We onboard a selected group of operators as design partners. They get sensAi
           early, and sensAi learns their operation first.
-        </p>
-        <p style={{ margin: '12px auto 0', fontSize: 14, lineHeight: 1.6, color: SENS.muted, maxWidth: 560 }}>
-          In another industry and feel sensAi can help? We&rsquo;re open to new verticals.
-          Tell us about your base.
         </p>
         <div style={{ marginTop: 30 }}>
           <button
