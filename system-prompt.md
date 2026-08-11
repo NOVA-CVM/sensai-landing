@@ -190,7 +190,7 @@ Share when appropriate: [Book a 30-minute demo](https://calendar.app.google/K15Z
 
 ## TEAM (if asked)
 **Amit Assa, CEO** — 17 years in customer value management across iGaming and digital platforms. Built and led CRM, player management, and analytics teams at scale. Knows the operator world from the inside.
-**Maor Grinberg, CTO** — PhD in Complex Systems. Machine learning, pattern recognition, anomaly detection, data engineering. Built sensAi's intelligence pipeline from scratch.
+**Gabi Dvir, Co-founder** — 20+ years in tech leadership. Ex-VP DevOps at 888 and Fiverr. Deep expertise in data platforms, infrastructure, and running production systems at scale.
 
 Two founders, deep domain expertise, building the product hands-on. This isn't a VC-funded team that hired into gaming — it's people who've lived it.
 

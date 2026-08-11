@@ -164,6 +164,44 @@
   animation: spin 0.7s linear infinite;
 }
 
+/* ─── Hero dashboard entrance/idle animations ─── */
+@keyframes sensaiDraw {
+  to { stroke-dashoffset: 0 }
+}
+.sensai-line-draw {
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: sensaiDraw 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+.sensai-spark-draw {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: sensaiDraw 1.8s ease 0.9s forwards;
+}
+@keyframes sensaiAreaIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+.sensai-area-in {
+  opacity: 0;
+  animation: sensaiAreaIn 1.2s ease 1.8s forwards;
+}
+@keyframes sensaiFadeUp {
+  from { opacity: 0; transform: translateY(8px) }
+  to { opacity: 1; transform: none }
+}
+.sensai-stagger {
+  opacity: 0;
+  animation: sensaiFadeUp 0.55s ease forwards;
+}
+@keyframes sensaiFloat {
+  from { transform: rotate(-1deg) translateY(0) }
+  to { transform: rotate(-1deg) translateY(-7px) }
+}
+.sensai-float {
+  animation: sensaiFloat 3.6s ease-in-out infinite alternate;
+}
+
 /* ─── Chat shell: full viewport, dvh-aware for mobile ─── */
 .sensai-chat-shell {
   height: 100vh;
@@ -179,11 +217,11 @@
     padding-right: 24px !important;
   }
   /* 4-col grids → 2-col (except inside scaled visuals) */
-  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *) {
+  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *):not(.sensai-hero-dashboard *) {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   /* 5-col grids → 2-col (except inside scaled visuals) */
-  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *) {
+  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-architecture *):not(.sensai-hero-dashboard *) {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
@@ -200,10 +238,10 @@
   }
 
   /* All multi-col grids stack on mobile (except inside scaled visuals, which keep their desktop layout) */
-  .sensai-page [style*="repeat(2, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
-  .sensai-page [style*="repeat(3, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
-  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture),
-  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture) {
+  .sensai-page [style*="repeat(2, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture):not(.sensai-hero-dashboard *):not(.sensai-hero-dashboard),
+  .sensai-page [style*="repeat(3, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture):not(.sensai-hero-dashboard *):not(.sensai-hero-dashboard),
+  .sensai-page [style*="repeat(4, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture):not(.sensai-hero-dashboard *):not(.sensai-hero-dashboard),
+  .sensai-page [style*="repeat(5, 1fr)"]:not(.sensai-demo-frame *):not(.sensai-demo-frame):not(.sensai-architecture *):not(.sensai-architecture):not(.sensai-hero-dashboard *):not(.sensai-hero-dashboard) {
     grid-template-columns: 1fr !important;
     gap: 14px !important;
   }
@@ -274,14 +312,26 @@
     padding: 14px 16px !important;
   }
 
+  /* Nav CTA: keep on one line, compact */
+  .sensai-page nav button {
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0;
+  }
+  /* Nav logo: smaller mascot + wordmark on mobile */
+  .sensai-page nav img {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .sensai-page nav .text-4xl,
+  .sensai-page nav .md\:text-4xl {
+    font-size: 20px !important;
+  }
+
   /* Hero section padding */
   .sensai-page section[style*="72px 80px"] {
     padding: 100px 16px 56px !important;
-  }
-
-  /* Hide complex absolute-positioned diagrams on mobile */
-  .sensai-page .sensai-cycle-diagram {
-    display: none !important;
   }
 
   /* Architecture visual: keep desktop layout but scale down to fit */
@@ -290,6 +340,71 @@
     max-width: 540px !important;
     zoom: 0.62;
     margin: 0 auto;
+  }
+
+  /* Cycle diagram (SENSE → ACT → LEARN): scale down to fit on mobile */
+  .sensai-page .sensai-cycle-diagram {
+    width: 460px !important;
+    max-width: 460px !important;
+    zoom: 0.7;
+    margin: 0 auto;
+  }
+
+  /* The numbered list below the cycle is redundant on mobile — the visual already shows the labels */
+  .sensai-page .sensai-cycle-list {
+    display: none !important;
+  }
+
+  /* Primary use case (featured card): stack on mobile */
+  .sensai-page .sensai-usecase-primary {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 24px !important;
+  }
+
+  /* Mobile text-trim: hide body text under card titles to reduce scroll */
+  .sensai-page .sensai-card-body {
+    display: none !important;
+  }
+  /* Gap cards: tighten padding now that body text is gone */
+  .sensai-page .sensai-gap-card {
+    padding: 16px !important;
+  }
+  /* Hide the hero subtitle paragraph on mobile — gap section right below covers the framing */
+  .sensai-page .sensai-hero-sub {
+    display: none !important;
+  }
+  /* Hide the hero CTA on mobile — the inline CTA below the gap section serves the same role */
+  .sensai-page .sensai-hero-cta {
+    display: none !important;
+  }
+
+  /* Hero dashboard — show on mobile, scaled with transform (more iOS-Safari reliable than zoom).
+     The wrapper clips and reserves the correct layout height; the dashboard inside scales from top-left. */
+  .sensai-page .sensai-hero-dashboard-wrap {
+    width: 100%;
+    height: 297px;            /* 540 * 0.55 */
+    overflow: hidden;
+    position: relative;
+    margin-top: 24px;
+  }
+  .sensai-page .sensai-hero-dashboard {
+    width: 640px !important;
+    max-width: 640px !important;
+    height: 540px !important;
+    transform: scale(0.55);
+    transform-origin: top left;
+    position: absolute;
+    left: 50%;
+    margin-left: -176px;       /* (640 * 0.55) / 2 = 176, center the scaled visual */
+  }
+
+  /* "Your team works the way they think" — show the demo above the copy on mobile */
+  .sensai-page .sensai-ask-copy {
+    order: 2 !important;
+  }
+  .sensai-page .sensai-ask-grid .sensai-demo-frame {
+    order: 1 !important;
   }
 
   /* Use case cards: keep vertical (stacked) layout but compact padding */
@@ -333,6 +448,27 @@
     height: 130px !important;
   }
 
+  /* v2 value rows: compact number column on mobile */
+  .sensai-page .sensai-value-row {
+    grid-template-columns: 44px 1fr 22px !important;
+    gap: 12px !important;
+  }
+
+  /* Proof-strip: stacked rows separate with top borders, not left */
+  .sensai-page .sensai-proof-strip > div {
+    border-left: none !important;
+    border-top: 1px solid #dfe4ee;
+  }
+  .sensai-page .sensai-proof-strip > div:first-child {
+    border-top: none;
+  }
+
+  /* Pull-quote shrinks on mobile */
+  .sensai-page .sensai-pullquote {
+    font-size: 22px !important;
+    letter-spacing: -0.4px !important;
+  }
+
   /* Keep the chat demo looking like a desktop dashboard, just scaled down to fit */
   .sensai-page .sensai-demo-frame {
     width: 580px !important;
@@ -348,11 +484,31 @@
   .sensai-page .sensai-architecture {
     zoom: 0.52;
   }
+  .sensai-page .sensai-cycle-diagram {
+    zoom: 0.6;
+  }
+  .sensai-page .sensai-hero-dashboard-wrap {
+    height: 248px;           /* 540 * 0.46 */
+  }
+  .sensai-page .sensai-hero-dashboard {
+    transform: scale(0.46);
+    margin-left: -147px;     /* (640 * 0.46) / 2 = 147 */
+  }
 }
 @media (max-width: 380px) {
   .sensai-page .sensai-demo-frame,
   .sensai-page .sensai-architecture {
     zoom: 0.46;
+  }
+  .sensai-page .sensai-cycle-diagram {
+    zoom: 0.5;
+  }
+  .sensai-page .sensai-hero-dashboard-wrap {
+    height: 216px;           /* 540 * 0.40 */
+  }
+  .sensai-page .sensai-hero-dashboard {
+    transform: scale(0.4);
+    margin-left: -128px;     /* (640 * 0.4) / 2 = 128 */
   }
 }
 

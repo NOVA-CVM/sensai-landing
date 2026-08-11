@@ -14,8 +14,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'sensAi - Adaptive Intelligence for iGaming',
-  description: 'sensAi is an adaptive intelligence engine for iGaming operators. Sense, Act, Learn from your player data.',
+  title: 'sensAi — A Digital Customer Manager for Every Player | Nova CVM',
+  description: 'sensAi puts a digital customer manager on every player — it knows their value, watches their risk, catches their churn, and pushes the actions into the systems your teams already use.',
   generator: 'v0.app',
   icons: {
     icon: [
