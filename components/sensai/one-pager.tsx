@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo } from "react"
+import Link from "next/link"
 import {
   ArrowRight,
+  Calendar,
+  MessageSquare,
 } from "lucide-react"
 
 // ─── Color tokens ───────────────────────────────────────────────────
@@ -203,10 +206,10 @@ function TrajectoryChart({ height = 160 }: { height?: number }) {
 
 function SignalsCard() {
   const rows = [
-    { tone: 'danger' as const, t: 'VIP churn signal', s: 'Account 231818894 · sessions −64%', m: '8s' },
-    { tone: 'danger' as const, t: 'RAF ring · root invitee', s: '1,206 red nodes · ghost accounts', m: '4m' },
-    { tone: 'warn' as const, t: 'Hidden VIP candidate', s: '78 active days · under threshold', m: '12m' },
-    { tone: 'ok' as const, t: 'Case pushed to CRM', s: 'Retention journey · 142 accounts', m: '23m' },
+    { tone: 'danger' as const, t: 'Bonus chain detected', s: '8 accounts · auto-flag', m: '12s' },
+    { tone: 'warn' as const, t: 'VIP cooldown · #4421', s: '3.2× avg session', m: '4m' },
+    { tone: 'ok' as const, t: 'Reactivation window opened', s: '142 dormant players', m: '11m' },
+    { tone: 'warn' as const, t: 'Promo abuse cluster', s: 'Network of 14 nodes', m: '23m' },
   ]
   const dot: Record<string, string> = { danger: SENS.danger, warn: SENS.warn, ok: SENS.ok }
   return (
@@ -267,13 +270,14 @@ function Nav() {
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
         <Logo className="text-xl sm:text-2xl md:text-4xl font-semibold text-foreground" showMascot />
-        <button
-          onClick={openBooking}
+        <Link
+          href="/chat"
           className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full text-white transition-all hover:opacity-90"
-          style={{ background: SENS.blue, border: 'none', cursor: 'pointer' }}
+          style={{ background: SENS.blue }}
         >
-          Book a walkthrough
-        </button>
+          <MessageSquare className="w-4 h-4" />
+          Talk to sensAi
+        </Link>
       </div>
     </nav>
   )
@@ -284,247 +288,68 @@ function Nav() {
 // ═══════════════════════════════════════════════════════════════════
 
 function Hero() {
-  const scrollToHow = () => {
-    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
-  }
   return (
-    <section style={{ padding: '72px 80px 110px', paddingTop: 170, background: SENS.bg, position: 'relative', overflow: 'hidden' }}>
-      {/* faint dot-grid texture */}
-      <div aria-hidden style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'radial-gradient(rgba(12,44,99,0.09) 1px, transparent 1px)',
-        backgroundSize: '26px 26px',
-        maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0) 80%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0) 80%)',
-      }} />
-      {/* soft radial glow behind the statement */}
-      <div aria-hidden style={{
-        position: 'absolute', width: 900, height: 900, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(26,68,168,0.09) 0%, rgba(26,68,168,0) 65%)',
-        top: -340, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-      }} />
-      <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
-        <div style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto' }}>
+    <section style={{ padding: '72px 80px 100px', paddingTop: 140, background: SENS.bg }}>
+      <div className="max-w-[1280px] mx-auto grid lg:grid-cols-[1fr_1.05fr] gap-14 items-center">
+        {/* Left: copy */}
+        <div>
           <div style={{
             color: SENS.blueBright, fontSize: 13, fontWeight: 500,
-            letterSpacing: '0.16em', marginBottom: 26,
-          }}>THE DIGITAL CUSTOMER MANAGER FOR GAMING OPERATORS</div>
+            letterSpacing: '0.14em', marginBottom: 20,
+          }}>ADAPTIVE INTELLIGENCE FOR IGAMING</div>
           <h1 style={{
-            margin: 0, fontSize: 58, lineHeight: 1.12, letterSpacing: -1.6,
+            margin: 0, fontSize: 64, lineHeight: 1.05, letterSpacing: -1.5,
             fontWeight: 600, color: SENS.ink,
           }}>
-            Your teams have all the data.<br />
-            What&rsquo;s missing is an expert reading{' '}
-            <span style={{ color: SENS.blueBright }}>every single player</span>.
+            The brain behind your player management.
           </h1>
           <p style={{
-            margin: '26px auto 0', fontSize: 18, lineHeight: 1.6, color: SENS.inkSoft,
-            maxWidth: 620,
+            marginTop: 24, fontSize: 17, lineHeight: 1.55, color: SENS.inkSoft,
+            maxWidth: 480,
           }}>
-            Sensai analyzes every account, continuously &mdash; value, risk, churn,
-            engagement &mdash; and pushes what it finds into the systems your teams
-            already use.
+            sensAi watches your players, spots what matters &mdash; abuse,
+            churn, value shifts &mdash; and acts through your existing stack.
+            Your team gives feedback, sensAi learns. Repeat.
           </p>
-          <div style={{ marginTop: 34, display: 'flex', gap: 22, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button
-              onClick={openBooking}
-              style={{
-                background: SENS.blue, color: '#fff', border: 'none',
-                padding: '15px 28px', borderRadius: 999, fontSize: 15, fontWeight: 500,
-                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-                boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
-              }}
-            >
-              Book a walkthrough <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={scrollToHow}
-              style={{
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                fontSize: 15, fontWeight: 500, color: SENS.blueBright,
-                display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0,
-              }}
-            >
-              How it works
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
+          <button
+            onClick={openBooking}
+            style={{
+              marginTop: 28, background: SENS.blue, color: '#fff', border: 'none',
+              padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+              cursor: 'pointer', display: 'inline-flex',
+              alignItems: 'center', gap: 10,
+            }}
+          >
+            Book a Demo <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Right: synthetic dashboard composition */}
+        <div className="relative hidden lg:block" style={{ height: 540 }}>
+          {/* Trajectory chart */}
+          <div style={{ position: 'absolute', top: 30, left: 0, width: 600, zIndex: 1 }}>
+            <TrajectoryChart height={170} />
+          </div>
+          {/* KPI strip */}
+          <div style={{ position: 'absolute', top: 290, left: 0, width: 600, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, zIndex: 1 }}>
+            <KpiTile label="Churn risk" value="8.4%" delta="+1.2 vs baseline" tone="danger" sparkline="M0 18 L20 16 L40 14 L60 10 L80 6 L100 4" />
+            <KpiTile label="VIP retention" value="92%" delta={"−0.4 pp"} tone="warn" sparkline="M0 8 L20 10 L40 9 L60 12 L80 14 L100 16" />
+            <KpiTile label="Bonus abuse" value="37" delta="flagged · 8 auto" tone="danger" sparkline="M0 14 L20 12 L40 10 L60 8 L80 6 L100 4" />
+            <KpiTile label="Net deposit" value="$1.84M" delta="+6.2%" tone="ok" sparkline="M0 18 L20 14 L40 12 L60 9 L80 6 L100 3" />
+          </div>
+          {/* Signals card floating right */}
+          <div style={{ position: 'absolute', top: 0, right: -10, width: 320, zIndex: 3 }}>
+            <SignalsCard />
+          </div>
+          {/* small callout pinned bottom-right */}
+          <div style={{ position: 'absolute', bottom: 0, right: 30, zIndex: 4, transform: 'rotate(-1deg)' }}>
+            <SignalCard tone="ok" meta="action · in flight"
+              title="Retention offer routed"
+              sub="142 dormant VIPs · pushed via Q Center." />
           </div>
         </div>
       </div>
     </section>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// SECTION 2: PROBLEM (locked copy, 2026-08-08)
-// ═══════════════════════════════════════════════════════════════════
-
-const MarkShallow = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M2 7c3-2.5 6-2.5 9 0s6 2.5 9 0" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-    <circle cx="6" cy="13" r="1" fill="currentColor" opacity="0.55"/>
-    <circle cx="11" cy="15" r="1" fill="currentColor" opacity="0.35"/>
-    <circle cx="16" cy="13.5" r="1" fill="currentColor" opacity="0.45"/>
-    <circle cx="8.5" cy="18" r="1" fill="currentColor" opacity="0.2"/>
-    <circle cx="14" cy="18.5" r="1" fill="currentColor" opacity="0.15"/>
-  </svg>
-)
-const MarkRigid = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M3 19V9h6V3h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M7 19v-6h6V7h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.4"/>
-  </svg>
-)
-const MarkUntrusted = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M2 16c4-1 7-4 9-8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="3 3"/>
-    <path d="M2 16c5 0 10 1 18 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
-    <path d="M14 4l4 4M18 4l-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.7"/>
-  </svg>
-)
-
-function ProblemSection() {
-  const tiles = [
-    { mark: <MarkShallow />, t: 'Shallow', s: 'Teams fall back on segments and averages — approximations, not understanding of the player.' },
-    { mark: <MarkRigid />, t: 'Rigid', s: 'Every change in the logic needs a data person in the loop. The analysis never keeps up with the business.' },
-    { mark: <MarkUntrusted />, t: 'Untrusted', s: 'When the models drift from reality, teams stop believing them — and go back to gut calls.' },
-  ]
-  const stats = [
-    { v: '5% → ~67%', l: 'of players → share of revenue; top 10% → ~80%', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
-    { v: '2% → 83%', l: 'at one operator, 2% of customers made 83% of deposits', f: 'UK Gambling Commission, 2020' },
-    { v: '10–20%', l: 'of promotional spend lost to bonus abuse — gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
-    { v: '55%', l: 'of a typical base sits churned; re-engaged 3 months late, worth 87% less', f: 'Optimove 2024 (5.3M players)' },
-  ]
-  return (
-    <SectionShell padY={104} bg={SENS.bgDeeper}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{
-          color: SENS.blueBright, fontSize: 13, fontWeight: 500,
-          letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
-        }}>Problem</div>
-        <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 820 }}>
-          Nobody can watch a million players.<br />So the money hides.
-        </h2>
-        <p style={{ margin: '20px auto 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 520 }}>
-          The problem is not too little data.<br />
-          It&rsquo;s analysis that was never tight enough.
-        </p>
-      </div>
-
-      <div style={{ marginTop: 52, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
-        {tiles.map(tile => (
-          <div key={tile.t} style={{
-            background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, padding: '26px 26px',
-          }}>
-            <div style={{ color: SENS.blueBright, marginBottom: 14 }}>{tile.mark}</div>
-            <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, marginBottom: 8 }}>{tile.t}</div>
-            <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{tile.s}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Slim proof-strip */}
-      <div className="sensai-proof-strip" style={{
-        marginTop: 44, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto',
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0,
-        borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}`,
-      }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{
-            padding: '20px 22px',
-            borderLeft: i > 0 ? `1px solid ${SENS.rule}` : 'none',
-            display: 'flex', flexDirection: 'column', gap: 5,
-          }}>
-            <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
-            <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
-            <div className="sensai-card-body" style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>
-          </div>
-        ))}
-      </div>
-    </SectionShell>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// SECTION 2b: THE TURN (locked copy — resolution concept)
-// ═══════════════════════════════════════════════════════════════════
-
-function ResolutionVisual() {
-  // A field of "players": blurred pixel blocks on the left resolving into
-  // sharp individuals on the right. Deterministic — no randomness.
-  const cols = 26
-  const rows = 6
-  const w = 1040
-  const h = 240
-  const cellW = w / cols
-  const cellH = h / rows
-  const cells: Array<{ x: number; y: number; t: number; jx: number; jy: number; seed: number }> = []
-  for (let c = 0; c < cols; c++) {
-    for (let r = 0; r < rows; r++) {
-      const t = c / (cols - 1) // 0 = blurred left, 1 = sharp right
-      const seed = (c * 7 + r * 13) % 17
-      cells.push({
-        x: c * cellW + cellW / 2,
-        y: r * cellH + cellH / 2,
-        t,
-        jx: ((seed % 5) - 2) * (2 + t * 2),
-        jy: (((seed * 3) % 5) - 2) * (2 + t * 2),
-        seed,
-      })
-    }
-  }
-  const focus = cells[cols * rows - rows - 2] // a sharp individual near the right edge
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="A blurred field of players resolving into sharp individuals">
-      <defs>
-        <filter id="res-blur-heavy"><feGaussianBlur stdDeviation="7" /></filter>
-        <filter id="res-blur-mid"><feGaussianBlur stdDeviation="3.5" /></filter>
-        <filter id="res-blur-soft"><feGaussianBlur stdDeviation="1.4" /></filter>
-      </defs>
-      {cells.map((cell, i) => {
-        const { x, y, t, jx, jy, seed } = cell
-        const opacity = 0.16 + t * 0.5 + (seed % 3) * 0.04
-        if (t < 0.33) {
-          const size = cellW * (0.95 - t * 0.5)
-          return <rect key={i} x={x - size / 2 + jx} y={y - size / 2 + jy} width={size} height={size}
-            fill={SENS.blueBright} opacity={opacity * 0.55} filter={t < 0.18 ? 'url(#res-blur-heavy)' : 'url(#res-blur-mid)'} />
-        }
-        if (t < 0.62) {
-          const size = 10 - (t - 0.33) * 12
-          return <rect key={i} x={x - size / 2 + jx} y={y - size / 2 + jy} width={size} height={size} rx={2}
-            fill={SENS.blueBright} opacity={opacity * 0.7} filter="url(#res-blur-soft)" />
-        }
-        const r = 3.4 - (seed % 3) * 0.4
-        return <circle key={i} cx={x + jx} cy={y + jy} r={r} fill={t > 0.85 ? SENS.blueBright : SENS.blue} opacity={opacity} />
-      })}
-      {/* the one in focus */}
-      <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="5" fill={SENS.blueBright} />
-      <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="11" fill="none" stroke={SENS.blueBright} strokeWidth="1.4" opacity="0.8">
-        <animate attributeName="r" values="9;13;9" dur="3.2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.8;0.25;0.8" dur="3.2s" repeatCount="indefinite" />
-      </circle>
-    </svg>
-  )
-}
-
-function TurnSection() {
-  return (
-    <SectionShell padY={104}>
-      <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto' }}>
-        <h2 style={{ margin: 0, fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink }}>
-          Your base, in high resolution.
-        </h2>
-        <p style={{ margin: '22px auto 0', fontSize: 17, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 680 }}>
-          Sensai&rsquo;s models work on context &mdash; the full picture of each account &mdash; so
-          they adapt the way only a human analyst could until now. When your business changes, the
-          analysis changes with it: no data project in between. Out of a blur of a million players:
-          every single one, in focus.
-        </p>
-      </div>
-      <div style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
-        <ResolutionVisual />
-      </div>
-    </SectionShell>
   )
 }
 
@@ -538,30 +363,25 @@ const IconAlert = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="no
 
 function GapCard({ title, body, icon }: { title: string; body: string; icon: React.ReactNode }) {
   return (
-    <div className="sensai-gap-card" style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, padding: 24 }}>
+    <div style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, padding: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
         <span style={{ width: 24, height: 24, color: SENS.blueBright, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
         <div style={{ fontSize: 16, fontWeight: 600, color: SENS.ink }}>{title}</div>
       </div>
-      <p className="sensai-card-body" style={{ margin: 0, fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{body}</p>
+      <p style={{ margin: 0, fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{body}</p>
     </div>
   )
 }
 
 function GapSection() {
   return (
-    <SectionShell>
-      <Eyebrow>The gap</Eyebrow>
-      <SectionTitle max={760}>A manager per customer was never possible in B2C.</SectionTitle>
-      <div className="sensai-card-body">
-        <Lede max={720}>Try staffing risk coverage, VIP identification and churn-watching across a
-        million players &mdash; at any price. So the job got split: CRM owns the campaigns, Risk owns
-        the fraud checks, VIP owns the top 1% &mdash; and nobody owns the whole player.</Lede>
-      </div>
+    <SectionShell bg={SENS.bgDeeper}>
+      <Eyebrow>Sound familiar?</Eyebrow>
+      <SectionTitle>Data is everywhere. Insights aren&rsquo;t.</SectionTitle>
       <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
         <GapCard icon={<IconBars />} title="Bottlenecked insights" body="Every analysis starts with a brief and a queue. Bandwidth is limited &mdash; questions wait." />
         <GapCard icon={<IconCog />} title="Black-box outputs" body="When teams can&rsquo;t understand why a model reached its answer, they stop trusting it &mdash; and stop using it." />
-        <GapCard icon={<IconAlert />} title="Blind spots" body="Abuse networks, churning VIPs, under-recognized VIPs &mdash; found too late, if at all." />
+        <GapCard icon={<IconAlert />} title="Blind spots" body="Abuse networks, churning VIPs, shifting segments &mdash; found too late." />
       </div>
     </SectionShell>
   )
@@ -819,102 +639,43 @@ function ArchitectureDiagram() {
   )
 }
 
-function DutyIcon({ kind }: { kind: 'grow' | 'protect' | 'churn' }) {
-  const stroke = SENS.blueBright
-  const common = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none' as const }
-  switch (kind) {
-    case 'grow':
-      return (
-        <svg {...common}>
-          <path d="M22 7l-8.5 8.5-5-5L2 17" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M16 7h6v6" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-    case 'protect':
-      return (
-        <svg {...common}>
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke={stroke} strokeWidth="1.7" strokeLinejoin="round"/>
-        </svg>
-      )
-    case 'churn':
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="10" stroke={stroke} strokeWidth="1.7"/>
-          <path d="M12 6v6l4 2" stroke={stroke} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )
-  }
-}
-
-function DutiesSection() {
-  const duties = [
-    {
-      kind: 'grow' as const,
-      n: '01',
-      t: 'Grow the player’s value',
-      d: 'LTV prediction, VIP identification and health, upsell, engagement, next best action.',
-    },
-    {
-      kind: 'protect' as const,
-      n: '02',
-      t: 'Protect from risk & abuse',
-      d: 'Bonus abuse, multi-accounting, coordinated rings — detected across the whole base.',
-    },
-    {
-      kind: 'churn' as const,
-      n: '03',
-      t: 'Catch churn early',
-      d: 'Early signals on the players worth keeping — before the value walks out the door.',
-    },
+function WhatItDoesSection() {
+  const features = [
+    { icon: <svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 14V9M7 14V4M12 14V7M16 14V11" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round"/></svg>,
+      t: 'KPI Monitoring & Alerts', s: 'Continuous monitoring with intelligent anomaly detection and real-time alerts.' },
+    { icon: <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="6" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5" fill="none"/><circle cx="13" cy="7" r="2" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M2 15c0-2.5 2-4 4-4s4 1.5 4 4M10 14c0-1.8 1.5-3 3-3s3 1.2 3 3" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>,
+      t: 'Automatic Customer Profiling', s: 'Abuse detection, VIP identification, churn risk, and account health — per customer.' },
+    { icon: <svg width="18" height="18" viewBox="0 0 18 18"><rect x="3" y="4" width="12" height="2" stroke="currentColor" strokeWidth="1.5" fill="none"/><rect x="3" y="8.5" width="12" height="2" stroke="currentColor" strokeWidth="1.5" fill="none"/><rect x="3" y="13" width="9" height="2" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>,
+      t: 'Ad Hoc Customer Lists', s: 'Targeted segments based on any combination of behavioral and profile criteria.' },
+    { icon: <svg width="18" height="18" viewBox="0 0 18 18"><path d="M9 2L15 5.5V12L9 15.5L3 12V5.5L9 2z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/><path d="M9 2v13.5M3 5.5l6 3 6-3" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>,
+      t: 'Enriched Analytics', s: 'LTV predictions, game recommendations, bonus calculators — wired into your tools.' },
   ]
 
   return (
-    <SectionShell padY={80}>
-      <Eyebrow>The job</Eyebrow>
-      <SectionTitle max={640}>One manager. Three duties. Every player.</SectionTitle>
-
-      <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-        {duties.map(duty => (
-          <div key={duty.n} style={{
-            background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16,
-            padding: 28, position: 'relative',
-            boxShadow: '0 10px 26px -18px rgba(15,28,70,0.18)',
-          }}>
-            <div style={{
-              position: 'absolute', top: 22, right: 24,
-              fontSize: 26, fontWeight: 300, color: SENS.rule, letterSpacing: -1,
-              fontFeatureSettings: '"tnum"',
-            }}>{duty.n}</div>
-            <div style={{
-              width: 44, height: 44, borderRadius: 11, background: SENS.bgDeeper,
-              display: 'grid', placeItems: 'center', marginBottom: 18,
-            }}>
-              <DutyIcon kind={duty.kind} />
-            </div>
-            <div style={{ fontSize: 18, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, marginBottom: 8 }}>{duty.t}</div>
-            <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{duty.d}</div>
-          </div>
-        ))}
-      </div>
-    </SectionShell>
-  )
-}
-
-// Standalone architecture section — lives near the bottom so analytical visitors
-// can see how Sensai plugs in after they've understood what it does.
-function ArchitectureSection() {
-  return (
     <SectionShell padY={96}>
-      <Eyebrow>How it plugs in</Eyebrow>
-      <SectionTitle max={580}>Architecture at a glance.</SectionTitle>
-      <div className="sensai-card-body">
-        <Lede max={680}>Your raw data on one side, your existing stack on the other. sensAi is the
-        analytical engine in between &mdash; enriching your tools, not replacing them. Already running
-        VIP hosts or engagement tools? sensAi works behind them, feeding context, evidence and next
-        actions that make them sharper.</Lede>
-      </div>
+      <Eyebrow>Capabilities &amp; Architecture</Eyebrow>
+      <SectionTitle max={580}>What sensAi does.</SectionTitle>
+      <Lede max={620}>sensAi connects to your data, builds a living intelligence layer on every customer, and wires it into the systems your teams already use — enriching them, not replacing them.</Lede>
 
-      <div style={{ marginTop: 56, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
+      <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+        {/* feature list */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+          {features.map((f, i) => (
+            <div key={i} style={{ display: 'flex', gap: 16 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 8,
+                background: '#eaeef7', color: SENS.blueBright,
+                display: 'grid', placeItems: 'center', flexShrink: 0,
+              }}>{f.icon}</div>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: SENS.ink, marginBottom: 4 }}>{f.t}</div>
+                <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.55 }}>{f.s}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* architecture diagram */}
         <ArchitectureDiagram />
       </div>
     </SectionShell>
@@ -930,18 +691,16 @@ function HowItWorks() {
   const angles = [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6]
   const pts = angles.map(a => ({ x: Math.round(cx + r * Math.cos(a)), y: Math.round(cy + r * Math.sin(a)) }))
   const labels = [
-    { step: '01', label: 'SENSE', body: 'Monitors every player, every day — value, activity, risk and abuse, account health, churn. Always current.' },
-    { step: '02', label: 'ACT', body: 'Pushes cases into your CRM, support, and risk systems. Your team acts with full context — no new tool, no new channel.' },
-    { step: '03', label: 'LEARN', body: 'Your teams give feedback in plain language. Every approval, every reject — it keeps tuning to your business logic.' },
+    { step: '01', label: 'SENSE', body: 'Continuously analyzes your customer base — value shifts, abuse signals, churn risk. Always current.' },
+    { step: '02', label: 'ACT', body: 'Pushes intelligence to your CRM, case management, and risk systems. Your team acts with full context.' },
+    { step: '03', label: 'LEARN', body: 'Your team teaches sensAi in plain language. The system gets smarter with every decision.' },
   ]
 
   return (
     <SectionShell padY={96} bg={SENS.bgDeeper}>
-      <Eyebrow>The manager&rsquo;s workflow</Eyebrow>
+      <Eyebrow>How sensAi works</Eyebrow>
       <SectionTitle max={620}>Sense. Act. Learn. Repeat.</SectionTitle>
-      <div className="sensai-card-body">
-        <Lede>A continuous loop, not a one-shot model. Every decision your teams make tunes it to your business.</Lede>
-      </div>
+      <Lede>A continuous loop, not a one-shot model. Every decision your team makes teaches the system.</Lede>
 
       <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: '460px 1fr', gap: 80, alignItems: 'center' }}>
         {/* Circular cycle diagram */}
@@ -993,13 +752,13 @@ function HowItWorks() {
         </div>
 
         {/* Right-side step descriptions */}
-        <div className="sensai-cycle-list" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
           {labels.map(l => (
             <div key={l.step} style={{ display: 'flex', gap: 16 }}>
               <div style={{ fontSize: 22, color: SENS.blueBright, fontWeight: 300, width: 36, flexShrink: 0, paddingTop: 0, lineHeight: 1, letterSpacing: -0.5, fontFeatureSettings: '"tnum"' }}>{l.step}</div>
               <div>
                 <div style={{ fontSize: 15, color: SENS.ink, fontWeight: 600, letterSpacing: -0.2, marginBottom: 6 }}>{l.label}</div>
-                <div className="sensai-card-body" style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 460 }}>{l.body}</div>
+                <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 460 }}>{l.body}</div>
               </div>
             </div>
           ))}
@@ -1097,7 +856,6 @@ interface PromptData {
     visual?: string
     action: string
     actionKind?: string
-    dwellMs?: number
   }
 }
 
@@ -1119,57 +877,11 @@ function AskSensAi() {
         title: "High bonus-abuse risk · 1,206 red nodes",
         bullets: [
           "Root of a 1,221-account RAF cluster · −$131.5k aggregate NGR",
-          "1,384 invites in a single referral chain · 8 ghost accounts never made a real deposit",
+          "1,384 invites from one device fingerprint · 8 ghost accounts",
           "97% of downstream activity within 24h of bonus claim",
         ],
         visual: 'network',
         action: "Flag cluster · Restrict promos · Open in RAF",
-      },
-    },
-    {
-      q: "Anything new in the last 24 hours?",
-      ctx: {
-        accountId: 'monitor · 24h watch',
-        tag: 'Live signals · forming cluster',
-        kpis: [
-          { l: 'New flags', v: '12', neg: true },
-          { l: 'Same pattern', v: '12 / 12' },
-          { l: 'Signature match', v: '94%' },
-          { l: 'Window', v: '24h' },
-        ],
-      },
-      reply: {
-        title: "12 new accounts · velocity-deposit signature forming",
-        bullets: [
-          "3 deposits of $200 within 8 min, then max bet — across all 12",
-          "All accounts created in last 72h · same deposit timing window",
-          "Behavioral match to historic March cluster · sensAi remembers",
-        ],
-        action: "Open cluster · Apply promo lockout",
-        dwellMs: 7500,
-      },
-    },
-    {
-      q: "Add new pattern: 5+ deposits in 10 min, then max bet",
-      ctx: {
-        accountId: 'pattern · operator-defined',
-        tag: 'Awaiting validation',
-        kpis: [
-          { l: 'Definition', v: 'Velocity-deposit-max' },
-          { l: 'Lookback', v: '90d' },
-          { l: 'Historic match', v: '47' },
-          { l: 'Aggregate NGR', v: '−$84k', neg: true },
-        ],
-      },
-      reply: {
-        title: "Pattern saved · 47 historic matches · live detection on",
-        bullets: [
-          "Found in 47 accounts over trailing 90 days · −$84k aggregate NGR",
-          "Pattern signature saved to your knowledge base",
-          "New flag tag visible in Q Center: 'Velocity-deposit-max-bet'",
-        ],
-        action: "Approve · Deploy to live detection",
-        dwellMs: 7500,
       },
     },
     {
@@ -1195,25 +907,47 @@ function AskSensAi() {
       },
     },
     {
-      q: "Push the cluster to risk and CRM",
+      q: "Which players are about to churn?",
       ctx: {
-        accountId: 'cluster · velocity-deposit',
-        tag: '12 accounts · synced just now',
+        accountId: '356828175',
+        tag: 'Cooling · was weekly depositor',
         kpis: [
-          { l: 'Accounts', v: '12' },
-          { l: 'Aggregate risk', v: '−$11k' },
-          { l: 'Channels', v: 'Risk · CRM' },
+          { l: 'NGR (30d)', v: '−$420', neg: true },
+          { l: 'Sessions', v: '−68%', neg: true },
+          { l: 'Last dep.', v: '23 days' },
+          { l: 'LTV', v: '$14.2k' },
+        ],
+      },
+      reply: {
+        title: "847 at-risk players · next 14 days",
+        bullets: [
+          "Session frequency dropped 60%+ vs trailing 90-day baseline",
+          "No deposit in 21+ days (median was 4.8 days)",
+          "Predicted exit value: $312k · 41% recoverable with offer",
+        ],
+        action: "Route to retention journey · A/B offer test",
+      },
+    },
+    {
+      q: "Push the at-risk segment to our CRM",
+      ctx: {
+        accountId: 'segment · churn-14d',
+        tag: '847 players · synced just now',
+        kpis: [
+          { l: 'Audience', v: '847' },
+          { l: 'Predicted save', v: '$128k' },
+          { l: 'Channel', v: 'CRM · email' },
           { l: 'Status', v: 'Ready' },
         ],
       },
       reply: {
-        title: "Ready to sync · 12 accounts → Risk + CRM",
+        title: "Ready to sync · 847 players → CRM",
         bullets: [
-          "Risk: open cases in your existing tool with full evidence trail",
-          "CRM: tag accounts 'Promo lockout' · suppress all bonus eligibility",
-          "Case notes pre-populated with signature match and timeline",
+          "Mapped to existing audience: Retention · 14-day cooldown",
+          "Offer template: 25% match-deposit, 7-day expiry · pre-approved",
+          "Will push members to existing CRM audience for retention outreach",
         ],
-        action: "Push 12 accounts to Risk + CRM",
+        action: "Push 847 players to CRM",
         actionKind: 'crm',
       },
     },
@@ -1286,7 +1020,7 @@ function AskSensAi() {
     return () => clearInterval(tick)
   }, [phase, current.reply.bullets.length])
 
-  // settled -> auto-advance (with click + CRM animations)
+  // settled -> auto-advance (with CRM sequence for last prompt)
   useEffect(() => {
     if (phase !== 'settled') return
     const isCrm = current.reply.actionKind === 'crm'
@@ -1294,26 +1028,23 @@ function AskSensAi() {
       const t1 = setTimeout(() => setCrmPhase('clicking'), 800)
       const t2 = setTimeout(() => setCrmPhase('syncing'), 1300)
       const t3 = setTimeout(() => setCrmPhase('done'), 2700)
-      const t4 = setTimeout(() => setPromptIdx((promptIdx + 1) % prompts.length), 5800)
+      const t4 = setTimeout(() => setPromptIdx((promptIdx + 1) % prompts.length), 5400)
       return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
     }
-    // Non-CRM frames get a button click animation, then dwell so the user can read
-    const dwell = current.reply.dwellMs ?? 4000
-    const t1 = setTimeout(() => setCrmPhase('clicking'), 800)
-    const t2 = setTimeout(() => setCrmPhase('done'), 1100)
-    const t3 = setTimeout(() => setPromptIdx((promptIdx + 1) % prompts.length), dwell)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
-  }, [phase, promptIdx, current.reply.actionKind, current.reply.dwellMs, prompts.length])
+    const t = setTimeout(() => setPromptIdx((promptIdx + 1) % prompts.length), 3500)
+    return () => clearTimeout(t)
+  }, [phase, promptIdx, current.reply.actionKind, prompts.length])
 
   return (
     <SectionShell padY={96}>
-      <div className="sensai-ask-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 80, alignItems: 'center' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 80, alignItems: 'center' }}>
         {/* Left: copy */}
-        <div className="sensai-ask-copy">
+        <div>
           <Eyebrow>Ask in plain language</Eyebrow>
           <SectionTitle max={520}>Your team works the way they think.</SectionTitle>
+          <Lede max={520}>Type a question. sensAi reads your data, returns evidence, and offers the next action — no SQL, no analyst tickets, no waiting.</Lede>
 
-          <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
               { t: 'Plain-language questions', s: 'Risk profiles, segments, anomalies — ask in your own words.' },
               { t: 'Evidence, not just answers', s: 'Every response is grounded in the underlying data and traceable.' },
@@ -1323,7 +1054,7 @@ function AskSensAi() {
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: SENS.blueBright, marginTop: 8, flexShrink: 0 }} />
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: SENS.ink }}>{it.t}</div>
-                  <div className="sensai-card-body" style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.5, marginTop: 2 }}>{it.s}</div>
+                  <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.5, marginTop: 2 }}>{it.s}</div>
                 </div>
               </div>
             ))}
@@ -1442,8 +1173,8 @@ function AskSensAi() {
                           {phase === 'settled' && (
                             <div className="sensai-fade-in" style={{
                               marginTop: 10, padding: '10px 12px',
-                              background: crmPhase === 'done' ? '#eaf6ee' : SENS.bgDeeper,
-                              border: `1px solid ${crmPhase === 'done' ? '#9fcdb0' : SENS.rule}`,
+                              background: current.reply.actionKind === 'crm' && crmPhase === 'done' ? '#eaf6ee' : SENS.bgDeeper,
+                              border: `1px solid ${current.reply.actionKind === 'crm' && crmPhase === 'done' ? '#9fcdb0' : SENS.rule}`,
                               borderRadius: 8,
                               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                               transition: 'background 0.35s, border-color 0.35s',
@@ -1502,20 +1233,16 @@ function AskSensAi() {
                                 </button>
                               ) : (
                                 <button style={{
-                                  background: crmPhase === 'done' ? '#1a8245' : '#0a0a0a',
-                                  color: '#fff', border: 'none',
+                                  background: '#0a0a0a', color: '#fff', border: 'none',
                                   borderRadius: 999, padding: '7px 16px', fontSize: 12, fontWeight: 500,
                                   cursor: 'pointer',
                                   letterSpacing: -0.1,
                                   display: 'flex', alignItems: 'center', gap: 6,
-                                  transform: crmPhase === 'clicking' ? 'scale(0.94)' : 'scale(1)',
-                                  transition: 'transform 0.18s, background 0.3s',
-                                  boxShadow: crmPhase === 'clicking' ? 'inset 0 2px 6px rgba(0,0,0,0.25)' : 'none',
                                 }}>
                                   <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
                                     <path d="M3 8l3.5 3.5L13 5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                   </svg>
-                                  {crmPhase === 'done' ? 'Done' : 'Apply'}
+                                  Apply
                                 </button>
                               )}
                             </div>
@@ -1559,73 +1286,87 @@ function AskSensAi() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// SECTION 7: PULL-QUOTE + VERIFIED STATS
+// SECTION 7: USE CASES (5 cards with custom SVG icons)
 // ═══════════════════════════════════════════════════════════════════
 
-function PullQuote() {
-  return (
-    <SectionShell padY={110} bg={SENS.bgDeeper}>
-      <div style={{ maxWidth: 880, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-        <div style={{
-          fontSize: 84, lineHeight: 1, color: SENS.blueBright, opacity: 0.18,
-          fontWeight: 700, marginBottom: -30, userSelect: 'none',
-        }}>&ldquo;</div>
-        <div className="sensai-pullquote" style={{ fontSize: 36, fontWeight: 600, letterSpacing: -1, lineHeight: 1.25 }}>
-          <span style={{ color: SENS.muted }}>Personalization changes what the player sees. </span>
-          <span style={{ color: SENS.ink }}>sensAi changes what your teams </span>
-          <span style={{ color: SENS.blueBright }}>do</span>
-          <span style={{ color: SENS.ink }}> about the player.</span>
-        </div>
-      </div>
-    </SectionShell>
-  )
+function UseCaseIcon({ kind }: { kind: string }) {
+  const stroke = SENS.blueBright
+  const sw = 1.6
+  const common = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none' as const }
+  switch (kind) {
+    case 'risk':
+      return (
+        <svg {...common}>
+          <path d="M12 3l7 3v5.5c0 4.2-3 7.8-7 9.5-4-1.7-7-5.3-7-9.5V6l7-3z" stroke={stroke} strokeWidth={sw} strokeLinejoin="round"/>
+          <circle cx="12" cy="11" r="2" fill={stroke}/>
+        </svg>
+      )
+    case 'vip':
+      return (
+        <svg {...common}>
+          <path d="M3 8l3 9h12l3-9-5 3-4-6-4 6-5-3z" stroke={stroke} strokeWidth={sw} strokeLinejoin="round"/>
+          <circle cx="12" cy="5" r="1.4" fill={stroke}/>
+        </svg>
+      )
+    case 'segments':
+      return (
+        <svg {...common}>
+          <circle cx="7" cy="8" r="2.2" stroke={stroke} strokeWidth={sw}/>
+          <circle cx="16" cy="8" r="2.2" stroke={stroke} strokeWidth={sw}/>
+          <circle cx="11" cy="16" r="2.2" stroke={stroke} strokeWidth={sw}/>
+          <path d="M9 9.5l1.5 5M14 9.5l-1.5 5M9.2 8h5.6" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+        </svg>
+      )
+    case 'kpi':
+      return (
+        <svg {...common}>
+          <path d="M4 19h16" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+          <rect x="6" y="13" width="2.6" height="5" stroke={stroke} strokeWidth={sw}/>
+          <rect x="11" y="9" width="2.6" height="9" stroke={stroke} strokeWidth={sw}/>
+          <rect x="16" y="6" width="2.6" height="12" stroke={stroke} strokeWidth={sw}/>
+          <circle cx="17.3" cy="4" r="1.2" fill={stroke}/>
+        </svg>
+      )
+    case 'game':
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8" stroke={stroke} strokeWidth={sw}/>
+          <circle cx="12" cy="12" r="4" stroke={stroke} strokeWidth={sw}/>
+          <circle cx="12" cy="12" r="1.4" fill={stroke}/>
+          <path d="M12 4v3M12 17v3M4 12h3M17 12h3" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+        </svg>
+      )
+    default:
+      return null
+  }
 }
 
-function StatsSection() {
-  const stats = [
-    {
-      v: '5% → ~67%',
-      l: 'of players account for two thirds of revenue — the top 10% for ~80%',
-      f: 'J. Gambling Studies 2024 (139k accounts, 7 UK operators) · UKGC Patterns of Play 2022',
-    },
-    {
-      v: '2% → 83%',
-      l: 'at one operator, 2% of customers made 83% of deposits',
-      f: 'UK Gambling Commission, 2020',
-    },
-    {
-      v: '10–20%',
-      l: "of promotional spend lost to bonus abuse — gaming's #1 fraud type, a top threat for 78% of operators",
-      f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026',
-    },
-    {
-      v: '55%',
-      l: 'of a typical base sits churned — and a player re-engaged 3 months late is worth 87% less',
-      f: 'Optimove 2024 (5.3M players)',
-    },
+function UseCases() {
+  const cases = [
+    { kind: 'risk', t: 'Risk & Fraud', s: 'Bonus abuse networks, suspicious patterns, coordinated accounts.' },
+    { kind: 'vip', t: 'VIP & Player Value', s: 'Hidden VIPs, lifetime value, churn prevention.' },
+    { kind: 'segments', t: 'Segmentation', s: 'Behavioral clusters that stay current as players change.' },
+    { kind: 'kpi', t: 'KPI Monitoring', s: 'Anomaly detection across your business metrics.' },
+    { kind: 'game', t: 'Game Intelligence', s: 'Player–game fit, recommendations, engagement signals.' },
   ]
   return (
-    <SectionShell padY={96} bg={SENS.bgDeeper}>
-      <Eyebrow>Why the role matters</Eyebrow>
-      <SectionTitle max={640}>A tiny share of players carries the P&amp;L.</SectionTitle>
-      <div className="sensai-card-body">
-        <Lede max={640}>Concentrated value, organized abuse, silent churn &mdash; all living in the same base.</Lede>
-      </div>
+    <SectionShell padY={96}>
+      <Eyebrow>Use cases</Eyebrow>
+      <SectionTitle max={620}>One engine. Multiple use cases.</SectionTitle>
 
-      <div style={{ marginTop: 44, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{
-            background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16,
-            padding: '26px 24px', display: 'flex', flexDirection: 'column', gap: 10,
-          }}>
-            <div style={{ fontSize: 30, fontWeight: 600, color: SENS.ink, letterSpacing: -0.8, whiteSpace: 'nowrap' }}>{s.v}</div>
-            <div style={{ fontSize: 13.5, color: SENS.inkSoft, lineHeight: 1.5, flex: 1 }}>{s.l}</div>
-            <div className="sensai-card-body" style={{ fontSize: 10.5, color: SENS.muted, lineHeight: 1.45, borderTop: `1px solid ${SENS.rule}`, paddingTop: 10 }}>{s.f}</div>
+      <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14 }}>
+        {cases.map(c => (
+          <div key={c.t} className="sensai-usecase-card" style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 14, padding: 22 }}>
+            <div className="sensai-usecase-icon" style={{
+              width: 36, height: 36, borderRadius: 8, background: SENS.bgDeeper,
+              marginBottom: 18, display: 'grid', placeItems: 'center',
+            }}>
+              <UseCaseIcon kind={c.kind} />
+            </div>
+            <div className="sensai-usecase-title" style={{ fontSize: 15, fontWeight: 600, color: SENS.ink, marginBottom: 6, letterSpacing: -0.2 }}>{c.t}</div>
+            <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.5 }}>{c.s}</div>
           </div>
         ))}
-      </div>
-      <div style={{ marginTop: 32, textAlign: 'center', fontSize: 16, fontWeight: 600, color: SENS.blueBright }}>
-        One manager per player is how you cover all of it.
       </div>
     </SectionShell>
   )
@@ -1765,7 +1506,7 @@ function WalkthroughCard({ step, title, body, screenshot }: {
       <div className="sensai-walkthrough-text" style={{ padding: 22, borderBottom: `1px solid ${SENS.rule}`, height: 140, display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
         <div style={{ fontSize: 11, color: SENS.muted, textTransform: 'uppercase', letterSpacing: '0.14em', fontWeight: 600, fontFamily: "'JetBrains Mono', ui-monospace, monospace", marginBottom: 6 }}>Step {step}</div>
         <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, marginBottom: 6 }}>{title}</div>
-        <div className="sensai-card-body" style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.55, overflow: 'hidden' }}>{body}</div>
+        <div style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.55, overflow: 'hidden' }}>{body}</div>
       </div>
       <div style={{ background: SENS.bgDeeper, padding: '14px 14px 0', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{
@@ -1790,28 +1531,22 @@ function WalkthroughCard({ step, title, body, screenshot }: {
 
 function Walkthrough() {
   return (
-    <SectionShell padY={96}>
-      <Eyebrow>How it lands</Eyebrow>
-      <SectionTitle max={620}>Every finding arrives as a case.</SectionTitle>
-      <div className="sensai-card-body">
-        <Lede max={720}>The accounts, the pattern, the evidence &mdash; not a black-box score &mdash; pushed
-        straight into your teams&rsquo; workflows: a CRM campaign, a support ticket, the personal account
-        manager, the risk tools. No new tool, no new channel. And with your teams&rsquo; feedback, it keeps
-        tuning to your business logic.</Lede>
-      </div>
+    <SectionShell padY={96} bg={SENS.bgDeeper}>
+      <Eyebrow>See it in action</Eyebrow>
+      <SectionTitle max={620}>From signal to action in minutes.</SectionTitle>
 
       <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
-        <WalkthroughCard step="1" title="Case delivered"
-          body="sensAi surfaces what needs attention: abuse rings, churning VIPs, anomalies — all triaged and ready."
+        <WalkthroughCard step="1" title="Signal detected"
+          body="sensAi surfaces what needs attention: alerts, risk pockets, queues — all triaged and ready."
           screenshot="/screenshots/daily-digest.png" />
-        <WalkthroughCard step="2" title="Evidence mapped"
-          body="Connects the accounts and lays out the pattern — a full evidence trail, not a score."
+        <WalkthroughCard step="2" title="Network mapped"
+          body="Connects accounts and surfaces an organized cluster of related abusers."
           screenshot="/screenshots/raf-network-new.png" />
-        <WalkthroughCard step="3" title="Team reviews and confirms"
-          body="Your team opens the case, reviews the 360, and approves the action."
+        <WalkthroughCard step="3" title="Team reviews"
+          body="Your team opens the case in Q Center, reviews the 360, and approves the action."
           screenshot="/screenshots/account-360.png" />
-        <WalkthroughCard step="4" title="Systems act"
-          body="The action routes through your CRM, support, or risk tools — and the feedback tunes the next case."
+        <WalkthroughCard step="4" title="System learns"
+          body="The pattern is added to your risk engine and pushed back to your stack — your systems get smarter."
           screenshot="/screenshots/Journeys.png" />
       </div>
       <div style={{ marginTop: 36, textAlign: 'center', fontSize: 16, fontWeight: 600, color: SENS.blueBright }}>
@@ -1827,23 +1562,21 @@ function Walkthrough() {
 
 function Why() {
   const cards = [
-    { t: '17 years of customer value management encoded.', s: 'VIP playbooks, abuse patterns, churn signals — encoded from years on the operator side, not learned from scratch on your data.' },
-    { t: 'Integration is light.', s: 'Read access to the source tables, no PII required, no heavy project on your side. The rest happens on ours.' },
-    { t: 'Live in production today.', s: 'Running with one operator today — and onboarding a 1M+ MAU multi-brand group.' },
+    { t: 'Live in production.', s: 'Not a concept. Processing millions of player data points daily in live production.' },
+    { t: 'Connected in days, not months.', s: 'Give us access to your raw tables — keep them in your cloud. Your team is using sensAi within two weeks.' },
+    { t: 'ROI from week one.', s: 'A 48-hour scan finds bonus abuse rings and under-the-radar VIPs. Everything else is upside.' },
   ]
   return (
-    <SectionShell padY={96} bg={SENS.bgDeeper}>
+    <SectionShell padY={96}>
       <Eyebrow>Why operators choose sensAi</Eyebrow>
-      <SectionTitle max={680}>Built by operators, run with your teams.</SectionTitle>
+      <SectionTitle max={680}>Built for teams who own their customers</SectionTitle>
 
       <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
         {cards.map(c => (
           <div key={c.t} style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, padding: 28 }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: SENS.blueBright, marginTop: 9, flexShrink: 0 }} />
-              <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, lineHeight: 1.3 }}>{c.t}</div>
-            </div>
-            <div className="sensai-card-body" style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, paddingLeft: 20 }}>{c.s}</div>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: SENS.blueBright, marginBottom: 18 }} />
+            <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, marginBottom: 8, letterSpacing: -0.3 }}>{c.t}</div>
+            <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{c.s}</div>
           </div>
         ))}
       </div>
@@ -1857,59 +1590,38 @@ function Why() {
 
 function CTA() {
   return (
-    <section style={{ padding: '110px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
-      {/* soft radial glow */}
-      <div style={{
-        position: 'absolute', width: 640, height: 640, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(26,68,168,0.35) 0%, rgba(26,68,168,0) 70%)',
-        top: -260, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-      }} />
-      <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
-        <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto' }}>
-          <div style={{
-            color: '#8fa8e0', fontSize: 13, fontWeight: 500, letterSpacing: '0.14em',
-            textTransform: 'uppercase', marginBottom: 16,
-          }}>Design partnership</div>
-          <h2 style={{ margin: 0, fontSize: 52, fontWeight: 600, letterSpacing: -1.2, lineHeight: 1.08, color: '#fff' }}>
-            Start with a 48-hour scan.
-          </h2>
-          <p style={{ marginTop: 20, fontSize: 17, lineHeight: 1.6, color: '#b6c1dd' }}>
-            Run sensAi on a sample of your data &mdash; specific findings within 48 hours,
-            no integration required. And we&rsquo;re onboarding a small number of operators
-            as design partners: favorable terms, direct access to the founders, and a
-            system tuned to your workflow.
-          </p>
+    <SectionShell padY={120}>
+      <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto' }}>
+        <Eyebrow>Early Operator Program</Eyebrow>
+        <h2 style={{ margin: 0, fontSize: 56, fontWeight: 600, letterSpacing: -1.2, lineHeight: 1.05, color: SENS.ink }}>
+          Unlock the full potential of your player data.
+        </h2>
+        <p style={{ marginTop: 20, fontSize: 17, lineHeight: 1.55, color: SENS.inkSoft }}>
+          We&apos;re onboarding a small number of operators who want to shape the product with us.
+          Favorable terms, direct access to the founding team, and a system built around your workflow.
+        </p>
 
-          <div style={{ marginTop: 36 }}>
-            <button
-              onClick={openBooking}
-              style={{
-                background: '#fff', color: SENS.ink, border: 'none',
-                padding: '16px 30px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-                boxShadow: '0 18px 44px -14px rgba(0,0,0,0.5)',
-              }}
-            >
-              Book a walkthrough <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Credibility suffix */}
-          <div style={{
-            marginTop: 56, paddingTop: 28, borderTop: '1px solid rgba(255,255,255,0.12)',
-            fontSize: 13.5, lineHeight: 1.7, color: '#9aa6c4', maxWidth: 680,
-            marginLeft: 'auto', marginRight: 'auto',
-          }}>
-            Built by operators &mdash; <span style={{ color: '#d7deef' }}>Amit Assa</span>, 17 years leading CRM,
-            customer value management and analytics at 888 and other major operators, and{' '}
-            <span style={{ color: '#d7deef' }}>Gabi Dvir</span>, 20+ years in tech leadership, ex-VP DevOps at 888 and Fiverr.
-            <div style={{ marginTop: 10, color: '#8fa8e0', fontWeight: 500 }}>
-              Live with one operator today &middot; Onboarding a 1M+ MAU multi-brand group
+        <div style={{ marginTop: 36, display: 'inline-block' }}>
+          <button
+            onClick={openBooking}
+            style={{
+              background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 18, padding: '18px 24px',
+              display: 'flex', alignItems: 'center', gap: 16, cursor: 'pointer',
+              boxShadow: '0 16px 36px -20px rgba(15,28,70,0.2)',
+            }}
+          >
+            <div style={{ width: 44, height: 44, borderRadius: 10, background: SENS.bgDeeper, display: 'grid', placeItems: 'center', color: SENS.blueBright }}>
+              <Calendar className="w-5 h-5" />
             </div>
-          </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: SENS.ink }}>Book a Demo</div>
+              <div style={{ fontSize: 13, color: SENS.inkSoft }}>30-minute call with the founding team</div>
+            </div>
+            <ArrowRight className="w-5 h-5 ml-4" style={{ color: SENS.blueBright }} />
+          </button>
         </div>
       </div>
-    </section>
+    </SectionShell>
   )
 }
 
@@ -1922,7 +1634,7 @@ function Footer() {
     <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '32px 80px' }}>
       <div className="max-w-[1280px] mx-auto flex justify-between items-center">
         <Logo className="text-xl font-semibold text-foreground" showMascot />
-        <div style={{ fontSize: 13, color: SENS.inkSoft }}>A digital customer manager for every player &middot; Nova CVM</div>
+        <div style={{ fontSize: 13, color: SENS.inkSoft }}>Early Operator Program &middot; Limited spots</div>
       </div>
     </footer>
   )
@@ -1942,7 +1654,7 @@ function SocialProof() {
   const proofs = [
     { stat: 'Live', label: 'In production today' },
     { stat: '400K+', label: 'Accounts analyzed nightly' },
-    { stat: '100s', label: 'Behavioral sensors running daily' },
+    { stat: '100s', label: 'AI sensors running daily' },
   ]
   return (
     <section style={{ padding: '32px 80px', background: SENS.bg, borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}` }}>
@@ -1965,12 +1677,12 @@ function SocialProof() {
 function Founders() {
   const team = [
     { name: 'Amit Assa', role: 'CEO', bio: '17 years in customer value management across iGaming and digital platforms.' },
-    { name: 'Gabi Dvir', role: 'Co-founder', bio: '20+ years in tech leadership. Ex-VP DevOps at 888 and Fiverr.' },
+    { name: 'Maor Grinberg', role: 'CTO', bio: 'PhD in Complex Systems. Deep expertise in ML and data engineering.' },
   ]
   return (
     <SectionShell padY={96}>
       <Eyebrow>Who&rsquo;s building this</Eyebrow>
-      <SectionTitle max={620}>Built by operators, for operators.</SectionTitle>
+      <SectionTitle max={620}>Operators and engineers, not just AI people.</SectionTitle>
 
       <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, maxWidth: 880 }}>
         {team.map(t => (
@@ -1998,22 +1710,22 @@ export function SensAiOnePager() {
       {/*
         ─── PARKED SECTIONS (defined above, currently NOT rendered) ───
         <SocialProof />  — "Live · 400K+ accounts · 100s sensors" strip.
-        <Founders />     — Amit + Gabi founder cards (credibility now lives
-                           as a suffix inside <CTA />).
-        Re-enable by dropping them back into the section list below.
+                           Removed because we don't want to advertise these
+                           specific numbers publicly yet.
+        <Founders />     — Amit + Maor founder cards.
+                           Removed for now; may bring back closer to launch.
+        Re-enable by dropping <SocialProof /> and/or <Founders /> back into
+        the section list below.
       */}
       <Nav />
       <Hero />
-      <ProblemSection />
-      <TurnSection />
-      <DutiesSection />
-      <div id="how-it-works">
-        <AskSensAi />
-      </div>
+      <GapSection />
+      <WhatItDoesSection />
       <HowItWorks />
+      <AskSensAi />
+      <UseCases />
       <Walkthrough />
       <Why />
-      <ArchitectureSection />
       <CTA />
       <Footer />
     </div>

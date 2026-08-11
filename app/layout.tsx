@@ -1,14 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Space_Grotesk } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 
 const isVercel = process.env.VERCEL === '1'
 import './globals.css'
 
-// Site-wide typeface: Space Grotesk — nearest freely-licensed equivalent to
-// getmodus.com's GT Planar (commercial). Keeps the --font-inter variable name
-// so the existing font-sans chain picks it up unchanged.
-const inter = Space_Grotesk({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -17,8 +14,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'sensAi — A Digital Customer Manager for Every Player | Nova CVM',
-  description: 'sensAi puts a digital customer manager on every player — it knows their value, watches their risk, catches their churn, and pushes the actions into the systems your teams already use.',
+  title: 'sensAi - Adaptive Intelligence for iGaming',
+  description: 'sensAi is an adaptive intelligence engine for iGaming operators. Sense, Act, Learn from your player data.',
   generator: 'v0.app',
   icons: {
     icon: [

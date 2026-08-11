@@ -29,7 +29,7 @@ const labelStyle: React.CSSProperties = {
 
 function Logo() {
   return (
-    <a href="/v2" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+    <a href="/sense" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
       <img src="/sensai-mascot.png" alt="sensAi" style={{ width: 40, height: 40, borderRadius: 10 }} />
       <span style={{
         fontWeight: 600, fontSize: 22, letterSpacing: '0.08em', color: '#fff',
@@ -57,7 +57,7 @@ export function BookPage() {
       </nav>
 
       <main style={{ maxWidth: 1180, margin: '0 auto', padding: '40px 40px 96px' }}>
-        <a href="/v2" style={{
+        <a href="/sense" style={{
           display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none',
           fontSize: 13.5, fontWeight: 500, color: SENS.muted, marginBottom: 40,
         }}>

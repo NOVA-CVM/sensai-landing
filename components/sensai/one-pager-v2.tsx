@@ -267,7 +267,7 @@ function TrajectoryChart({ height = 160 }: { height?: number }) {
 function SignalsCard() {
   const rows = [
     { tone: 'danger' as const, t: 'VIP churn signal', s: 'Account 231818894 · sessions −64%', m: '8s' },
-    { tone: 'danger' as const, t: 'RAF ring · root invitee', s: '1,206 red nodes · ghost accounts', m: '4m' },
+    { tone: 'danger' as const, t: 'RAF ring · root invitee', s: '19 red nodes · ghost accounts', m: '4m' },
     { tone: 'warn' as const, t: 'Hidden VIP candidate', s: '78 active days · under threshold', m: '12m' },
     { tone: 'ok' as const, t: 'Case pushed to CRM', s: 'Retention journey · 142 accounts', m: '23m' },
   ]
@@ -2327,9 +2327,6 @@ function CTA() {
             marginLeft: 'auto', marginRight: 'auto',
           }}>
             Built by people who spent years inside online gaming.
-            {' '}<span style={{ color: '#d7deef' }}>Amit Assa</span>, 17 years leading CRM,
-            customer value management and analytics at 888 and other major operators, and{' '}
-            <span style={{ color: '#d7deef' }}>Gabi Dvir</span>, 20+ years in tech leadership, ex-VP DevOps at 888 and Fiverr.
             <div style={{ marginTop: 10, color: '#8fa8e0', fontWeight: 500 }}>
               Live in production.
             </div>
