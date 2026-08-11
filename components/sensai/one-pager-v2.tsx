@@ -800,6 +800,23 @@ function MiniRadar() {
   )
 }
 
+const AxisFrame = () => (
+  <g>
+    {[30, 65].map(y => <line key={y} x1="18" x2="302" y1={y} y2={y} stroke={SENS.rule} strokeWidth="0.8" strokeDasharray="2 4" />)}
+    <line x1="18" x2="302" y1="100" y2="100" stroke={SENS.rule} strokeWidth="1" />
+    {[18, 89, 160, 231, 302].map(x => <line key={x} x1={x} x2={x} y1="100" y2="104" stroke={SENS.rule} strokeWidth="1" />)}
+  </g>
+)
+
+const EventMark = ({ x, y, label, ly }: { x: number; y: number; label: string; ly: number }) => (
+  <g>
+    <line x1={x} y1={ly + 5} x2={x} y2={y - 5} stroke={SENS.blueBright} strokeWidth="0.9" strokeDasharray="2 2" />
+    <rect x={x - 3} y={y - 3} width="6" height="6" transform={`rotate(45 ${x} ${y})`} fill="#fff" stroke={SENS.blueBright} strokeWidth="1.3" />
+    <text x={x} y={ly} textAnchor="middle" fontSize="8.5" fill={SENS.blueBright}
+      fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">{label}</text>
+  </g>
+)
+
 function ValueSection() {
   const rowStyle = { fontSize: 12.5, color: SENS.inkSoft, display: 'flex', alignItems: 'center', gap: 10 } as const
   const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
@@ -810,18 +827,22 @@ function ValueSection() {
       art: (
         <ArtifactCard>
           <MonoLabel>A ring, delivered as a case</MonoLabel>
-          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <ellipse cx="120" cy="55" rx="92" ry="44" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 4" opacity="0.6" />
-            {[[120,55],[78,36],[74,74],[128,22],[160,42],[158,74],[112,86],[186,58]].map(([x,y],i) => (
+          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            {[...Array(24)].map((_, i) => (
+              <circle key={i} cx={26 + (i % 8) * 38} cy={22 + Math.floor(i / 8) * 38} r="0.9" fill={SENS.rule} />
+            ))}
+            <ellipse cx="110" cy="60" rx="86" ry="42" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 4" opacity="0.55" />
+            {[[110,60],[72,40],[70,80],[118,26],[150,44],[148,80],[104,94],[178,62]].map(([x,y],i) => (
               <g key={i}>
-                {i > 0 && <line x1="120" y1="55" x2={x} y2={y} stroke={SENS.ink} strokeWidth="0.9" opacity="0.35" />}
-                <circle cx={x} cy={y} r={i === 0 ? 6 : 3.6} fill={i === 0 ? SENS.blueBright : '#fff'}
+                {i > 0 && <line x1="110" y1="60" x2={x} y2={y} stroke={SENS.ink} strokeWidth="1.1" opacity="0.3" />}
+                <circle cx={x} cy={y} r={i === 0 ? 5.5 : 3.4} fill={i === 0 ? SENS.blueBright : '#fff'}
                   stroke={i === 0 ? 'none' : SENS.ink} strokeWidth="1.1" />
               </g>
             ))}
-            <path d="M226 55 h44" stroke={SENS.blueBright} strokeWidth="1.3" />
-            <rect x="272" y="41" width="40" height="28" rx="6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" />
-            <path d="M280 55 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <EventMark x={110} y={60} label="SAME PAYMENT ROUTE" ly={12} />
+            <path d="M220 60 h40" stroke={SENS.blueBright} strokeWidth="1.5" />
+            <rect x="262" y="46" width="44" height="28" rx="6" fill="none" stroke={SENS.blueBright} strokeWidth="1.3" />
+            <path d="M272 60 l5 5 10 -11" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
@@ -833,18 +854,14 @@ function ValueSection() {
       art: (
         <ArtifactCard>
           <MonoLabel>Lifetime value, refreshed daily</MonoLabel>
-          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            {['A','B','C'].map((tier, i) => (
-              <g key={tier}>
-                <line x1="16" y1={22 + i * 32} x2="270" y2={22 + i * 32} stroke={SENS.rule} strokeWidth="1" />
-                <text x="284" y={26 + i * 32} fontSize="11" fill={i === 0 ? SENS.blueBright : SENS.muted} fontWeight="600">{tier}</text>
-              </g>
-            ))}
-            <path d="M20 96 C 90 92, 150 78, 200 54 S 258 26, 268 22" fill="none" stroke={SENS.blueBright} strokeWidth="1.8" strokeLinecap="round" />
-            <circle cx="268" cy="22" r="4.5" fill={SENS.blueBright} />
-            <circle cx="268" cy="22" r="9" fill="none" stroke={SENS.blueBright} strokeWidth="1" opacity="0.4" />
-            <path d="M96 90 C 150 88, 205 80, 262 55" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.35" strokeDasharray="3 3" />
-            <circle cx="262" cy="55" r="3" fill="none" stroke={SENS.ink} strokeWidth="1.1" opacity="0.5" />
+          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <AxisFrame />
+            <path d="M18 92 C 90 88, 150 72, 210 48 S 280 24, 296 22" fill="none" stroke={SENS.blueBright} strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M18 94 C 100 92, 190 84, 296 66" fill="none" stroke={SENS.ink} strokeWidth="1.1" opacity="0.3" strokeDasharray="3 3" />
+            <circle cx="296" cy="22" r="4" fill={SENS.blueBright} />
+            <text x="306" y="26" fontSize="10" fill={SENS.blueBright} fontWeight="600">A</text>
+            <text x="306" y="70" fontSize="10" fill={SENS.muted}>avg</text>
+            <EventMark x={89} y={84} label="FLAGGED DAY 9" ly={14} />
           </svg>
           <OutChip>→ worked as cases · VIP review</OutChip>
         </ArtifactCard>
@@ -856,15 +873,19 @@ function ValueSection() {
       art: (
         <ArtifactCard>
           <MonoLabel>The signal, before the drop</MonoLabel>
-          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <line x1="16" y1="92" x2="304" y2="92" stroke={SENS.rule} strokeWidth="1" />
-            <path d="M20 30 C 80 28, 130 32, 170 40 S 240 68, 292 88" fill="none" stroke={SENS.ink} strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
-            <circle cx="292" cy="88" r="4" fill="none" stroke={SENS.ink} strokeWidth="1.3" opacity="0.6" />
-            <line x1="170" y1="18" x2="170" y2="92" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 3" />
-            <circle cx="170" cy="40" r="5" fill={SENS.blueBright} />
-            <circle cx="170" cy="40" r="10" fill="none" stroke={SENS.blueBright} strokeWidth="1" opacity="0.4" />
-            <path d="M170 18 h58" stroke={SENS.blueBright} strokeWidth="1.1" />
-            <path d="M224 14 l6 4 -6 4" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <AxisFrame />
+            <path d="M18 34 C 60 32, 100 33, 138 36" fill="none" stroke={SENS.ink} strokeWidth="1.5" strokeLinecap="round" opacity="0.85" />
+            <path d="M138 36 C 170 40, 186 46, 200 52" fill="none" stroke={SENS.ink} strokeWidth="1.5" strokeLinecap="round" opacity="0.85" />
+            <path d="M200 52 C 240 66, 272 84, 296 96" fill="none" stroke={SENS.ink} strokeWidth="1.3" strokeDasharray="4 3" opacity="0.5" />
+            <EventMark x={138} y={36} label="DEPOSIT PATTERN BREAKS" ly={14} />
+            <g>
+              <line x1="176" y1="44" x2="176" y2="24" stroke={SENS.blueBright} strokeWidth="1.3" />
+              <path d="M176 24 l12 4 -12 4 z" fill={SENS.blueBright} />
+              <circle cx="176" cy="44" r="3.4" fill={SENS.blueBright} />
+            </g>
+            <text x="230" y="112" fontSize="8.5" fill={SENS.muted} textAnchor="middle"
+              fontFamily="'JetBrains Mono', ui-monospace, monospace">PROJECTED, IF UNTOUCHED</text>
           </svg>
           <OutChip>→ CRM: retention journey, next 24h</OutChip>
         </ArtifactCard>
@@ -876,20 +897,24 @@ function ValueSection() {
       art: (
         <ArtifactCard>
           <MonoLabel>Player to games, matched</MonoLabel>
-          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <circle cx="42" cy="55" r="12" fill="none" stroke={SENS.ink} strokeWidth="1.4" />
-            <circle cx="42" cy="50" r="4" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
-            <path d="M34 63 c 0 -5 4 -7 8 -7 s 8 2 8 7" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
+          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            {[...Array(24)].map((_, i) => (
+              <circle key={i} cx={26 + (i % 8) * 38} cy={22 + Math.floor(i / 8) * 38} r="0.9" fill={SENS.rule} />
+            ))}
+            <circle cx="44" cy="60" r="11" fill="none" stroke={SENS.ink} strokeWidth="1.3" />
+            <circle cx="44" cy="56" r="3.6" fill="none" stroke={SENS.ink} strokeWidth="1.1" />
+            <path d="M37 67 c 0 -4.5 3.5 -6.3 7 -6.3 s 7 1.8 7 6.3" fill="none" stroke={SENS.ink} strokeWidth="1.1" />
             {[0, 1, 2].map(i => (
               <g key={i}>
-                <path d={`M 58 55 C 100 ${30 + i * 25}, 140 ${26 + i * 26}, 182 ${26 + i * 26}`}
+                <path d={`M 57 60 C 110 ${28 + i * 30}, 150 ${24 + i * 31}, 196 ${24 + i * 31}`}
                   fill="none" stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth={i === 0 ? 1.5 : 1.1} />
-                <rect x="184" y={12 + i * 26} width="108" height="22" rx="6"
-                  fill={i === 0 ? 'rgba(26,68,168,0.08)' : '#fff'} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="1.1" />
-                <circle cx="198" cy={23 + i * 26} r="3.4" fill={i === 0 ? SENS.blueBright : SENS.rule} />
-                <line x1="208" y1={23 + i * 26} x2="280" y2={23 + i * 26} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="2.4" strokeLinecap="round" opacity={i === 0 ? 0.5 : 0.6} />
+                <rect x="198" y={11 + i * 31} width="104" height="24" rx="6"
+                  fill={i === 0 ? 'rgba(26,68,168,0.07)' : '#fff'} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="1.1" />
+                <circle cx="212" cy={23 + i * 31} r="3.2" fill={i === 0 ? SENS.blueBright : SENS.rule} />
+                <line x1="223" y1={23 + i * 31} x2="290" y2={23 + i * 31} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="2.4" strokeLinecap="round" opacity={i === 0 ? 0.5 : 0.6} />
               </g>
             ))}
+            <EventMark x={128} y={44} label="AFFINITY MATCHED" ly={102} />
           </svg>
           <OutChip>→ CRM campaigns · lobby tools</OutChip>
         </ArtifactCard>
@@ -901,21 +926,25 @@ function ValueSection() {
       art: (
         <ArtifactCard>
           <MonoLabel>Columns added to every player</MonoLabel>
-          <svg viewBox="0 0 320 110" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <line x1="18" x2="302" y1="14" y2="14" stroke={SENS.rule} strokeWidth="1" />
+            {[48, 78, 108, 138, 176, 206, 236, 266].map(x => (
+              <line key={x} x1={x} x2={x} y1="10" y2="14" stroke={SENS.rule} strokeWidth="1" />
+            ))}
             {[0, 1, 2].map(row => (
               <g key={row}>
-                <circle cx="24" cy={26 + row * 30} r="7" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
+                <circle cx="28" cy={34 + row * 28} r="6.4" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
                 {[0, 1, 2, 3].map(col => (
-                  <rect key={col} x={48 + col * 30} y={19 + row * 30} width="22" height="14" rx="3"
+                  <rect key={col} x={44 + col * 30} y={27 + row * 28} width="22" height="14" rx="3"
                     fill="#fff" stroke={SENS.rule} strokeWidth="1.1" />
                 ))}
-                {[4, 5, 6, 7].map(col => (
-                  <rect key={col} x={48 + col * 30 + 8} y={19 + row * 30} width="22" height="14" rx="3"
-                    fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.1" />
+                {[0, 1, 2, 3].map(col => (
+                  <rect key={col} x={172 + col * 30} y={27 + row * 28} width="22" height="14" rx="3"
+                    fill="rgba(26,68,168,0.09)" stroke={SENS.blueBright} strokeWidth="1.1" />
                 ))}
-                <text x={296} y={30 + row * 30} fontSize="12" fill={SENS.blueBright} fontWeight="600">+</text>
               </g>
             ))}
+            <EventMark x={218} y={22} label="+214 COLUMNS" ly={116} />
           </svg>
           <OutChip>→ written to CRM · DWH</OutChip>
         </ArtifactCard>
@@ -928,16 +957,18 @@ function ValueSection() {
         <ArtifactCard>
           <MonoLabel>A question, answered with evidence</MonoLabel>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-            <svg viewBox="0 0 190 100" style={{ width: 190, flexShrink: 0 }}>
-              <rect x="8" y="10" width="120" height="30" rx="10" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.6" />
-              <text x="24" y="30" fontSize="15" fill={SENS.ink} opacity="0.7" fontWeight="600">?</text>
-              <line x1="42" y1="25" x2="112" y2="25" stroke={SENS.ink} strokeWidth="2.2" strokeLinecap="round" opacity="0.25" />
-              <path d="M50 40 v14" stroke={SENS.blueBright} strokeWidth="1.2" />
-              <path d="M46 50 l4 6 4 -6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              <rect x="8" y="62" width="164" height="30" rx="10" fill="rgba(26,68,168,0.06)" stroke={SENS.blueBright} strokeWidth="1.2" />
-              <path d="M22 77 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              <line x1="48" y1="77" x2="120" y2="77" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.55" />
-              <line x1="130" y1="77" x2="158" y2="77" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.3" />
+            <svg viewBox="0 0 200 110" style={{ width: 200, flexShrink: 0 }}>
+              <rect x="10" y="10" width="126" height="30" rx="9" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.55" />
+              <text x="26" y="30" fontSize="14" fill={SENS.ink} opacity="0.7" fontWeight="600">?</text>
+              <line x1="44" y1="25" x2="118" y2="25" stroke={SENS.ink} strokeWidth="2.2" strokeLinecap="round" opacity="0.25" />
+              <path d="M52 40 v12" stroke={SENS.blueBright} strokeWidth="1.2" />
+              <path d="M48 48 l4 6 4 -6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="10" y="60" width="176" height="32" rx="9" fill="rgba(26,68,168,0.06)" stroke={SENS.blueBright} strokeWidth="1.2" />
+              <path d="M24 76 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="50" y1="76" x2="126" y2="76" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.5" />
+              <line x1="136" y1="76" x2="168" y2="76" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.28" />
+              <text x="98" y="106" fontSize="8.5" fill={SENS.blueBright} textAnchor="middle"
+                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">EVIDENCE ATTACHED</text>
             </svg>
             <MiniRadar />
           </div>
@@ -960,7 +991,7 @@ function ValueSection() {
               What you get
             </div>
             <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
-              Built to grow value, stop abuse, and keep players playing.
+              Built to grow value, stop abuse, and keep players engaged.
             </h2>
           </div>
           <div style={{
@@ -1055,14 +1086,14 @@ const MarkUntrusted = () => (
 
 function ProblemSection() {
   const tiles = [
-    { mark: <MarkDrifting />, t: 'Drifting', s: <>Every change in the logic needs a data person in the loop. The models drift behind the business.</> },
-    { mark: <MarkUntrusted />, t: 'Untrusted', s: <>So the teams stop believing what the models say.</> },
-    { mark: <MarkShallow />, t: 'Shallow', s: <>Left without models they trust, teams fall back on segments and averages.<span className="sensai-card-body"> Approximations, not understanding.</span></> },
+    { mark: <MarkDrifting />, t: 'Drifting models', s: <>Every change in the logic needs a data person in the loop. The analysis falls behind the business.</> },
+    { mark: <MarkUntrusted />, t: 'Untrusted outputs', s: <>So the teams stop believing what the models say.</> },
+    { mark: <MarkShallow />, t: 'Shallow insights', s: <>Left without models they trust, teams fall back on segments and averages.<span className="sensai-card-body"> Approximations, not understanding.</span></> },
   ]
   const stats = [
     { v: '5% → 67%', l: 'of players generate 67% of revenue', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
-    { v: '10–20%', l: 'of promotional spend lost to bonus abuse, gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
     { v: '~30%', l: 'of VIPs fall below the radar', f: 'Based on our experience' },
+    { v: '10–20%', l: 'of promotional spend lost to bonus abuse, gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
   ]
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
@@ -1093,8 +1124,17 @@ function ProblemSection() {
         </div>
 
         {/* Slim proof-strip */}
+        <div style={{
+          marginTop: 56, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
+          color: SENS.blueBright, fontSize: 13, fontWeight: 500,
+          letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
+          display: 'flex', alignItems: 'center', gap: 10,
+        }}>
+          <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
+          The price of low resolution
+        </div>
         <div className="sensai-proof-strip" style={{
-          marginTop: 64, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
+          marginTop: 0, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
           display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
           borderTop: `1px solid ${SENS.rule}`, borderBottom: `1px solid ${SENS.rule}`,
         }}>
@@ -1145,7 +1185,15 @@ function ResolutionVisual({ animate = true }: { animate?: boolean }) {
       const size = Number(lerp(30, 5.2, ease).toFixed(1))
       const rx = Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))
       const blur = ease < 0.22 ? 'url(#res-b3)' : ease < 0.45 ? 'url(#res-b2)' : ease < 0.68 ? 'url(#res-b1)' : undefined
-      const color = ease < 0.55 ? hexLerp('#5f7cc0', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
+      let color = ease < 0.55 ? hexLerp('#5f7cc0', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
+      // In the sharpest zone only, a few players show their state: muted value-green,
+      // muted risk-amber/red. High resolution shows WHO players are.
+      let halo: string | null = null
+      if (ease > 0.85) {
+        if (seed === 3) { color = '#5d8a72'; halo = 'rgba(93,138,114,0.35)' }
+        else if (seed === 9) { color = '#8a6b45'; halo = 'rgba(138,107,69,0.35)' }
+        else if (seed === 14) { color = '#8a5058'; halo = 'rgba(138,80,88,0.35)' }
+      }
       const opacity = Number((0.15 + ease * 0.85).toFixed(3))
       const isFocus = c === cols - 3 && i === Math.floor(count / 2)
       if (isFocus) { focusCx = x; focusCy = y }
@@ -1153,7 +1201,10 @@ function ResolutionVisual({ animate = true }: { animate?: boolean }) {
         <rect key={`${c}-${i}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
           width={size} height={size} rx={rx} fill={color} opacity={opacity} filter={blur} />
       )
-      if (ease > 0.88) {
+      if (halo) {
+        cells.push(<rect key={`g${c}-${i}`} x={Number((x - size).toFixed(1))} y={Number((y - size).toFixed(1))}
+          width={size * 2} height={size * 2} rx={size} fill={halo} filter="url(#res-b1)" />)
+      } else if (ease > 0.88) {
         cells.push(<rect key={`g${c}-${i}`} x={Number((x - size).toFixed(1))} y={Number((y - size).toFixed(1))}
           width={size * 2} height={size * 2} rx={size} fill="#ffffff" opacity={0.14} filter="url(#res-b1)" />)
       }
@@ -1487,9 +1538,8 @@ function AskSensAi() {
   return (
     <section style={{ padding: '110px 80px', background: '#ffffff' }}>
       <div className="max-w-[1280px] mx-auto">
-      <div ref={viewRef} className="sensai-ask-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 80, alignItems: 'center' }}>
-        {/* Left: copy */}
-        <div className="sensai-ask-copy">
+      <div ref={viewRef}>
+        <div>
           <div style={{
             color: SENS.blueBright, fontSize: 13, fontWeight: 500,
             letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
@@ -1502,7 +1552,7 @@ function AskSensAi() {
             Speak with sensAi in your own words.
           </h2>
 
-          <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, maxWidth: 1020 }}>
             {[
               { t: 'Plain-language questions', s: 'Risk profiles, segments, anomalies. Ask in your own words.' },
               { t: 'Evidence, not just answers', s: 'Every response is grounded in the underlying data and traceable.' },
@@ -1518,20 +1568,10 @@ function AskSensAi() {
             ))}
           </div>
 
-          {/* Prompt picker dots */}
-          <div style={{ marginTop: 36, display: 'flex', gap: 8, alignItems: 'center' }}>
-            {prompts.map((_, i) => (
-              <button key={i} onClick={() => setPromptIdx(i)} style={{
-                width: i === promptIdx ? 28 : 8, height: 8, borderRadius: 4,
-                background: i === promptIdx ? SENS.blueBright : SENS.rule,
-                border: 'none', padding: 0, cursor: 'pointer', transition: 'all 0.3s',
-              }} aria-label={`Prompt ${i + 1}`} />
-            ))}
-            <span style={{ fontSize: 12, color: SENS.muted, marginLeft: 12 }}>{promptIdx + 1}/{prompts.length}</span>
-          </div>
         </div>
 
-        {/* Right: Q Center app chrome mock */}
+        {/* Q Center window, nested under the section headline */}
+        <div style={{ marginTop: 44, maxWidth: 920, marginLeft: 'auto', marginRight: 'auto' }}>
         <div className="sensai-demo-frame" style={{
           background: '#fff', borderRadius: 16, border: `1px solid ${SENS.rule}`,
           boxShadow: '0 30px 60px -28px rgba(15,28,70,0.25)',
@@ -1631,8 +1671,8 @@ function AskSensAi() {
                           {phase === 'settled' && (
                             <div className="sensai-fade-in" style={{
                               marginTop: 10, padding: '10px 12px',
-                              background: crmPhase === 'done' ? '#eaf6ee' : SENS.bgDeeper,
-                              border: `1px solid ${crmPhase === 'done' ? '#9fcdb0' : SENS.rule}`,
+                              background: crmPhase === 'done' ? '#eef3f0' : SENS.bgDeeper,
+                              border: `1px solid ${crmPhase === 'done' ? '#a9c4b4' : SENS.rule}`,
                               borderRadius: 8,
                               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                               transition: 'background 0.35s, border-color 0.35s',
@@ -1657,7 +1697,7 @@ function AskSensAi() {
                               </div>
                               {current.reply.actionKind === 'crm' ? (
                                 <button style={{
-                                  background: crmPhase === 'done' ? '#1a8245' : '#0a0a0a',
+                                  background: crmPhase === 'done' ? '#3e6b52' : '#0a0a0a',
                                   color: '#fff', border: 'none',
                                   borderRadius: 999, padding: '7px 14px 7px 12px', fontSize: 12, fontWeight: 500,
                                   cursor: 'pointer',
@@ -1691,7 +1731,7 @@ function AskSensAi() {
                                 </button>
                               ) : (
                                 <button style={{
-                                  background: crmPhase === 'done' ? '#1a8245' : '#0a0a0a',
+                                  background: crmPhase === 'done' ? '#3e6b52' : '#0a0a0a',
                                   color: '#fff', border: 'none',
                                   borderRadius: 999, padding: '7px 16px', fontSize: 12, fontWeight: 500,
                                   cursor: 'pointer',
@@ -1739,6 +1779,17 @@ function AskSensAi() {
               </button>
             </div>
           </div>
+        </div>
+        <div style={{ marginTop: 22, display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+          {prompts.map((_, i) => (
+            <button key={i} onClick={() => setPromptIdx(i)} style={{
+              width: i === promptIdx ? 28 : 8, height: 8, borderRadius: 4,
+              background: i === promptIdx ? SENS.blueBright : SENS.rule,
+              border: 'none', padding: 0, cursor: 'pointer', transition: 'all 0.3s',
+            }} aria-label={`Prompt ${i + 1}`} />
+          ))}
+          <span style={{ fontSize: 12, color: SENS.muted, marginLeft: 12 }}>{promptIdx + 1}/{prompts.length}</span>
+        </div>
         </div>
       </div>
       </div>
@@ -1975,6 +2026,42 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
   )
 }
 
+function PartnershipSection() {
+  return (
+    <section style={{ padding: '100px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
+      <div className="max-w-[1280px] mx-auto" style={{ textAlign: 'center', maxWidth: 760 }}>
+        <div style={{
+          color: SENS.blueBright, fontSize: 13, fontWeight: 500,
+          letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
+        }}>Design partnership</div>
+        <h2 style={{ margin: '0 auto', fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
+          We onboard selected operators.
+        </h2>
+        <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
+          We onboard a selected group of operators as design partners. They get sensAi
+          early, and sensAi learns their operation first.
+        </p>
+        <p style={{ margin: '12px auto 0', fontSize: 14, lineHeight: 1.6, color: SENS.muted, maxWidth: 560 }}>
+          In another industry and feel sensAi can help? We&rsquo;re open to new verticals.
+          Tell us about your base.
+        </p>
+        <div style={{ marginTop: 30 }}>
+          <button
+            onClick={() => { window.location.href = '/apply' }}
+            style={{
+              background: '#fff', color: SENS.blueBright, border: `1.5px solid ${SENS.blueBright}`,
+              padding: '13px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
+            }}
+          >
+            Apply to the program <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // Integration band — modus's "enterprise-grade by default" slot.
 function IntegrationSection() {
   const { ref, inView } = useInView()
@@ -1988,7 +2075,7 @@ function IntegrationSection() {
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
         }}>Integration</div>
         <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
-          Light integration.<br />Your data stays in your cloud.
+          Light integration.<br />Read access in, actions out.
         </h2>
         <div style={{ margin: '22px auto 0', fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: SENS.blueBright }}>
           Scan in 48 hours. Live in 4 weeks.
@@ -1998,7 +2085,7 @@ function IntegrationSection() {
           back into the tools your teams run.
         </p>
         <div style={{ marginTop: 30, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {['Read-only source access', 'No PII required', 'Runs in your cloud', 'Live within 4 weeks'].map(chip => (
+          {['Read-only source access', 'No PII required', 'Pseudonymized data only', 'Live within 4 weeks'].map(chip => (
             <span key={chip} style={{
               border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
               padding: '9px 18px', fontSize: 13, fontWeight: 500, color: SENS.inkSoft,
@@ -2294,11 +2381,8 @@ function CTA() {
             color: '#8fa8e0', fontSize: 13, fontWeight: 500, letterSpacing: '0.14em',
             textTransform: 'uppercase', marginBottom: 16,
           }}>Quick customer base scan</div>
-          <div style={{ fontSize: 15, color: '#b6c1dd', marginBottom: 14, fontStyle: 'italic' }}>
-            What if you could check?
-          </div>
           <h2 style={{ margin: 0, fontSize: 52, fontWeight: 600, letterSpacing: -1.2, lineHeight: 1.08, color: '#fff' }}>
-            See what&rsquo;s leaking. In 48 hours.
+            See where the revenue leaks. In 48 hours.
           </h2>
           <p style={{ marginTop: 20, fontSize: 17, lineHeight: 1.6, color: '#b6c1dd' }}>
             Give us a sample of your data. 48 hours later you get a full scan of your
@@ -2343,10 +2427,18 @@ function CTA() {
 
 function Footer() {
   return (
-    <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '32px 80px', background: '#ffffff' }}>
-      <div className="max-w-[1280px] mx-auto flex justify-between items-center">
-        <Logo className="text-xl font-semibold" showMascot />
-        <div style={{ fontSize: 13, color: SENS.inkSoft }}>A digital customer manager for every player &middot; Nova CVM</div>
+    <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '14px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto flex justify-between items-center" style={{ minHeight: 34 }}>
+        <Logo className="text-base font-semibold" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <span style={{ fontSize: 12.5, color: SENS.inkSoft }}>A digital customer manager for every player</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: SENS.inkSoft }}>
+            <span className="sensai-heartbeat" style={{
+              width: 7, height: 7, borderRadius: '50%', background: '#4f8a68', display: 'inline-block',
+            }} />
+            Live in production.
+          </span>
+        </div>
       </div>
     </footer>
   )
@@ -2436,6 +2528,7 @@ export function SensAiOnePagerV2() {
         <AskSensAi />
       </div>
       <IntegrationSection />
+      <PartnershipSection />
       <CTA />
       <Footer />
     </div>

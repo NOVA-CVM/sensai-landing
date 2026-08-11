@@ -332,3 +332,15 @@
   }
 }
 
+
+/* Heartbeat dot: quiet green pulse */
+@keyframes sensaiHeartbeat {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79, 138, 104, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(79, 138, 104, 0); }
+}
+.sensai-heartbeat {
+  animation: sensaiHeartbeat 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sensai-heartbeat { animation: none !important; }
+}

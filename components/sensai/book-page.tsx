@@ -38,14 +38,15 @@ function Logo() {
   )
 }
 
-export function BookPage() {
+export function BookPage({ program = false }: { program?: boolean }) {
   const [submitted, setSubmitted] = useState(false)
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // No backend yet: forward to the walkthrough calendar (database hookup later).
     setSubmitted(true)
-    window.location.href = BOOKING_URL
+    // Program applications stay distinguishable from walkthrough requests
+    window.location.href = program ? `${BOOKING_URL}?src=design-partnership` : BOOKING_URL
   }
 
   return (
@@ -74,12 +75,13 @@ export function BookPage() {
                 margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1,
                 lineHeight: 1.12, color: SENS.ink,
               }}>
-                Get an expert on every player.
+                {program ? 'Apply to the design partnership.' : 'Get an expert on every player.'}
               </h1>
               <p style={{ margin: '14px 0 10px', fontSize: 16, lineHeight: 1.55, color: SENS.inkSoft }}>
                 Tell us a little about your operation. We take it from there.
               </p>
 
+              <input type="hidden" name="type" value={program ? 'design-partnership' : 'walkthrough'} />
               <label style={labelStyle} htmlFor="bk-name">Full name*</label>
               <input id="bk-name" name="name" required style={inputStyle} autoComplete="name" />
 
@@ -115,7 +117,7 @@ export function BookPage() {
                   boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
                   opacity: submitted ? 0.7 : 1,
                 }}>
-                  {submitted ? 'Opening the calendar…' : 'Book a walkthrough'} <ArrowRight className="w-4 h-4" />
+                  {submitted ? 'Opening the calendar…' : program ? 'Apply to the program' : 'Book a walkthrough'} <ArrowRight className="w-4 h-4" />
                 </button>
                 <div style={{ fontSize: 12, color: SENS.muted }}>
                   By submitting you agree to our Privacy Policy
