@@ -23,6 +23,65 @@ const SENS = {
 
 const BOOKING_URL = "https://calendar.app.google/K15ZBdA3E6WBxbWXA"
 
+// ─── Performance hooks: pause animations off-viewport, honor reduced motion ───
+function useInView(margin = '200px') {
+  const ref = useRef<HTMLDivElement | null>(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') { setInView(true); return }
+    const obs = new IntersectionObserver(entries => setInView(entries[0].isIntersecting), { rootMargin: margin })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [margin])
+  return { ref, inView }
+}
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduced(mq.matches)
+    const fn = (e: MediaQueryListEvent) => setReduced(e.matches)
+    mq.addEventListener('change', fn)
+    return () => mq.removeEventListener('change', fn)
+  }, [])
+  return reduced
+}
+
+// Typewriter isolated in a leaf so per-keystroke state never re-renders the big tree.
+function TypedPrompt({ text, run, cursorColor, onDone }: {
+  text: string; run: boolean; cursorColor: string; onDone: () => void
+}) {
+  const [n, setN] = useState(0)
+  const doneRef = useRef(false)
+  useEffect(() => {
+    doneRef.current = false
+    setN(0)
+    if (!run) return
+    let i = 0
+    const id = setInterval(() => {
+      i += 1
+      setN(i)
+      if (i >= text.length) {
+        clearInterval(id)
+        if (!doneRef.current) {
+          doneRef.current = true
+          setTimeout(onDone, 450)
+        }
+      }
+    }, 38)
+    return () => clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, run])
+  return (
+    <>
+      {text.slice(0, n)}
+      <span className="sensai-cursor-blink" style={{ display: 'inline-block', width: 2, height: 14, background: cursorColor, marginLeft: 2 }} />
+    </>
+  )
+}
+
 function openBooking() {
   const w = 500
   const h = 650
@@ -664,23 +723,23 @@ const Spark = ({ d, color }: { d: string; color: string }) => (
 const MonoLabel = ({ children }: { children: React.ReactNode }) => (
   <div style={{
     fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 9.5,
-    letterSpacing: '0.1em', color: '#7d89a8', textTransform: 'uppercase', marginBottom: 10,
+    letterSpacing: '0.1em', color: SENS.muted, textTransform: 'uppercase', marginBottom: 10,
   }}>{children}</div>
 )
 
 const OutChip = ({ children }: { children: React.ReactNode }) => (
   <span style={{
     display: 'inline-block', marginTop: 10, padding: '5px 10px', borderRadius: 999,
-    border: '1px solid rgba(143,168,224,0.4)', background: 'rgba(143,168,224,0.08)',
-    fontSize: 11, fontWeight: 500, color: '#aebfe8',
+    border: '1px solid rgba(26,68,168,0.3)', background: 'rgba(26,68,168,0.06)',
+    fontSize: 11, fontWeight: 500, color: SENS.blueBright,
   }}>{children}</span>
 )
 
 function ArtifactCard({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      marginTop: 16, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)',
-      borderRadius: 12, padding: '14px 16px',
+      marginTop: 14, background: '#f7f9fd', border: `1px solid ${SENS.rule}`,
+      borderRadius: 12, padding: '14px 16px', maxWidth: 560,
     }}>{children}</div>
   )
 }
@@ -698,26 +757,26 @@ function MiniRadar() {
     <svg viewBox="0 0 92 84" style={{ width: 92, height: 84, flexShrink: 0 }}>
       {[0.5, 1].map(f => (
         <polygon key={f} points={Array.from({ length: axes }, (_, i) => pt(i, f)).join(' ')}
-          fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" />
+          fill="none" stroke={SENS.rule} strokeWidth="0.8" />
       ))}
-      <polygon points={healthy.map((f, i) => pt(i, f)).join(' ')} fill="rgba(143,168,224,0.18)" stroke="#8fa8e0" strokeWidth="1.2" />
-      <polygon points={cooled.map((f, i) => pt(i, f)).join(' ')} fill="rgba(255,255,255,0.08)" stroke="#ffffff" strokeWidth="1.2" strokeDasharray="3 2" />
+      <polygon points={healthy.map((f, i) => pt(i, f)).join(' ')} fill="rgba(26,68,168,0.14)" stroke={SENS.blueBright} strokeWidth="1.2" />
+      <polygon points={cooled.map((f, i) => pt(i, f)).join(' ')} fill="rgba(11,21,48,0.05)" stroke={SENS.ink} strokeWidth="1.2" strokeDasharray="3 2" />
     </svg>
   )
 }
 
 function ValueSection() {
-  const rowStyle = { fontSize: 12.5, color: '#b6c1dd', display: 'flex', alignItems: 'center', gap: 10 } as const
-  const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: '#dfe7f8' } as const
-  const tiles: Array<{ n: string; pill: string; t: string; s: string; art: React.ReactNode }> = [
+  const rowStyle = { fontSize: 12.5, color: SENS.inkSoft, display: 'flex', alignItems: 'center', gap: 10 } as const
+  const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
+  const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     {
-      n: '01', pill: 'Cases', t: 'Bonus abuse & fraud prevention',
+      n: '01', t: 'Bonus abuse & fraud prevention',
       s: 'Multi-accounting, coordinated rings, promo cycling — caught across the whole base, delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
           <div style={{ position: 'relative' }}>
             <img src="/screenshots/raf-network-new.png" alt="Ring-network graph of linked accounts"
-              style={{ width: '100%', borderRadius: 8, display: 'block', opacity: 0.9 }} />
+              style={{ width: '100%', borderRadius: 8, display: 'block' }} />
             <div style={{
               position: 'absolute', left: 8, bottom: 8, right: 8,
               background: 'rgba(11,21,48,0.92)', border: '1px solid rgba(143,168,224,0.35)', borderRadius: 8,
@@ -731,7 +790,7 @@ function ValueSection() {
       ),
     },
     {
-      n: '02', pill: 'Daily board', t: 'Value prediction & VIP triggers',
+      n: '02', t: 'Value prediction & VIP triggers',
       s: 'Lifetime-value models on every account. Tomorrow’s VIPs flagged in their first weeks; today’s VIPs watched daily for health.',
       art: (
         <ArtifactCard>
@@ -739,24 +798,24 @@ function ValueSection() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={rowStyle}>
               <span style={idStyle}>#48291</span>
-              <span style={{ color: '#fff', fontWeight: 600 }}>$2,140</span>
-              <span style={{ color: '#8fa8e0', fontWeight: 600 }}>Tier A</span>
-              <Spark d="M2 22 L20 20 L38 16 L56 14 L74 8 L98 4" color="#8fa8e0" />
+              <span style={{ color: SENS.ink, fontWeight: 600 }}>$2,140</span>
+              <span style={{ color: SENS.blueBright, fontWeight: 600 }}>Tier A</span>
+              <Spark d="M2 22 L20 20 L38 16 L56 14 L74 8 L98 4" color={SENS.blueBright} />
             </div>
-            <div style={{ fontSize: 11, color: '#7d89a8', fontStyle: 'italic', paddingLeft: 2 }}>
+            <div style={{ fontSize: 11, color: SENS.muted, fontStyle: 'italic', paddingLeft: 2 }}>
               deposits steady 6 weeks · session depth rising · flagged day 9
             </div>
             <div style={rowStyle}>
               <span style={idStyle}>#55107</span>
-              <span style={{ color: '#fff', fontWeight: 600 }}>$860</span>
-              <span style={{ color: '#b6c1dd' }}>Tier B</span>
-              <Spark d="M2 14 L20 15 L38 13 L56 15 L74 12 L98 13" color="#5f7cc0" />
+              <span style={{ color: SENS.ink, fontWeight: 600 }}>$860</span>
+              <span style={{ color: SENS.inkSoft }}>Tier B</span>
+              <Spark d="M2 14 L20 15 L38 13 L56 15 L74 12 L98 13" color="#8fa8e0" />
             </div>
             <div style={rowStyle}>
               <span style={idStyle}>#61220</span>
-              <span style={{ color: '#fff', fontWeight: 600 }}>$310</span>
-              <span style={{ color: '#b6c1dd' }}>Tier C</span>
-              <Spark d="M2 8 L20 10 L38 14 L56 16 L74 20 L98 22" color="#5f7cc0" />
+              <span style={{ color: SENS.ink, fontWeight: 600 }}>$310</span>
+              <span style={{ color: SENS.inkSoft }}>Tier C</span>
+              <Spark d="M2 8 L20 10 L38 14 L56 16 L74 20 L98 22" color="#8fa8e0" />
             </div>
           </div>
           <OutChip>→ worked as cases · VIP review</OutChip>
@@ -764,17 +823,17 @@ function ValueSection() {
       ),
     },
     {
-      n: '03', pill: 'Triggers', t: 'Churn prevention',
+      n: '03', t: 'Churn prevention',
       s: 'Early disengagement signals on the players worth keeping, with the next action attached — before the value walks out the door.',
       art: (
         <ArtifactCard>
           <MonoLabel>Early signal · worked as a case</MonoLabel>
           <div style={rowStyle}>
             <span style={idStyle}>#33418</span>
-            <span style={{ color: '#fff', fontWeight: 600 }}>Churn risk 87%</span>
-            <Spark d="M2 4 L20 6 L38 10 L56 14 L74 19 L98 24" color="#ffffff" />
+            <span style={{ color: SENS.ink, fontWeight: 600 }}>Churn risk 87%</span>
+            <Spark d="M2 4 L20 6 L38 10 L56 14 L74 19 L98 24" color={SENS.ink} />
           </div>
-          <div style={{ fontSize: 11.5, color: '#7d89a8', marginTop: 6 }}>
+          <div style={{ fontSize: 11.5, color: SENS.muted, marginTop: 6 }}>
             sessions shortening · last deposit 12d
           </div>
           <OutChip>→ CRM: retention journey, next 24h</OutChip>
@@ -782,7 +841,7 @@ function ValueSection() {
       ),
     },
     {
-      n: '04', pill: 'Recommendations', t: 'Game & content recommendations',
+      n: '04', t: 'Game & content recommendations',
       s: 'For each player: the games they haven’t tried but will likely love — fed to your CRM campaigns and lobby tools.',
       art: (
         <ArtifactCard>
@@ -795,7 +854,6 @@ function ValueSection() {
             ].map(game => (
               <div key={game.name} style={{
                 flex: 1, height: 62, borderRadius: 8, background: game.g,
-                border: '1px solid rgba(255,255,255,0.14)',
                 display: 'flex', alignItems: 'flex-end', padding: 8,
               }}>
                 <span style={{ fontSize: 10.5, fontWeight: 600, color: '#dfe7f8' }}>{game.name}</span>
@@ -807,31 +865,31 @@ function ValueSection() {
       ),
     },
     {
-      n: '05', pill: 'Enriched profiles', t: 'Player-profile enrichment',
+      n: '05', t: 'Player-profile enrichment',
       s: 'Every system you run gets a deeper picture of the player: value tier, risk signals, churn risk, game affinities — written into your CRM, risk tools and warehouse. Hundreds of enrichment columns, added to every player.',
       art: (
         <ArtifactCard>
           <MonoLabel>Player #29054 · profile</MonoLabel>
           <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, lineHeight: 1.8 }}>
-            <div style={{ color: '#7d89a8' }}>id: 29054 · joined: 2025-11 · market: MT</div>
-            <div style={{ color: '#8fa8e0' }}>+ value_tier: <span style={{ color: '#fff' }}>A</span> · churn_risk: <span style={{ color: '#fff' }}>low</span></div>
-            <div style={{ color: '#8fa8e0' }}>+ affinity: <span style={{ color: '#fff' }}>live casino</span> · risk_flags: <span style={{ color: '#fff' }}>none</span></div>
+            <div style={{ color: SENS.muted }}>id: 29054 · joined: 2025-11 · market: MT</div>
+            <div style={{ color: SENS.blueBright }}>+ value_tier: <span style={{ color: SENS.ink }}>A</span> · churn_risk: <span style={{ color: SENS.ink }}>low</span></div>
+            <div style={{ color: SENS.blueBright }}>+ affinity: <span style={{ color: SENS.ink }}>live casino</span> · risk_flags: <span style={{ color: SENS.ink }}>none</span></div>
           </div>
           <OutChip>→ written to CRM · DWH</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '06', pill: 'Answers', t: 'Evidence-backed answers',
+      n: '06', t: 'Evidence-backed answers',
       s: 'Ask about any player, segment or pattern — and get an answer built on the full context of the base, with the evidence attached.',
       art: (
         <ArtifactCard>
           <MonoLabel>Q Center</MonoLabel>
           <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 12.5, color: '#dfe7f8', marginBottom: 6 }}>&ldquo;Which VIPs cooled off this week?&rdquo;</div>
-              <div style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>7 VIPs · sessions −40% vs their norm</div>
-              <div style={{ fontSize: 11, color: '#7d89a8', marginTop: 4 }}>evidence: session log · deposit cadence · 90d baseline</div>
+              <div style={{ fontSize: 12.5, color: SENS.inkSoft, marginBottom: 6 }}>&ldquo;Which VIPs cooled off this week?&rdquo;</div>
+              <div style={{ fontSize: 13, color: SENS.ink, fontWeight: 600 }}>7 VIPs · sessions −40% vs their norm</div>
+              <div style={{ fontSize: 11, color: SENS.muted, marginTop: 4 }}>evidence: session log · deposit cadence · 90d baseline</div>
             </div>
             <MiniRadar />
           </div>
@@ -839,57 +897,85 @@ function ValueSection() {
       ),
     },
   ]
+  const [active, setActive] = useState(0)
   return (
-    <SectionShell padY={100}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
-        <div>
-          <Eyebrow>What you get</Eyebrow>
-          <SectionTitle max={720}>Built to grow value, stop abuse, and keep players playing.</SectionTitle>
-        </div>
-        <div style={{
-          fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10,
-          letterSpacing: '0.1em', color: '#7d89a8', paddingBottom: 6,
-        }}>ILLUSTRATIVE · SYNTHETIC DATA</div>
-      </div>
-
-      <div style={{ marginTop: 44, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
-        {tiles.map(tile => (
-          <div key={tile.n} style={{
-            background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.10)',
-            borderRadius: 16, padding: '24px 26px', display: 'flex', flexDirection: 'column',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <span style={{ fontSize: 24, fontWeight: 300, color: '#8fa8e0', letterSpacing: -1, fontFeatureSettings: '"tnum"' }}>{tile.n}</span>
-              <span style={{
-                fontSize: 10.5, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase',
-                color: '#8fa8e0', border: '1px solid rgba(143,168,224,0.35)', borderRadius: 999, padding: '4px 10px',
-              }}>{tile.pill}</span>
+    <section style={{ padding: '110px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div style={{
+              color: SENS.blueBright, fontSize: 13, fontWeight: 500,
+              letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
+              What you get
             </div>
-            <div style={{ fontSize: 17, fontWeight: 600, color: '#fff', letterSpacing: -0.3, marginBottom: 8 }}>{tile.t}</div>
-            <div style={{ fontSize: 13.5, color: '#b6c1dd', lineHeight: 1.55 }}>{tile.s}</div>
-            <div style={{ marginTop: 'auto' }}>{tile.art}</div>
+            <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
+              Built to grow value, stop abuse, and keep players playing.
+            </h2>
           </div>
-        ))}
-      </div>
+          <div style={{
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10,
+            letterSpacing: '0.1em', color: SENS.muted, paddingBottom: 6,
+          }}>ILLUSTRATIVE · SYNTHETIC DATA</div>
+        </div>
 
-      <div style={{ marginTop: 30, fontSize: 16, fontWeight: 600, color: '#8fa8e0', maxWidth: 720, lineHeight: 1.5 }}>
-        All of it lands in the systems you already run &mdash; as cases, lists, triggers and enriched profiles. No new tool.
-      </div>
+        <div style={{ marginTop: 48, maxWidth: 880 }}>
+          {tiles.map((it, i) => {
+            const isActive = i === active
+            return (
+              <div
+                key={it.n}
+                className="sensai-value-row"
+                onClick={() => setActive(i)}
+                style={{
+                  display: 'grid', gridTemplateColumns: '90px 1fr 36px', gap: 24, alignItems: 'start',
+                  padding: '22px 0', cursor: 'pointer',
+                  borderTop: `1px solid ${SENS.rule}`,
+                  borderBottom: i === tiles.length - 1 ? `1px solid ${SENS.rule}` : 'none',
+                }}
+              >
+                <div style={{ fontSize: 30, fontWeight: 300, color: isActive ? SENS.blueBright : '#b6bfd4', letterSpacing: -1, fontFeatureSettings: '"tnum"', transition: 'color 0.25s' }}>{it.n}</div>
+                <div>
+                  <div style={{ fontSize: 17, fontWeight: 600, color: isActive ? SENS.ink : SENS.inkSoft, letterSpacing: -0.3, paddingTop: 6, transition: 'color 0.25s' }}>{it.t}</div>
+                  {isActive && (
+                    <div className="sensai-fade-in">
+                      <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 560, marginTop: 8 }}>{it.s}</div>
+                      {it.art}
+                    </div>
+                  )}
+                </div>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{
+                  marginTop: 12, justifySelf: 'end',
+                  transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s',
+                }}>
+                  <path d="M3 6l5 5 5-5" stroke={SENS.blueBright} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            )
+          })}
+        </div>
 
-      <div style={{ marginTop: 40 }}>
-        <button
-          onClick={openBooking}
-          style={{
-            background: '#fff', color: SENS.ink, border: 'none',
-            padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-            boxShadow: '0 18px 44px -14px rgba(0,0,0,0.5)',
-          }}
-        >
-          Book a walkthrough <ArrowRight className="w-4 h-4" />
-        </button>
+        <div style={{ marginTop: 30, fontSize: 16, fontWeight: 600, color: SENS.blueBright, maxWidth: 720, lineHeight: 1.5 }}>
+          All of it lands in the systems you already run &mdash; as cases, lists, triggers and enriched profiles. No new tool.
+        </div>
+
+        <div style={{ marginTop: 40 }}>
+          <button
+            onClick={openBooking}
+            style={{
+              background: SENS.blue, color: '#fff', border: 'none',
+              padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
+              boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
+            }}
+          >
+            Book a walkthrough <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
-    </SectionShell>
+    </section>
   )
 }
 
@@ -980,7 +1066,7 @@ function ProblemSection() {
   )
 }
 
-function ResolutionVisual() {
+function ResolutionVisual({ animate = true }: { animate?: boolean }) {
   // A field of "players": blurred pixel blocks on the left resolving into
   // sharp individuals on the right. Deterministic — no randomness.
   const cols = 26
@@ -1038,14 +1124,16 @@ function ResolutionVisual() {
       })}
       <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="5" fill="#fff" />
       <circle cx={focus.x + focus.jx} cy={focus.y + focus.jy} r="11" fill="none" stroke="#aebfe8" strokeWidth="1.4" opacity="0.9">
-        <animate attributeName="r" values="9;13;9" dur="3.2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.9;0.3;0.9" dur="3.2s" repeatCount="indefinite" />
+        {animate && <animate attributeName="r" values="9;13;9" dur="3.2s" repeatCount="indefinite" />}
+        {animate && <animate attributeName="opacity" values="0.9;0.3;0.9" dur="3.2s" repeatCount="indefinite" />}
       </circle>
     </svg>
   )
 }
 
 function TurnSection() {
+  const { ref, inView } = useInView()
+  const reduced = useReducedMotion()
   return (
     <SectionShell padY={104}>
       <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto' }}>
@@ -1059,8 +1147,8 @@ function TurnSection() {
           every single one, in focus.
         </p>
       </div>
-      <div style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
-        <ResolutionVisual />
+      <div ref={ref} style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
+        <ResolutionVisual animate={inView && !reduced} />
       </div>
     </SectionShell>
   )
@@ -1273,13 +1361,23 @@ function AskSensAi() {
   ]
 
   const [promptIdx, setPromptIdx] = useState(0)
-  const [typedQ, setTypedQ] = useState('')
   const [phase, setPhase] = useState<'typing' | 'sending' | 'thinking' | 'answering' | 'settled'>('typing')
   const [crmPhase, setCrmPhase] = useState<'idle' | 'clicking' | 'syncing' | 'done'>('idle')
   const [revealedBullets, setRevealedBullets] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { ref: viewRef, inView } = useInView()
+  const reduced = useReducedMotion()
+  const animate = inView && !reduced
 
   const current = prompts[promptIdx]
+
+  // Reduced motion: land on the settled state, no cycling
+  useEffect(() => {
+    if (!reduced) return
+    setPhase('settled')
+    setRevealedBullets(current.reply.bullets.length)
+    setCrmPhase('done')
+  }, [reduced, promptIdx, current.reply.bullets.length])
 
   // Auto-scroll
   useEffect(() => {
@@ -1287,46 +1385,31 @@ function AskSensAi() {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight
   }, [phase, revealedBullets, crmPhase, promptIdx])
 
-  // Typewriter
+  // Scene reset on prompt change (typing itself lives in the TypedPrompt leaf)
   useEffect(() => {
-    let cancelled = false
-    setTypedQ('')
+    if (reduced) return
     setPhase('typing')
     setRevealedBullets(0)
     setCrmPhase('idle')
-
-    const q = current.q
-    let i = 0
-    const typeTick = setInterval(() => {
-      if (cancelled) return
-      i += 1
-      setTypedQ(q.slice(0, i))
-      if (i >= q.length) {
-        clearInterval(typeTick)
-        setTimeout(() => !cancelled && setPhase('sending'), 450)
-      }
-    }, 38)
-
-    return () => { cancelled = true; clearInterval(typeTick) }
-  }, [promptIdx, current.q])
+  }, [promptIdx, reduced])
 
   // sending -> thinking
   useEffect(() => {
-    if (phase !== 'sending') return
+    if (phase !== 'sending' || !animate) return
     const t = setTimeout(() => setPhase('thinking'), 350)
     return () => clearTimeout(t)
-  }, [phase])
+  }, [phase, animate])
 
   // thinking -> answering
   useEffect(() => {
-    if (phase !== 'thinking') return
+    if (phase !== 'thinking' || !animate) return
     const t = setTimeout(() => setPhase('answering'), 700)
     return () => clearTimeout(t)
-  }, [phase])
+  }, [phase, animate])
 
   // answering -> reveal bullets -> settled
   useEffect(() => {
-    if (phase !== 'answering') return
+    if (phase !== 'answering' || !animate) return
     let i = 0
     const tick = setInterval(() => {
       i += 1
@@ -1337,11 +1420,11 @@ function AskSensAi() {
       }
     }, 350)
     return () => clearInterval(tick)
-  }, [phase, current.reply.bullets.length])
+  }, [phase, animate, current.reply.bullets.length])
 
   // settled -> auto-advance (with click + CRM animations)
   useEffect(() => {
-    if (phase !== 'settled') return
+    if (phase !== 'settled' || !animate) return
     const isCrm = current.reply.actionKind === 'crm'
     if (isCrm) {
       const t1 = setTimeout(() => setCrmPhase('clicking'), 800)
@@ -1356,15 +1439,25 @@ function AskSensAi() {
     const t2 = setTimeout(() => setCrmPhase('done'), 1100)
     const t3 = setTimeout(() => setPromptIdx((promptIdx + 1) % prompts.length), dwell)
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
-  }, [phase, promptIdx, current.reply.actionKind, current.reply.dwellMs, prompts.length])
+  }, [phase, animate, promptIdx, current.reply.actionKind, current.reply.dwellMs, prompts.length])
 
   return (
-    <SectionShell padY={96}>
-      <div className="sensai-ask-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 80, alignItems: 'center' }}>
+    <section style={{ padding: '110px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
+      <div ref={viewRef} className="sensai-ask-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 80, alignItems: 'center' }}>
         {/* Left: copy */}
         <div className="sensai-ask-copy">
-          <Eyebrow>How it works</Eyebrow>
-          <SectionTitle max={560}>Speak with sensAi in your own words.</SectionTitle>
+          <div style={{
+            color: SENS.blueBright, fontSize: 13, fontWeight: 500,
+            letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
+            display: 'flex', alignItems: 'center', gap: 10,
+          }}>
+            <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
+            How it works
+          </div>
+          <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 560 }}>
+            Speak with sensAi in your own words.
+          </h2>
 
           <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
@@ -1373,10 +1466,10 @@ function AskSensAi() {
               { t: 'One click to act', s: 'Push to CRM, open a case, or route a journey from inside the answer.' },
             ].map(it => (
               <div key={it.t} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#8fa8e0', marginTop: 8, flexShrink: 0 }} />
+                <div style={{ width: 6, height: 6, borderRadius: '50%', background: SENS.blueBright, marginTop: 8, flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{it.t}</div>
-                  <div className="sensai-card-body" style={{ fontSize: 13, color: '#b6c1dd', lineHeight: 1.5, marginTop: 2 }}>{it.s}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: SENS.ink }}>{it.t}</div>
+                  <div className="sensai-card-body" style={{ fontSize: 13, color: SENS.inkSoft, lineHeight: 1.5, marginTop: 2 }}>{it.s}</div>
                 </div>
               </div>
             ))}
@@ -1387,11 +1480,11 @@ function AskSensAi() {
             {prompts.map((_, i) => (
               <button key={i} onClick={() => setPromptIdx(i)} style={{
                 width: i === promptIdx ? 28 : 8, height: 8, borderRadius: 4,
-                background: i === promptIdx ? '#8fa8e0' : 'rgba(255,255,255,0.18)',
+                background: i === promptIdx ? SENS.blueBright : SENS.rule,
                 border: 'none', padding: 0, cursor: 'pointer', transition: 'all 0.3s',
               }} aria-label={`Prompt ${i + 1}`} />
             ))}
-            <span style={{ fontSize: 12, color: '#7d89a8', marginLeft: 12 }}>{promptIdx + 1}/{prompts.length}</span>
+            <span style={{ fontSize: 12, color: SENS.muted, marginLeft: 12 }}>{promptIdx + 1}/{prompts.length}</span>
           </div>
         </div>
 
@@ -1589,14 +1682,12 @@ function AskSensAi() {
             }}>
               <span style={{ fontSize: 13, color: phase === 'typing' ? SENS.ink : SENS.muted, flex: 1, minHeight: 18, display: 'flex', alignItems: 'center' }}>
                 {phase === 'typing' ? (
-                  <>
-                    {typedQ}
-                    <span className="sensai-cursor-blink" style={{ display: 'inline-block', width: 2, height: 14, background: SENS.blueBright, marginLeft: 2 }} />
-                  </>
+                  <TypedPrompt text={current.q} run={animate} cursorColor={SENS.blueBright}
+                    onDone={() => setPhase('sending')} />
                 ) : 'Ask sensAi…'}
               </span>
               <button style={{
-                background: phase === 'typing' && typedQ.length > 0 ? '#0a0a0a' : '#dde2ee',
+                background: phase === 'typing' ? '#0a0a0a' : '#dde2ee',
                 color: '#fff', border: 'none',
                 width: 30, height: 30, borderRadius: '50%', display: 'grid', placeItems: 'center', cursor: 'pointer',
                 transition: 'background 0.2s',
@@ -1607,7 +1698,8 @@ function AskSensAi() {
           </div>
         </div>
       </div>
-    </SectionShell>
+      </div>
+    </section>
   )
 }
 
@@ -1682,7 +1774,7 @@ function HowItWorks() {
   )
 }
 
-function IntegrationDiagram() {
+function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
   // Raw data → (read access) → sensAi over the player base → (actions out) → the teams' systems.
   const sources = [
     { name: 'Players', glyph: 'person' },
@@ -1711,18 +1803,18 @@ function IntegrationDiagram() {
       const ry = Number(y.toFixed(2))
       if (z > -0.15) {
         dots.push(<circle key={`${lat}-${s}`} cx={rx} cy={ry} r={Number((1.5 + Math.max(0, z) * 1.5).toFixed(3))}
-          fill={seed % 5 === 0 ? '#dfe7f8' : '#8fa8e0'} opacity={Number((0.2 + Math.max(0, z) * 0.55).toFixed(3))} />)
+          fill={seed % 5 === 0 ? SENS.blue : SENS.blueBright} opacity={Number((0.2 + Math.max(0, z) * 0.55).toFixed(3))} />)
       } else {
-        dots.push(<circle key={`${lat}-${s}`} cx={rx} cy={ry} r={1.2} fill="#8fa8e0" opacity={0.1} />)
+        dots.push(<circle key={`${lat}-${s}`} cx={rx} cy={ry} r={1.2} fill={SENS.blueBright} opacity={0.12} />)
       }
     }
   }
   const glyph = (kind: string, x: number, y: number) => {
-    const stroke = { stroke: '#c9d3ea', strokeWidth: 1.5, fill: 'none', opacity: 0.9 } as const
+    const stroke = { stroke: SENS.inkSoft, strokeWidth: 1.5, fill: 'none', opacity: 0.9 } as const
     switch (kind) {
       case 'person': return <g {...stroke}><circle cx={x + 10} cy={y - 4} r="4" /><path d={`M ${x + 2} ${y + 9} c 0 -5 4 -7 8 -7 s 8 2 8 7`} /></g>
       case 'card': return <g {...stroke}><rect x={x} y={y - 7} width="20" height="14" rx="2.5" /><path d={`M ${x} ${y - 2} h 20`} /></g>
-      case 'dice': return <g {...stroke}><rect x={x + 1} y={y - 8} width="17" height="17" rx="3.5" /><circle cx={x + 6} cy={y - 3} r="1" fill="#c9d3ea" /><circle cx={x + 13} cy={y + 4} r="1" fill="#c9d3ea" /></g>
+      case 'dice': return <g {...stroke}><rect x={x + 1} y={y - 8} width="17" height="17" rx="3.5" /><circle cx={x + 6} cy={y - 3} r="1" fill={SENS.inkSoft} /><circle cx={x + 13} cy={y + 4} r="1" fill={SENS.inkSoft} /></g>
       case 'gift': return <g {...stroke}><rect x={x} y={y - 3} width="20" height="11" rx="2" /><path d={`M ${x} ${y - 3} h 20 M ${x + 10} ${y - 3} v 11 M ${x + 5} ${y - 3} c -1 -6 5 -7 5 -1 M ${x + 15} ${y - 3} c 1 -6 -5 -7 -5 -1`} /></g>
       default: return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 9} ${y - 4} v 4 l 3 2`} /></g>
     }
@@ -1732,23 +1824,23 @@ function IntegrationDiagram() {
       aria-label="Raw data tables flowing into sensAi over the player base, with actions pushed out to the teams' systems">
       <defs>
         <radialGradient id="globe-glow" cx="50%" cy="42%" r="60%">
-          <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.22" />
           <stop offset="100%" stopColor="#1a44a8" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="conn" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#8fa8e0" stopOpacity="0.10" />
-          <stop offset="100%" stopColor="#8fa8e0" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#1a44a8" stopOpacity="0.55" />
         </linearGradient>
         <linearGradient id="conn-out" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#8fa8e0" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#8fa8e0" stopOpacity="0.10" />
+          <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#1a44a8" stopOpacity="0.12" />
         </linearGradient>
       </defs>
 
       {/* zone labels */}
-      <text x="336" y="38" textAnchor="middle" fill="#8fa8e0" fontSize="12" fontWeight="600"
+      <text x="336" y="38" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">READ ACCESS IN</text>
-      <text x="762" y="38" textAnchor="middle" fill="#8fa8e0" fontSize="12" fontWeight="600"
+      <text x="762" y="38" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">ACTIONS OUT</text>
 
       {/* connectors: raw data → node (terminate at node's left edge) */}
@@ -1764,15 +1856,15 @@ function IntegrationDiagram() {
           stroke="url(#conn-out)" strokeWidth="1.4" fill="none" />
       })}
       {/* flow pulses */}
-      {[1, 3].map(i => (
-        <circle key={`pin${i}`} r="2.4" fill="#aebfe8" opacity="0">
+      {animate && [1, 3].map(i => (
+        <circle key={`pin${i}`} r="2.4" fill={SENS.blueBright} opacity="0">
           <animateMotion dur="3.4s" repeatCount="indefinite" begin={`${i * 0.9}s`}
             path={`M 252 ${srcYs[i]} C 350 ${srcYs[i]}, 360 ${nodeY - 22 + i * 11}, 452 ${nodeY - 22 + i * 11}`} />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="3.4s" repeatCount="indefinite" begin={`${i * 0.9}s`} />
         </circle>
       ))}
-      {[0, 2].map(i => (
-        <circle key={`pout${i}`} r="2.4" fill="#aebfe8" opacity="0">
+      {animate && [0, 2].map(i => (
+        <circle key={`pout${i}`} r="2.4" fill={SENS.blueBright} opacity="0">
           <animateMotion dur="3.4s" repeatCount="indefinite" begin={`${1.4 + i * 0.8}s`}
             path={`M 648 ${nodeY - 16 + i * 11} C 750 ${nodeY - 16 + i * 11}, 770 ${outYs[i]}, 872 ${outYs[i]}`} />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="3.4s" repeatCount="indefinite" begin={`${1.4 + i * 0.8}s`} />
@@ -1782,31 +1874,31 @@ function IntegrationDiagram() {
       {/* the player base — globe of players */}
       <circle cx={cx} cy={gy} r={R + 40} fill="url(#globe-glow)" />
       {dots}
-      <circle cx={cx + 62} cy={gy - 38} r="3.4" fill="#fff" />
-      <circle cx={cx + 62} cy={gy - 38} r="7.5" fill="none" stroke="#aebfe8" strokeWidth="1.1" opacity="0.8">
-        <animate attributeName="r" values="6;10;6" dur="3s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.8;0.25;0.8" dur="3s" repeatCount="indefinite" />
+      <circle cx={cx + 62} cy={gy - 38} r="3.4" fill={SENS.blueBright} />
+      <circle cx={cx + 62} cy={gy - 38} r="7.5" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" opacity="0.7">
+        {animate && <animate attributeName="r" values="6;10;6" dur="3s" repeatCount="indefinite" />}
+        {animate && <animate attributeName="opacity" values="0.8;0.25;0.8" dur="3s" repeatCount="indefinite" />}
       </circle>
-      <circle cx={cx - 84} cy={gy + 30} r="3" fill="#fff" />
-      <circle cx={cx + 8} cy={gy + 88} r="2.8" fill="#dfe7f8" />
-      <text x={cx} y={gy + R + 34} textAnchor="middle" fill="#7d89a8" fontSize="11.5"
+      <circle cx={cx - 84} cy={gy + 30} r="3" fill={SENS.blue} />
+      <circle cx={cx + 8} cy={gy + 88} r="2.8" fill={SENS.blue} />
+      <text x={cx} y={gy + R + 34} textAnchor="middle" fill={SENS.muted} fontSize="11.5"
         letterSpacing="0.14em" style={{ textTransform: 'uppercase' }}>THE PLAYER BASE · EVERY DOT A PLAYER</text>
 
       {/* raw-data chips */}
-      <text x="30" y="66" fill="#7d89a8" fontSize="10.5" letterSpacing="0.16em">RAW TABLES</text>
+      <text x="30" y="66" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">RAW TABLES</text>
       {sources.map((s, i) => (
         <g key={s.name}>
           <rect x="30" y={srcYs[i] - 26} width="222" height="52" rx="12"
-            fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)" />
+            fill="#ffffff" stroke={SENS.rule} />
           {glyph(s.glyph, 48, srcYs[i])}
-          <text x="84" y={srcYs[i] + 5} fill="#c9d3ea" fontSize="14" fontWeight="500">{s.name}</text>
+          <text x="84" y={srcYs[i] + 5} fill={SENS.ink} fontSize="14" fontWeight="500">{s.name}</text>
         </g>
       ))}
 
       {/* sensAi node — white card */}
       <g>
-        <rect x="452" y={nodeY - 34} width="196" height="68" rx="16" fill="#ffffff"
-          style={{ filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.45))' }} />
+        <rect x="452" y={nodeY - 34} width="196" height="68" rx="16" fill="#ffffff" stroke={SENS.rule}
+          style={{ filter: 'drop-shadow(0 16px 28px rgba(15,28,70,0.22))' }} />
         <text x="550" y={nodeY + 3} textAnchor="middle" fill="#0b1530" fontSize="23" fontWeight="700"
           letterSpacing="0.06em">sens<tspan fontSize="26">A</tspan>i</text>
         <text x="550" y={nodeY + 22} textAnchor="middle" fill="#7a849c" fontSize="10.5"
@@ -1814,12 +1906,12 @@ function IntegrationDiagram() {
       </g>
 
       {/* system chips */}
-      <text x="872" y="106" fill="#7d89a8" fontSize="10.5" letterSpacing="0.16em">YOUR SYSTEMS</text>
+      <text x="872" y="106" fill={SENS.muted} fontSize="10.5" letterSpacing="0.16em">YOUR SYSTEMS</text>
       {outputs.map((o, i) => (
         <g key={o}>
           <rect x="872" y={outYs[i] - 26} width="198" height="52" rx="12"
-            fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)" />
-          <text x="971" y={outYs[i] + 5} textAnchor="middle" fill="#c9d3ea" fontSize="14" fontWeight="500">{o}</text>
+            fill="#ffffff" stroke={SENS.rule} />
+          <text x="971" y={outYs[i] + 5} textAnchor="middle" fill={SENS.ink} fontSize="14" fontWeight="500">{o}</text>
         </g>
       ))}
     </svg>
@@ -1828,33 +1920,37 @@ function IntegrationDiagram() {
 
 // Integration band — modus's "enterprise-grade by default" slot.
 function IntegrationSection() {
+  const { ref, inView } = useInView()
+  const reduced = useReducedMotion()
   return (
-    <SectionShell padY={100}>
+    <section style={{ padding: '110px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
       <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto' }}>
         <div style={{
-          color: '#8fa8e0', fontSize: 13, fontWeight: 500,
+          color: SENS.blueBright, fontSize: 13, fontWeight: 500,
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
         }}>Integration</div>
-        <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: '#fff' }}>
+        <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
           Integration is light.<br />Your data stays in your cloud.
         </h2>
-        <p style={{ margin: '20px auto 0', fontSize: 16, lineHeight: 1.6, color: '#b6c1dd', maxWidth: 620 }}>
+        <p style={{ margin: '20px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
           Read access to the source tables &mdash; we take it from there. Outputs pushed
           back through a write channel into the tools your teams run.
         </p>
         <div style={{ marginTop: 30, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
           {['Read-only source access', 'No PII required', 'Runs in your cloud', 'Days, not months'].map(chip => (
             <span key={chip} style={{
-              border: '1px solid rgba(255,255,255,0.14)', background: 'rgba(255,255,255,0.05)', borderRadius: 999,
-              padding: '9px 18px', fontSize: 13, fontWeight: 500, color: '#c9d3ea',
+              border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
+              padding: '9px 18px', fontSize: 13, fontWeight: 500, color: SENS.inkSoft,
             }}>{chip}</span>
           ))}
         </div>
       </div>
-      <div style={{ marginTop: 64, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
-        <IntegrationDiagram />
+      <div ref={ref} style={{ marginTop: 64, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
+        <IntegrationDiagram animate={inView && !reduced} />
       </div>
-    </SectionShell>
+      </div>
+    </section>
   )
 }
 
@@ -2190,10 +2286,10 @@ function CTA() {
 
 function Footer() {
   return (
-    <footer style={{ borderTop: '1px solid rgba(255,255,255,0.10)', padding: '32px 80px', background: SENS.ink }}>
+    <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '32px 80px', background: '#ffffff' }}>
       <div className="max-w-[1280px] mx-auto flex justify-between items-center">
-        <Logo className="text-xl font-semibold text-white" showMascot />
-        <div style={{ fontSize: 13, color: '#9aa6c4' }}>A digital customer manager for every player &middot; Nova CVM</div>
+        <Logo className="text-xl font-semibold" showMascot />
+        <div style={{ fontSize: 13, color: SENS.inkSoft }}>A digital customer manager for every player &middot; Nova CVM</div>
       </div>
     </footer>
   )

@@ -202,6 +202,24 @@
   animation: sensaiFloat 3.6s ease-in-out infinite alternate;
 }
 
+/* ─── Reduced motion: kill decorative animation, land on final states ─── */
+@media (prefers-reduced-motion: reduce) {
+  .sensai-cursor-blink,
+  .sensai-dot-pulse,
+  .sensai-fade-in,
+  .sensai-msg-in,
+  .sensai-spin,
+  .sensai-line-draw,
+  .sensai-spark-draw,
+  .sensai-area-in,
+  .sensai-stagger,
+  .sensai-float {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 /* ─── Chat shell: full viewport, dvh-aware for mobile ─── */
 .sensai-chat-shell {
   height: 100vh;
