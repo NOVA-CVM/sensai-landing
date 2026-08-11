@@ -1062,7 +1062,7 @@ function ProblemSection() {
   const stats = [
     { v: '5% → 67%', l: 'of players generate 67% of revenue', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
     { v: '10–20%', l: 'of promotional spend lost to bonus abuse, gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
-    { v: '~30%', l: 'of VIPs fall below the radar', f: '' },
+    { v: '~30%', l: 'of VIPs fall below the radar', f: 'Based on our experience' },
   ]
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
@@ -1106,7 +1106,7 @@ function ProblemSection() {
             }}>
               <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
               <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
-              {s.f && <div className="sensai-card-body" style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
+              {s.f && <div style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
             </div>
           ))}
         </div>
@@ -1116,15 +1116,12 @@ function ProblemSection() {
 }
 
 function ResolutionVisual({ animate = true }: { animate?: boolean }) {
-  // One continuous field: focus and brightness ramp smoothly left to right.
-  // Shape morphs blocky→round via rx, blur steps are dithered per-cell so no
-  // tier seams are visible. Deterministic.
-  const cols = 30
-  const rows = 6
+  // One continuous field where DENSITY grows with focus: sparse blurred blocks
+  // on the left, a dense crisp crowd of players on the right. Deterministic.
+  const cols = 34
   const w = 1040
   const h = 240
-  const cellW = w / cols
-  const cellH = h / rows
+  const colW = w / cols
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t
   const hexLerp = (c1: string, c2: string, t: number) => {
     const p = (c: string) => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)]
@@ -1134,32 +1131,36 @@ function ResolutionVisual({ animate = true }: { animate?: boolean }) {
   const cells: React.ReactNode[] = []
   let focusCx = 0, focusCy = 0
   for (let c = 0; c < cols; c++) {
-    for (let r = 0; r < rows; r++) {
-      const seed = (c * 7 + r * 13) % 17
-      const noise = ((seed / 17) - 0.5) * 0.12
-      const t = Math.min(1, Math.max(0, c / (cols - 1) + noise))
+    const tCol = c / (cols - 1)
+    const easeCol = tCol * tCol * (3 - 2 * tCol)
+    // density: 3 per column on the far left, 16 on the far right
+    const count = Math.round(lerp(3, 16, easeCol))
+    for (let i = 0; i < count; i++) {
+      const seed = (c * 7 + i * 13) % 17
+      const noise = ((seed / 17) - 0.5) * 0.1
+      const t = Math.min(1, Math.max(0, tCol + noise))
       const ease = t * t * (3 - 2 * t)
-      const x = Number((c * cellW + cellW / 2 + ((seed % 5) - 2) * (2 + t * 3)).toFixed(1))
-      const y = Number((r * cellH + cellH / 2 + (((seed * 3) % 5) - 2) * (2 + t * 3)).toFixed(1))
-      const size = Number(lerp(cellW * 0.92, 6.4, ease).toFixed(1))
+      const x = Number((c * colW + colW / 2 + ((seed % 5) - 2) * (2 + t * 4)).toFixed(1))
+      const y = Number(((i + 0.5) * (h / count) + (((seed * 3) % 5) - 2) * 3).toFixed(1))
+      const size = Number(lerp(30, 5.2, ease).toFixed(1))
       const rx = Number(Math.min(size / 2, size / 2 * ease * 2.2 + 1).toFixed(1))
       const blur = ease < 0.22 ? 'url(#res-b3)' : ease < 0.45 ? 'url(#res-b2)' : ease < 0.68 ? 'url(#res-b1)' : undefined
       const color = ease < 0.55 ? hexLerp('#5f7cc0', '#8fa8e0', ease / 0.55) : hexLerp('#8fa8e0', '#ffffff', (ease - 0.55) / 0.45)
-      const opacity = Number((0.16 + ease * 0.84).toFixed(3))
-      const isFocus = c === cols - 3 && r === 2
+      const opacity = Number((0.15 + ease * 0.85).toFixed(3))
+      const isFocus = c === cols - 3 && i === Math.floor(count / 2)
       if (isFocus) { focusCx = x; focusCy = y }
       cells.push(
-        <rect key={`${c}-${r}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
+        <rect key={`${c}-${i}`} x={Number((x - size / 2).toFixed(1))} y={Number((y - size / 2).toFixed(1))}
           width={size} height={size} rx={rx} fill={color} opacity={opacity} filter={blur} />
       )
-      if (ease > 0.9) {
-        cells.push(<rect key={`g${c}-${r}`} x={Number((x - size).toFixed(1))} y={Number((y - size).toFixed(1))}
-          width={size * 2} height={size * 2} rx={size} fill="#ffffff" opacity={0.12} filter="url(#res-b1)" />)
+      if (ease > 0.88) {
+        cells.push(<rect key={`g${c}-${i}`} x={Number((x - size).toFixed(1))} y={Number((y - size).toFixed(1))}
+          width={size * 2} height={size * 2} rx={size} fill="#ffffff" opacity={0.14} filter="url(#res-b1)" />)
       }
     }
   }
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="A blurred field of players resolving smoothly into sharp individuals">
+    <svg viewBox={`0 0 ${w} ${h}`} style={{ width: '100%', height: 'auto', display: 'block' }} aria-label="A sparse blurred field resolving into a dense crowd of sharp players">
       <defs>
         <filter id="res-b3" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6.5" /></filter>
         <filter id="res-b2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" /></filter>
@@ -1829,8 +1830,8 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
   const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Other']
   const srcYs = [92, 170, 248, 326, 404, 482]
   const outYs = [120, 205, 290, 375, 460]
-  const nodeY = 228
   const cx = 550, gy = 372, R = 148
+  const nodeY = gy
   const dots: React.ReactNode[] = []
   for (let lat = -75; lat <= 75; lat += 15) {
     const th = (lat * Math.PI) / 180
@@ -1977,7 +1978,10 @@ function IntegrationSection() {
         <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
           Light integration.<br />Your data stays in your cloud.
         </h2>
-        <p style={{ margin: '20px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
+        <div style={{ margin: '22px auto 0', fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: SENS.blueBright }}>
+          Scan in 48 hours. Live in 4 weeks.
+        </div>
+        <p style={{ margin: '16px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
           Read access to the source tables. We take it from there. Outputs pushed
           back into the tools your teams run.
         </p>
@@ -2285,9 +2289,9 @@ function CTA() {
             See what&rsquo;s leaking. In 48 hours.
           </h2>
           <p style={{ marginTop: 20, fontSize: 17, lineHeight: 1.6, color: '#b6c1dd' }}>
-            Give us a sample of your data. 48 hours later you get sensAi&rsquo;s first
-            analysis of your base: value, risk and churn, player by player. No integration,
-            nothing to prepare.
+            Give us a sample of your data. 48 hours later you get a full scan of your
+            base: value, risk and churn, player by player. No integration, nothing
+            to prepare.
           </p>
 
           <div style={{ marginTop: 36 }}>

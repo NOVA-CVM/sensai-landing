@@ -56,7 +56,14 @@ export function BookPage() {
         </div>
       </nav>
 
-      <main style={{ maxWidth: 1180, margin: '0 auto', padding: '72px 40px 96px' }}>
+      <main style={{ maxWidth: 1180, margin: '0 auto', padding: '40px 40px 96px' }}>
+        <a href="/v2" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none',
+          fontSize: 13.5, fontWeight: 500, color: SENS.muted, marginBottom: 40,
+        }}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          Back
+        </a>
         <form onSubmit={onSubmit}>
           <div className="sensai-book-grid" style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start',
