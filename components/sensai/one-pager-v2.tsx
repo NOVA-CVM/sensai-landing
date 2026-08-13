@@ -457,13 +457,14 @@ function Hero() {
             margin: 0, fontSize: 56, lineHeight: 1.12, letterSpacing: -1.6,
             fontWeight: 600, color: '#fff',
           }}>
-            You have the data.<br />What&rsquo;s missing is an expert who analyzes every player.
+            You have the data.<br />What&rsquo;s missing is an expert who{' '}
+            <span style={{ color: '#8fa8e0' }}>analyzes every player</span>.
           </h1>
           <p className="sensai-hero-subline" style={{
             margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 560,
           }}>
-            sensAi puts a digital customer manager on every player: it watches value,
+            sensAi gives you a digital customer manager on every player: it watches value,
             risk, churn and engagement, and pushes the actions into the systems your
             teams already use.
           </p>
@@ -857,6 +858,52 @@ const EventMark = ({ x, y, label, ly }: { x: number; y: number; label: string; l
   </g>
 )
 
+function RafBurst() {
+  // Dense two-hub referral burst in the product's visual vocabulary: soft-red
+  // loss nodes, scattered green wins, thin grey edges, a few ringed highlights.
+  // Deterministic; all values synthetic.
+  const hubs = [
+    { x: 262, y: 86, n: 236, spread: 80 },
+    { x: 136, y: 130, n: 158, spread: 62 },
+  ]
+  const reds = ['#e8b7b7', '#e0a1a1', '#d18585', '#c06a6a', '#a94848']
+  const greens = ['#b3d6bd', '#8fbf9d']
+  const nodes: React.ReactNode[] = []
+  const edges: React.ReactNode[] = []
+  const highlights: Array<[number, number]> = []
+  hubs.forEach((hub, hi) => {
+    for (let i = 0; i < hub.n; i++) {
+      const seed = (hi * 31 + i * 7) % 23
+      const a = i * 2.399963 + hi * 1.7
+      const r = 7 + hub.spread * Math.sqrt((i + 1) / hub.n) * (0.82 + (seed % 5) * 0.09)
+      const x = Number((hub.x + r * Math.cos(a)).toFixed(1))
+      const y = Number((hub.y + r * Math.sin(a) * 0.86).toFixed(1))
+      const roll = (seed * 13 + i) % 100
+      const color = roll < 68 ? reds[seed % 5] : roll < 80 ? greens[seed % 2] : roll < 88 ? '#cbd0da' : reds[(seed + 2) % 5]
+      const size = 1.05 + (seed % 4) * 0.38
+      edges.push(<line key={`e${hi}-${i}`} x1={hub.x} y1={hub.y} x2={x} y2={y} stroke="#d9dde6" strokeWidth="0.5" opacity="0.55" />)
+      nodes.push(<circle key={`n${hi}-${i}`} cx={x} cy={y} r={Number(size.toFixed(2))} fill={color} />)
+      if (hi === 0 && (i === 61 || i === 143)) highlights.push([x, y])
+      if (hi === 1 && (i === 47 || i === 101)) highlights.push([x, y])
+    }
+  })
+  return (
+    <svg viewBox="0 0 400 190" style={{ width: '100%', display: 'block' }}>
+      {edges}
+      {nodes}
+      {hubs.map((hub, i) => (
+        <circle key={`h${i}`} cx={hub.x} cy={hub.y} r="5" fill="#8c2f2f" stroke="#fff" strokeWidth="1" />
+      ))}
+      {highlights.map(([x, y], i) => (
+        <g key={`hl${i}`}>
+          <circle cx={x} cy={y} r="3.6" fill="#c06a6a" />
+          <circle cx={x} cy={y} r="6.2" fill="none" stroke="#c8862a" strokeWidth="1.4" />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 function ValueSection() {
   const rowStyle = { fontSize: 12.5, color: SENS.inkSoft, display: 'flex', alignItems: 'center', gap: 10 } as const
   const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
@@ -866,24 +913,31 @@ function ValueSection() {
       s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
-          <MonoLabel>A ring, delivered as a case</MonoLabel>
-          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            {[...Array(24)].map((_, i) => (
-              <circle key={i} cx={26 + (i % 8) * 38} cy={22 + Math.floor(i / 8) * 38} r="0.9" fill={SENS.rule} />
-            ))}
-            <ellipse cx="110" cy="60" rx="86" ry="42" fill="none" stroke={SENS.blueBright} strokeWidth="1.1" strokeDasharray="4 4" opacity="0.55" />
-            {[[110,60],[72,40],[70,80],[118,26],[150,44],[148,80],[104,94],[178,62]].map(([x,y],i) => (
-              <g key={i}>
-                {i > 0 && <line x1="110" y1="60" x2={x} y2={y} stroke={SENS.ink} strokeWidth="1.1" opacity="0.3" />}
-                <circle cx={x} cy={y} r={i === 0 ? 5.5 : 3.4} fill={i === 0 ? SENS.blueBright : '#fff'}
-                  stroke={i === 0 ? 'none' : SENS.ink} strokeWidth="1.1" />
-              </g>
-            ))}
-            <EventMark x={110} y={60} label="SAME PAYMENT ROUTE" ly={12} />
-            <path d="M220 60 h40" stroke={SENS.blueBright} strokeWidth="1.5" />
-            <rect x="262" y="46" width="44" height="28" rx="6" fill="none" stroke={SENS.blueBright} strokeWidth="1.3" />
-            <path d="M272 60 l5 5 10 -11" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <div style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 10, overflow: 'hidden' }}>
+            <div style={{ background: '#0d1530', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840' }} />
+              <span style={{ color: '#9aa6c4', fontSize: 9.5, marginLeft: 8 }}>Referral network</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, padding: '8px 10px 0' }}>
+              {[
+                { l: 'NETWORK NGR', v: '−$38.4K', neg: true },
+                { l: 'ACCOUNTS', v: '214', neg: false },
+                { l: 'RED RISK', v: '187', neg: true },
+              ].map(k => (
+                <div key={k.l} style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 8px' }}>
+                  <div style={{ fontSize: 7.5, color: SENS.muted, letterSpacing: '0.08em', fontWeight: 600 }}>{k.l}</div>
+                  <div style={{ fontSize: 13.5, fontWeight: 700, color: k.neg ? '#b03a3a' : SENS.ink, marginTop: 1 }}>{k.v}</div>
+                </div>
+              ))}
+            </div>
+            <RafBurst />
+            <div style={{
+              padding: '0 10px 8px', fontSize: 8, color: SENS.muted, letterSpacing: '0.1em',
+              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            }}>REFERRAL NETWORK · RANKED BY NET LOSS</div>
+          </div>
           <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
       ),
@@ -933,10 +987,10 @@ function ValueSection() {
     },
     {
       n: '04', t: 'Health scoring',
-      s: 'Every account scored for activity and engagement health, refreshed daily.',
+      s: 'Every account scored for activity and engagement health.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Account health, refreshed daily</MonoLabel>
+          <MonoLabel>Account health</MonoLabel>
           <svg viewBox="0 0 320 96" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
             {[0, 1, 2].map(i => {
               const cx = 70 + i * 92
@@ -957,7 +1011,7 @@ function ValueSection() {
               )
             })}
           </svg>
-          <OutChip>→ written to your CRM · daily</OutChip>
+          <OutChip>→ written to your CRM</OutChip>
         </ArtifactCard>
       ),
     },
@@ -994,20 +1048,40 @@ function ValueSection() {
       s: 'Bonus economics per player: who responds, who abuses, and what it should cost.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Bonus economics, per player</MonoLabel>
-          <svg viewBox="0 0 320 96" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <line x1="18" x2="302" y1="76" y2="76" stroke={SENS.rule} strokeWidth="1" />
-            {[54, 126, 198, 270].map(x => (
-              <line key={x} x1={x} x2={x} y1="76" y2="80" stroke={SENS.rule} strokeWidth="1" />
-            ))}
-            <rect x="40" y="30" width="28" height="46" rx="3" fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.2" />
-            <rect x="112" y="46" width="28" height="30" rx="3" fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.2" />
-            <rect x="184" y="58" width="28" height="18" rx="3" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.5" />
-            <rect x="256" y="24" width="28" height="52" rx="3" fill="none" stroke="#8a5058" strokeWidth="1.2" strokeDasharray="3 2.5" />
-            <line x1="18" y1="40" x2="302" y2="40" stroke={SENS.blueBright} strokeWidth="1" strokeDasharray="4 3" opacity="0.6" />
-            <text x="20" y="20" fontSize="8.5" fill={SENS.muted}
-              fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">RESPONDS · RESPONDS · IGNORES · ABUSES</text>
-          </svg>
+          <MonoLabel>The right offer, at the right amount</MonoLabel>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            <div style={{
+              border: `1px solid ${SENS.rule}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0,
+            }}>
+              <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</div>
+              <div style={{ fontSize: 9.5, color: SENS.muted, marginTop: 2 }}>Tier B · slots</div>
+            </div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                { t: 'Cashback 10%', a: '$14', pick: false },
+                { t: 'Free spins 50', a: '$11', pick: true },
+                { t: 'Deposit match 100%', a: '$25', pick: false },
+              ].map(o => (
+                <div key={o.t} style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  border: `1px solid ${o.pick ? SENS.blueBright : SENS.rule}`,
+                  background: o.pick ? 'rgba(26,68,168,0.06)' : '#fff',
+                  borderRadius: 8, padding: '6px 10px',
+                }}>
+                  <span style={{ fontSize: 12, color: o.pick ? SENS.ink : SENS.inkSoft, fontWeight: o.pick ? 600 : 400 }}>{o.t}</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: o.pick ? SENS.blueBright : SENS.muted }}>{o.a}</span>
+                    {o.pick && (
+                      <span style={{
+                        fontSize: 8, fontWeight: 600, color: SENS.blueBright, letterSpacing: '0.08em',
+                        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                      }}>SENSAI PICK</span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
           <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
       ),
@@ -1141,7 +1215,7 @@ function ProblemSection() {
             letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 20,
           }}>Problem</div>
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
-            Nobody can watch a million players.<br />So the value leaks.
+            Nobody can watch a million players.<br />So the revenue leaks.
           </h2>
           <p style={{ margin: '22px auto 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 520 }}>
             The problem is not too little data.<br />
@@ -1190,7 +1264,7 @@ function ProblemSection() {
           marginTop: 14, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
           fontSize: 11.5, color: SENS.muted,
         }}>
-          From our years inside gaming operators.
+          From our years running CRM, VIP and risk at major gaming operators.
         </div>
       </div>
     </section>
@@ -1316,9 +1390,10 @@ function TurnSection() {
           Your base, now in high resolution.
         </h2>
         <p style={{ margin: '22px auto 0', fontSize: 17, lineHeight: 1.65, color: '#b6c1dd', maxWidth: 700 }}>
-          Sensai&rsquo;s models work on the full picture of each account, and adapt the way
-          only a human analyst could. When your business changes, the analysis changes with it.
-          No data project in between. Out of a blur of a million players: every single one, in focus.
+          sensAi holds the full 360 of every account: deposits, play, bonuses, sessions,
+          risk signals. It keeps tuning to your business logic, so when something changes
+          there are no data tickets and no waiting. The analysis adapts on its own.
+          A million players stop being a blur. Every single one comes into focus.
         </p>
       </div>
       <div ref={ref} style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -2119,7 +2194,8 @@ function PartnershipSection() {
         </h2>
         <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
           We onboard a selected group of operators as design partners. They get sensAi
-          early, and sensAi learns their operation first.
+          early, and sensAi learns their operation first. Partners shape the roadmap,
+          work directly with the founders, and lock early terms.
         </p>
         <div style={{ marginTop: 30 }}>
           <button

@@ -9,12 +9,12 @@ const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' }
 export const metadata: Metadata = {
   title: 'You have the data. What’s missing is an expert who analyzes every player. | sensAi',
   description:
-    'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
+    'sensAi gives you a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
   robots: { index: false, follow: false },
   openGraph: {
     title: 'You have the data. What’s missing is an expert who analyzes every player.',
     description:
-      'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
+      'sensAi gives you a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
     images: ['/og-sense.png'],
     siteName: 'sensAi',
     type: 'website',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'You have the data. What’s missing is an expert who analyzes every player.',
     description:
-      'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
+      'sensAi gives you a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
     images: ['/og-sense.png'],
   },
 }
