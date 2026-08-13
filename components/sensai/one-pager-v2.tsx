@@ -146,7 +146,7 @@ function Logo({ className = "", showMascot = false }: { className?: string; show
       )}
       <span
         className={`tracking-[0.08em] ${className}`}
-        style={{ fontFamily: "-apple-system, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 600 }}
+        style={{ fontFamily: 'inherit', fontWeight: 600 }}
       >
         sens<span style={{ textTransform: 'none', fontSize: '1.15em', fontWeight: 700 }}>A</span>i
       </span>
@@ -454,18 +454,18 @@ function Hero() {
             letterSpacing: '0.14em', marginBottom: 22,
           }}>THE DIGITAL CUSTOMER MANAGER FOR GAMING OPERATORS</div>
           <h1 style={{
-            margin: 0, fontSize: 66, lineHeight: 1.08, letterSpacing: -1.8,
+            margin: 0, fontSize: 56, lineHeight: 1.12, letterSpacing: -1.6,
             fontWeight: 600, color: '#fff',
           }}>
-            A million players.<br />An expert on every one.
+            You have the data.<br />What&rsquo;s missing is an expert who analyzes every player.
           </h1>
           <p className="sensai-hero-subline" style={{
             margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 560,
           }}>
-            sensAi is that expert: it grows each player&rsquo;s value, protects from risk
-            and abuse, and catches churn early, acting through the systems your teams
-            already use.
+            sensAi puts a digital customer manager on every player: it watches value,
+            risk, churn and engagement, and pushes the actions into the systems your
+            teams already use.
           </p>
           <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
             <button
@@ -1144,7 +1144,7 @@ function ProblemSection() {
             letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 20,
           }}>Problem</div>
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
-            That expert never existed.<br />So the value leaks.
+            Nobody can watch a million players.<br />So the value leaks.
           </h2>
           <p style={{ margin: '22px auto 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 520 }}>
             The problem is not too little data.<br />

@@ -7,23 +7,23 @@ import './sense.css'
 const grotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-grotesk' })
 
 export const metadata: Metadata = {
-  title: 'A million players. An expert on every one. | sensAi',
+  title: 'You have the data. What’s missing is an expert who analyzes every player. | sensAi',
   description:
-    'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
+    'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
   robots: { index: false, follow: false },
   openGraph: {
-    title: 'A million players. An expert on every one.',
+    title: 'You have the data. What’s missing is an expert who analyzes every player.',
     description:
-      'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
+      'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
     images: ['/og-sense.png'],
     siteName: 'sensAi',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'A million players. An expert on every one.',
+    title: 'You have the data. What’s missing is an expert who analyzes every player.',
     description:
-      'sensAi is that expert: it grows each player’s value, protects from risk and abuse, and catches churn early, acting through the systems your teams already use.',
+      'sensAi puts a digital customer manager on every player: it watches value, risk, churn and engagement, and pushes the actions into the systems your teams already use.',
     images: ['/og-sense.png'],
   },
 }
