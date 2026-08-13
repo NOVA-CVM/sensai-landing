@@ -876,8 +876,8 @@ function RafBurst() {
       const seed = (hi * 31 + i * 7) % 23
       const a = i * 2.399963 + hi * 1.7
       const r = 7 + hub.spread * Math.sqrt((i + 1) / hub.n) * (0.82 + (seed % 5) * 0.09)
-      const x = Number((hub.x + r * Math.cos(a)).toFixed(1))
-      const y = Number((hub.y + r * Math.sin(a) * 0.86).toFixed(1))
+      const x = Math.round(hub.x + r * Math.cos(a))
+      const y = Math.round(hub.y + r * Math.sin(a) * 0.86)
       const roll = (seed * 13 + i) % 100
       const color = roll < 68 ? reds[seed % 5] : roll < 80 ? greens[seed % 2] : roll < 88 ? '#cbd0da' : reds[(seed + 2) % 5]
       const size = 1.05 + (seed % 4) * 0.38
