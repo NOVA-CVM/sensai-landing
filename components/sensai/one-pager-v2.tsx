@@ -763,7 +763,7 @@ function RoleSection() {
           display: 'flex', alignItems: 'center', gap: 10,
         }}>
           <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
-          The role
+          sensAi
         </div>
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
           A digital customer manager for every player.
@@ -862,8 +862,8 @@ function ValueSection() {
   const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
   const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     {
-      n: '01', t: 'Bonus abuse & fraud prevention',
-      s: 'Multi-accounting, coordinated rings, promo cycling, caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
+      n: '01', t: 'Risk scoring',
+      s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
           <MonoLabel>A ring, delivered as a case</MonoLabel>
@@ -889,8 +889,8 @@ function ValueSection() {
       ),
     },
     {
-      n: '02', t: 'Value prediction & VIP triggers',
-      s: 'Lifetime-value models on every account. Tomorrow’s VIPs flagged in their first weeks; today’s VIPs watched daily for health.',
+      n: '02', t: 'Value prediction',
+      s: 'LTV on every account, and tomorrow’s VIPs flagged in their first weeks.',
       art: (
         <ArtifactCard>
           <MonoLabel>Lifetime value, refreshed daily</MonoLabel>
@@ -908,8 +908,8 @@ function ValueSection() {
       ),
     },
     {
-      n: '03', t: 'Churn prevention',
-      s: 'Early disengagement signals on the players worth keeping, with the next action attached, before the value walks out the door.',
+      n: '03', t: 'Churn prediction',
+      s: 'Early signals on the players worth keeping, with the next action attached.',
       art: (
         <ArtifactCard>
           <MonoLabel>The signal, before the drop</MonoLabel>
@@ -932,8 +932,38 @@ function ValueSection() {
       ),
     },
     {
-      n: '04', t: 'Game & content recommendations',
-      s: 'For each player: the games they haven’t tried but will likely love, fed to your CRM campaigns and lobby tools.',
+      n: '04', t: 'Health scoring',
+      s: 'Every account scored for activity and engagement health, refreshed daily.',
+      art: (
+        <ArtifactCard>
+          <MonoLabel>Account health, refreshed daily</MonoLabel>
+          <svg viewBox="0 0 320 96" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            {[0, 1, 2].map(i => {
+              const cx = 70 + i * 92
+              const sweep = [0.82, 0.55, 0.3][i]
+              const a0 = Math.PI * 0.75
+              const a1 = a0 + Math.PI * 1.5 * sweep
+              const x0 = cx + 26 * Math.cos(a0), y0 = 52 + 26 * Math.sin(a0)
+              const x1 = cx + 26 * Math.cos(a1), y1 = 52 + 26 * Math.sin(a1)
+              const large = sweep > 0.66 ? 1 : 0
+              return (
+                <g key={i}>
+                  <circle cx={cx} cy={52} r="26" fill="none" stroke={SENS.rule} strokeWidth="1.2" />
+                  <path d={`M ${x0.toFixed(1)} ${y0.toFixed(1)} A 26 26 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`}
+                    fill="none" stroke={i === 2 ? SENS.ink : SENS.blueBright} strokeWidth="2.2" strokeLinecap="round"
+                    opacity={i === 2 ? 0.55 : 1} />
+                  <circle cx={cx} cy={52} r="3" fill={i === 2 ? SENS.ink : SENS.blueBright} opacity={i === 2 ? 0.55 : 1} />
+                </g>
+              )
+            })}
+          </svg>
+          <OutChip>→ written to your CRM · daily</OutChip>
+        </ArtifactCard>
+      ),
+    },
+    {
+      n: '05', t: 'Game recommendations',
+      s: 'Per-player game and content affinities, pushed into your CRM journeys.',
       art: (
         <ArtifactCard>
           <MonoLabel>Player to games, matched</MonoLabel>
@@ -954,64 +984,31 @@ function ValueSection() {
                 <line x1="223" y1={23 + i * 31} x2="290" y2={23 + i * 31} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="2.4" strokeLinecap="round" opacity={i === 0 ? 0.5 : 0.6} />
               </g>
             ))}
-            <EventMark x={128} y={44} label="AFFINITY MATCHED" ly={102} />
           </svg>
-          <OutChip>→ CRM campaigns · lobby tools</OutChip>
+          <OutChip>→ CRM journeys · lobby tools</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '05', t: 'Player-profile enrichment',
-      s: 'Every system you run gets a deeper picture of the player: value tier, risk signals, churn risk, game affinities, written into your CRM, risk tools and warehouse. Hundreds of enrichment columns, added to every player.',
+      n: '06', t: 'Bonus calculators',
+      s: 'Bonus economics per player: who responds, who abuses, and what it should cost.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Columns added to every player</MonoLabel>
-          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <line x1="18" x2="302" y1="14" y2="14" stroke={SENS.rule} strokeWidth="1" />
-            {[48, 78, 108, 138, 176, 206, 236, 266].map(x => (
-              <line key={x} x1={x} x2={x} y1="10" y2="14" stroke={SENS.rule} strokeWidth="1" />
+          <MonoLabel>Bonus economics, per player</MonoLabel>
+          <svg viewBox="0 0 320 96" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
+            <line x1="18" x2="302" y1="76" y2="76" stroke={SENS.rule} strokeWidth="1" />
+            {[54, 126, 198, 270].map(x => (
+              <line key={x} x1={x} x2={x} y1="76" y2="80" stroke={SENS.rule} strokeWidth="1" />
             ))}
-            {[0, 1, 2].map(row => (
-              <g key={row}>
-                <circle cx="28" cy={34 + row * 28} r="6.4" fill="none" stroke={SENS.ink} strokeWidth="1.2" />
-                {[0, 1, 2, 3].map(col => (
-                  <rect key={col} x={44 + col * 30} y={27 + row * 28} width="22" height="14" rx="3"
-                    fill="#fff" stroke={SENS.rule} strokeWidth="1.1" />
-                ))}
-                {[0, 1, 2, 3].map(col => (
-                  <rect key={col} x={172 + col * 30} y={27 + row * 28} width="22" height="14" rx="3"
-                    fill="rgba(26,68,168,0.09)" stroke={SENS.blueBright} strokeWidth="1.1" />
-                ))}
-              </g>
-            ))}
-            <EventMark x={218} y={22} label="+214 COLUMNS" ly={116} />
+            <rect x="40" y="30" width="28" height="46" rx="3" fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.2" />
+            <rect x="112" y="46" width="28" height="30" rx="3" fill="rgba(26,68,168,0.10)" stroke={SENS.blueBright} strokeWidth="1.2" />
+            <rect x="184" y="58" width="28" height="18" rx="3" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.5" />
+            <rect x="256" y="24" width="28" height="52" rx="3" fill="none" stroke="#8a5058" strokeWidth="1.2" strokeDasharray="3 2.5" />
+            <line x1="18" y1="40" x2="302" y2="40" stroke={SENS.blueBright} strokeWidth="1" strokeDasharray="4 3" opacity="0.6" />
+            <text x="20" y="20" fontSize="8.5" fill={SENS.muted}
+              fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">RESPONDS · RESPONDS · IGNORES · ABUSES</text>
           </svg>
-          <OutChip>→ written to CRM · DWH</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '06', t: 'Evidence-backed answers',
-      s: 'Ask about any player, segment or pattern, and get an answer built on the full context of the base, with the evidence attached.',
-      art: (
-        <ArtifactCard>
-          <MonoLabel>A question, answered with evidence</MonoLabel>
-          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-            <svg viewBox="0 0 200 110" style={{ width: 200, flexShrink: 0 }}>
-              <rect x="10" y="10" width="126" height="30" rx="9" fill="none" stroke={SENS.ink} strokeWidth="1.2" opacity="0.55" />
-              <text x="26" y="30" fontSize="14" fill={SENS.ink} opacity="0.7" fontWeight="600">?</text>
-              <line x1="44" y1="25" x2="118" y2="25" stroke={SENS.ink} strokeWidth="2.2" strokeLinecap="round" opacity="0.25" />
-              <path d="M52 40 v12" stroke={SENS.blueBright} strokeWidth="1.2" />
-              <path d="M48 48 l4 6 4 -6" fill="none" stroke={SENS.blueBright} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              <rect x="10" y="60" width="176" height="32" rx="9" fill="rgba(26,68,168,0.06)" stroke={SENS.blueBright} strokeWidth="1.2" />
-              <path d="M24 76 l5 5 9 -10" stroke={SENS.blueBright} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              <line x1="50" y1="76" x2="126" y2="76" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.5" />
-              <line x1="136" y1="76" x2="168" y2="76" stroke={SENS.blueBright} strokeWidth="2.2" strokeLinecap="round" opacity="0.28" />
-              <text x="98" y="106" fontSize="8.5" fill={SENS.blueBright} textAnchor="middle"
-                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">EVIDENCE ATTACHED</text>
-            </svg>
-            <MiniRadar />
-          </div>
+          <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
       ),
     },
@@ -1131,9 +1128,9 @@ function ProblemSection() {
     { mark: <MarkShallow />, t: 'Shallow insights', s: <>Left without models they trust, teams fall back on segments and averages.<span className="sensai-card-body"> Approximations, not understanding.</span></> },
   ]
   const stats = [
-    { v: '5% → 67%', l: 'of players generate 67% of revenue', f: 'J. Gambling Studies 2024 · UKGC Patterns of Play 2022' },
-    { v: '~30%', l: 'of VIPs fall below the radar', f: 'Based on our experience' },
-    { v: '10–20%', l: 'of promotional spend lost to bonus abuse, gaming’s #1 fraud type', f: 'LexisNexis Risk Solutions 2026 (n=993) · SEON 2026' },
+    { v: '10%', l: 'of players generate 90% of revenue' },
+    { v: '3%', l: 'of revenue is lost to bonus abusers' },
+    { v: '30%', l: 'of VIPs are below the radar' },
   ]
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
@@ -1171,7 +1168,7 @@ function ProblemSection() {
           display: 'flex', alignItems: 'center', gap: 10,
         }}>
           <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
-          The price of low resolution
+          What it costs
         </div>
         <div className="sensai-proof-strip" style={{
           marginTop: 0, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
@@ -1186,9 +1183,14 @@ function ProblemSection() {
             }}>
               <div style={{ fontSize: 21, fontWeight: 600, color: SENS.ink, letterSpacing: -0.5, whiteSpace: 'nowrap' }}>{s.v}</div>
               <div style={{ fontSize: 12.5, color: SENS.inkSoft, lineHeight: 1.45 }}>{s.l}</div>
-              {s.f && <div style={{ fontSize: 9.5, color: SENS.muted, lineHeight: 1.4, marginTop: 2 }}>{s.f}</div>}
             </div>
           ))}
+        </div>
+        <div style={{
+          marginTop: 14, maxWidth: 1060, marginLeft: 'auto', marginRight: 'auto',
+          fontSize: 11.5, color: SENS.muted,
+        }}>
+          From our years inside gaming operators.
         </div>
       </div>
     </section>
@@ -1311,7 +1313,7 @@ function TurnSection() {
     <SectionShell padY={104}>
       <div style={{ textAlign: 'center', maxWidth: 780, margin: '0 auto' }}>
         <h2 style={{ margin: 0, fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: '#fff' }}>
-          Your base, in high resolution.
+          Your base, now in high resolution.
         </h2>
         <p style={{ margin: '22px auto 0', fontSize: 17, lineHeight: 1.65, color: '#b6c1dd', maxWidth: 700 }}>
           Sensai&rsquo;s models work on the full picture of each account, and adapt the way
@@ -1319,8 +1321,8 @@ function TurnSection() {
           No data project in between. Out of a blur of a million players: every single one, in focus.
         </p>
       </div>
-      <div ref={ref} style={{ marginTop: 48, maxWidth: 900, marginLeft: 'auto', marginRight: 'auto' }}>
-        <EchoBand animate={inView && !reduced} />
+      <div ref={ref} style={{ marginTop: 56, maxWidth: 1040, marginLeft: 'auto', marginRight: 'auto' }}>
+        <ResolutionVisual animate={inView && !reduced} />
       </div>
     </SectionShell>
   )
