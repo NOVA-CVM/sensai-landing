@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
+import { trackEvent } from "@/lib/analytics"
+import { VisitTracking } from "@/components/sensai/visit-tracking"
 
 const SENS = {
   bg: '#eef1f8',
@@ -14,6 +16,15 @@ const SENS = {
 } as const
 
 const BOOKING_URL = "https://calendar.app.google/K15ZBdA3E6WBxbWXA"
+
+// Round 10, item 4 — nothing may be lost.
+// Submissions POST to a hosted form endpoint (Web3Forms: instant email to AA, submissions kept
+// in the provider dashboard, no account needed to get a key). The key is an env var so it can be
+// rotated without a code change: set NEXT_PUBLIC_WEB3FORMS_KEY in the Vercel project.
+// Until the key is set, the form keeps its previous behaviour (straight to the calendar) so the
+// page never regresses — see the memo for the one step AA has to do.
+const FORM_ENDPOINT = "https://api.web3forms.com/submit"
+const FORM_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? ""
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '12px 14px', borderRadius: 10,
@@ -40,17 +51,87 @@ function Logo() {
 
 export function BookPage({ program = false }: { program?: boolean }) {
   const [submitted, setSubmitted] = useState(false)
+  const [done, setDone] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const source = program ? 'design-partnership' : 'walkthrough'
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // No backend yet: forward to the walkthrough calendar (database hookup later).
+    const form = e.currentTarget
+
+    // Honeypot: bots fill every field they find. No captcha — friction costs us leads.
+    const data = new FormData(form)
+    if ((data.get('botcheck') as string | null)?.length) return
+
     setSubmitted(true)
-    // Program applications stay distinguishable from walkthrough requests
-    window.location.href = program ? `${BOOKING_URL}?src=design-partnership` : BOOKING_URL
+    setFailed(false)
+
+    if (!FORM_KEY) {
+      // Endpoint not configured yet: previous behaviour, straight to the calendar.
+      window.location.href = program ? `${BOOKING_URL}?src=design-partnership` : BOOKING_URL
+      return
+    }
+
+    data.set('access_key', FORM_KEY)
+    data.set('subject', program
+      ? 'sensAi — design partnership application'
+      : 'sensAi — walkthrough request')
+    data.set('from_name', 'novacvm.net')
+
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: data,
+      })
+      if (!res.ok) throw new Error(`form endpoint returned ${res.status}`)
+      trackEvent('form_submit', { source })
+      setDone(true)
+    } catch {
+      // Never swallow a lead: fall back to the calendar so the person still lands somewhere useful.
+      trackEvent('form_submit_failed', { source })
+      setFailed(true)
+      setSubmitted(false)
+    }
+  }
+
+  if (done) {
+    return (
+      <div style={{ background: '#ffffff', minHeight: '100vh', color: SENS.ink }}>
+        <VisitTracking page={program ? 'apply' : 'book'} />
+        <nav style={{ background: SENS.ink, padding: '16px 40px' }}>
+          <div style={{ maxWidth: 1180, margin: '0 auto' }}><Logo /></div>
+        </nav>
+        <main style={{ maxWidth: 640, margin: '0 auto', padding: '96px 40px 120px' }}>
+          <h1 style={{ margin: 0, fontSize: 36, fontWeight: 600, letterSpacing: -1, lineHeight: 1.14 }}>
+            {program ? 'Your application is in.' : 'Got it.'}
+          </h1>
+          <p style={{ margin: '16px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft }}>
+            {program
+              ? 'We read every application ourselves. You will hear back from one of the founders.'
+              : 'We will come back to you shortly.'}
+            {' '}If you would rather not wait, pick a slot now.
+          </p>
+          <a
+            href={program ? `${BOOKING_URL}?src=design-partnership` : BOOKING_URL}
+            onClick={() => trackEvent('cta_click', { cta: 'calendar_after_submit', where: source })}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10, marginTop: 28,
+              background: SENS.blue, color: '#fff', textDecoration: 'none',
+              padding: '14px 28px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+              boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
+            }}
+          >
+            Pick a walkthrough slot <ArrowRight className="w-4 h-4" />
+          </a>
+        </main>
+      </div>
+    )
   }
 
   return (
     <div style={{ background: '#ffffff', minHeight: '100vh', color: SENS.ink }}>
+      <VisitTracking page={program ? 'apply' : 'book'} />
       <nav style={{ background: SENS.ink, padding: '16px 40px' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <Logo />
@@ -81,7 +162,17 @@ export function BookPage({ program = false }: { program?: boolean }) {
                 Tell us a little about your operation. We take it from there.
               </p>
 
-              <input type="hidden" name="type" value={program ? 'design-partnership' : 'walkthrough'} />
+              {/* Which CTA this came from — partnership applications must stay distinguishable */}
+              <input type="hidden" name="type" value={source} />
+              <input type="hidden" name="source" value={source} />
+              {/* Honeypot: hidden from people, irresistible to bots. No captcha. */}
+              <input
+                type="checkbox"
+                name="botcheck"
+                tabIndex={-1}
+                aria-hidden="true"
+                style={{ display: 'none' }}
+              />
               <label style={labelStyle} htmlFor="bk-name">Full name*</label>
               <input id="bk-name" name="name" required style={inputStyle} autoComplete="name" />
 
@@ -117,11 +208,17 @@ export function BookPage({ program = false }: { program?: boolean }) {
                   boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
                   opacity: submitted ? 0.7 : 1,
                 }}>
-                  {submitted ? 'Opening the calendar…' : program ? 'Apply to the program' : 'Book a walkthrough'} <ArrowRight className="w-4 h-4" />
+                  {submitted ? 'Sending…' : program ? 'Apply to the program' : 'Book a walkthrough'} <ArrowRight className="w-4 h-4" />
                 </button>
-                <div style={{ fontSize: 12, color: SENS.muted }}>
-                  By submitting you agree to our Privacy Policy
+                <div style={{ fontSize: 12, color: SENS.muted, textAlign: 'right' }}>
+                  We&rsquo;ll use your details only to reply to your enquiry.
                 </div>
+                {failed && (
+                  <div style={{ fontSize: 12.5, color: '#b03a3a', textAlign: 'right', maxWidth: 320 }}>
+                    That didn&rsquo;t send. Please try once more, or pick a slot directly:{' '}
+                    <a href={BOOKING_URL} style={{ color: SENS.blueBright }}>the calendar</a>.
+                  </div>
+                )}
               </div>
             </div>
           </div>

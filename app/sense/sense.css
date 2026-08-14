@@ -274,9 +274,15 @@
     gap: 12px !important;
   }
 
-  /* Closed-row deliverable descriptor: must stay on one line at 390px */
+  /* Closed-row deliverable descriptor: its own single line on mobile, so the full
+     phrase survives at 390px instead of wrapping mid-sentence */
   .sensai-page .sensai-value-desc {
+    display: block;
     font-size: 11.5px !important;
+    margin-top: 3px;
+  }
+  .sensai-page .sensai-value-dot {
+    display: none;
   }
 
   /* Proof-strip: stacked rows separate with top borders, not left */

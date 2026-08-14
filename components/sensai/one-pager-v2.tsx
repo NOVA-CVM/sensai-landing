@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useMemo } from "react"
 import {
   ArrowRight,
 } from "lucide-react"
+import { trackEvent } from "@/lib/analytics"
+import { VisitTracking } from "@/components/sensai/visit-tracking"
 
 // ─── Color tokens ───────────────────────────────────────────────────
 const SENS = {
@@ -22,7 +24,10 @@ const SENS = {
 } as const
 
 const BOOKING_URL = "https://calendar.app.google/K15ZBdA3E6WBxbWXA"
-const goBook = () => { window.location.href = '/book' }
+const goBook = (where = 'unknown') => {
+  trackEvent('cta_click', { cta: 'book_walkthrough', where })
+  window.location.href = '/book'
+}
 
 // ─── Performance hooks: pause animations off-viewport, honor reduced motion ───
 function useInView(margin = '200px') {
@@ -470,7 +475,7 @@ function Hero() {
           </p>
           <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
             <button
-              onClick={goBook}
+              onClick={() => goBook('hero')}
               style={{
                 background: '#fff', color: SENS.ink, border: 'none',
                 padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 600,
@@ -481,7 +486,7 @@ function Hero() {
               Book a walkthrough <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={scrollToHow}
+              onClick={() => { trackEvent('cta_click', { cta: 'how_it_works', where: 'hero' }); scrollToHow() }}
               style={{
                 background: 'transparent', color: '#dfe7f8', border: '1.5px solid rgba(255,255,255,0.35)',
                 padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
@@ -961,7 +966,7 @@ function ValueSection() {
   const tiles: Array<{ n: string; t: string; d: string; s: string; art: React.ReactNode }> = [
     {
       n: '01', t: 'Risk scoring', d: 'a score on every account',
-      s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence. And harm markers surfaced to your RG team.',
+      s: 'A risk score on every account: multi-accounting, coordinated rings, bonus-abuse patterns. Delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
           <ProductFrame title="Referral network"
@@ -973,17 +978,6 @@ function ValueSection() {
             footer="REFERRAL NETWORK · RANKED BY NET LOSS">
             <RafBurst />
             <ReasonLine>12 accounts · one payment fingerprint · same root inviter</ReasonLine>
-            <div style={{ padding: '0 10px 4px' }}>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999,
-                border: `1px solid ${SENS.rule}`, background: '#fff',
-                fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 8,
-                letterSpacing: '0.08em', color: SENS.inkSoft,
-              }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#c58a3a' }} />
-                HARM MARKERS · SURFACED TO YOUR RG TEAM
-              </span>
-            </div>
           </ProductFrame>
           <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
@@ -1044,11 +1038,11 @@ function ValueSection() {
       ),
     },
     {
-      n: '03', t: 'Churn prediction', d: 'signals with reasons',
-      s: 'Early signals on the players worth keeping, with the next action attached.',
+      n: '03', t: 'Churn & health scoring', d: 'account health, and the signal before the drop',
+      s: 'A health score on every account: engagement depth, session and play patterns. Early signals on the players worth keeping, with the reason attached.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="Churn curve"
+          <ProductFrame title="Account health · churn curve"
             kpis={[
               { l: 'RETENTION', v: '61%' },
               { l: 'REACTIVATED', v: '14%' },
@@ -1083,110 +1077,139 @@ function ValueSection() {
               <text x="332" y="122" fontSize="8" fill={SENS.muted} textAnchor="middle"
                 fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">PROJECTED, IF UNTOUCHED</text>
             </svg>
+            {/* The health half of the merged tile: the score's own reason, behavioural (round 9, item 2/03) */}
+            <ReasonLine>health score falling: session depth down · 9 days since last visit</ReasonLine>
           </ProductFrame>
           <OutChip>→ CRM: retention journey, next 24h</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '04', t: 'Health scoring', d: 'engagement health',
-      s: 'Every account scored for activity and engagement health.',
+      n: '04', t: 'Responsible gaming', d: 'play-pattern signals for your RG team',
+      s: 'Play-pattern signals that matter for player protection, surfaced to your RG team with the evidence.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="Engagement health"
+          {/* Signals, never diagnoses: each row is an observation against the player's own norm,
+              handed to the operator's RG team. No rates, no outcomes, no verdicts. */}
+          <ProductFrame title="Play-pattern signals"
             kpis={[
-              { l: 'ACCOUNTS BELOW THEIR OWN WEEKLY NORMAL', v: '38' },
-            ]}>
-            <div style={{ padding: '10px 10px 12px' }}>
-              <div style={{ display: 'flex', height: 16, borderRadius: 6, overflow: 'hidden', border: `1px solid ${SENS.rule}` }}>
-                <div style={{ width: '63%', background: 'rgba(26,68,168,0.30)' }} />
-                <div style={{ width: '37%', background: 'rgba(176,58,58,0.35)' }} />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                <span style={{ fontSize: 9, color: SENS.inkSoft, fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>RECOVERING · 24</span>
-                <span style={{ fontSize: 9, color: '#b03a3a', fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>DECLINING · 14</span>
-              </div>
+              { l: 'SIGNALS THIS WEEK', v: '7' },
+            ]}
+            footer="SURFACED FOR REVIEW · NOT A VERDICT">
+            <div style={{ padding: '8px 10px 4px', display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {[
+                { id: '#63140', s: 'Session length up 3× vs this player’s own norm' },
+                { id: '#58022', s: 'Play shifted to 02:00–05:00' },
+                { id: '#70915', s: 'Pattern change after a loss run' },
+              ].map(r => (
+                <div key={r.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 9,
+                  border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 8px',
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#c58a3a', flexShrink: 0 }} />
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: SENS.ink }}>{r.id}</span>
+                  <span style={{ fontSize: 11, color: SENS.inkSoft }}>{r.s}</span>
+                </div>
+              ))}
             </div>
-            <ReasonLine>session depth down · 9 days since last visit</ReasonLine>
           </ProductFrame>
-          <OutChip>→ written to your CRM</OutChip>
+          <OutChip>→ RG team review, with the evidence</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '05', t: 'Game recommendations', d: 'affinities',
+      n: '05', t: 'Game recommendations', d: 'per-player affinities',
       s: 'Per-player game and content affinities, pushed into your CRM journeys.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="Game catalogue · affinities">
-            <div style={{ padding: '10px 10px 12px', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 9px', flexShrink: 0 }}>
-                <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#7723</div>
-                <div style={{ fontSize: 9, color: SENS.muted, marginTop: 1 }}>Tier B · evening</div>
+          {/* One player, a ranked list of what to put in front of them.
+              Game titles are invented: no third-party vendor trademarks on the page. */}
+          <ProductFrame title="Recommended for this player" footer="RANKED BY AFFINITY · INVENTED TITLES">
+            <div style={{ padding: '8px 10px 2px' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'baseline', gap: 8,
+                border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 9px', marginBottom: 7,
+              }}>
+                <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#7723</span>
+                <span style={{ fontSize: 9, color: SENS.muted }}>Tier B · evening player</span>
               </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                 {[
-                  { g: 'High-volatility slots', s: 92, top: true },
-                  { g: 'Megaways', s: 74, top: false },
-                  { g: 'Crash', s: 61, top: false },
-                ].map(c => (
-                  <span key={c.g} style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                    border: `1px solid ${c.top ? SENS.blueBright : SENS.rule}`,
-                    background: c.top ? 'rgba(26,68,168,0.06)' : '#fff',
-                    borderRadius: 999, padding: '5px 12px',
+                  { r: '1', g: 'Ashfall Reels', s: 92 },
+                  { r: '2', g: 'Vault of Coppers', s: 87 },
+                  { r: '3', g: 'Nightmarket Sevens', s: 74 },
+                  { r: '4', g: 'Bison & Bells', s: 61 },
+                ].map((g, i) => (
+                  <div key={g.g} style={{
+                    display: 'flex', alignItems: 'center', gap: 9,
+                    border: `1px solid ${i === 0 ? SENS.blueBright : SENS.rule}`,
+                    background: i === 0 ? 'rgba(26,68,168,0.05)' : '#fff',
+                    borderRadius: 7, padding: '5px 9px',
                   }}>
-                    <span style={{ fontSize: 11.5, fontWeight: 600, color: c.top ? SENS.ink : SENS.inkSoft }}>{c.g}</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: c.top ? SENS.blueBright : SENS.muted,
-                      fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>{c.s}</span>
-                  </span>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 9,
+                      color: i === 0 ? SENS.blueBright : SENS.muted, width: 8, flexShrink: 0,
+                    }}>{g.r}</span>
+                    <span style={{ fontSize: 11.5, fontWeight: i === 0 ? 600 : 400, color: i === 0 ? SENS.ink : SENS.inkSoft }}>{g.g}</span>
+                    <span style={{ flex: 1 }} />
+                    <span style={{ width: 74, height: 4, borderRadius: 999, background: '#eaeef7', overflow: 'hidden', flexShrink: 0 }}>
+                      <span style={{ display: 'block', width: `${g.s}%`, height: '100%', background: i === 0 ? SENS.blueBright : '#a8b7d8' }} />
+                    </span>
+                    <span style={{
+                      fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 9.5, fontWeight: 700,
+                      color: i === 0 ? SENS.blueBright : SENS.muted, width: 16, textAlign: 'right', flexShrink: 0,
+                    }}>{g.s}</span>
+                  </div>
                 ))}
               </div>
             </div>
             <ReasonLine>plays high-volatility slots late evening · never live tables</ReasonLine>
           </ProductFrame>
-          <OutChip>→ CRM journeys · lobby tools</OutChip>
+          <OutChip>→ pushed to CRM journeys</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '06', t: 'Bonus calculators', d: 'the right amount',
+      n: '06', t: 'Bonus calculators', d: 'the ladder, per player',
       s: 'Bonus economics per player: who responds, who abuses, and what it should cost.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="Bonus calculator" footer="PER-PLAYER BONUS ECONOMICS">
-            <div style={{ padding: '10px 10px 8px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 9px', flexShrink: 0 }}>
-                <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</div>
-                <div style={{ fontSize: 9, color: SENS.muted, marginTop: 1 }}>Tier B · slots</div>
+          {/* The deliverable is the ladder calculated for this player: deposit in, bonus out.
+              Standard commercial offer mechanics (RG carve-out, round 9 item 2/06). */}
+          <ProductFrame title="Deposit → bonus ladder" footer="CALCULATED PER PLAYER">
+            <div style={{ padding: '8px 10px 2px' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'baseline', gap: 8,
+                border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 9px', marginBottom: 7,
+              }}>
+                <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</span>
+                <span style={{ fontSize: 9, color: SENS.muted }}>Tier B · slots</span>
               </div>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, overflow: 'hidden' }}>
+                <div style={{
+                  display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '4px 9px',
+                  background: '#f7f9fd', borderBottom: `1px solid ${SENS.rule}`,
+                  fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 7.5,
+                  letterSpacing: '0.1em', color: SENS.muted, fontWeight: 600,
+                }}>
+                  <span>DEPOSIT</span><span style={{ textAlign: 'right' }}>BONUS</span>
+                </div>
                 {[
-                  { t: 'Cashback 10%', a: '$14', pick: false },
-                  { t: 'Free spins 50', a: '$11', pick: true },
-                  { t: 'Deposit match 100%', a: '$25', pick: false },
-                ].map(o => (
-                  <div key={o.t} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    border: `1px solid ${o.pick ? SENS.blueBright : SENS.rule}`,
-                    background: o.pick ? 'rgba(26,68,168,0.06)' : '#fff',
-                    borderRadius: 7, padding: '5px 9px',
+                  { d: '$10', b: '$2' },
+                  { d: '$20', b: '$5' },
+                  { d: '$50', b: '$20' },
+                ].map((row, i) => (
+                  <div key={row.d} style={{
+                    display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '5px 9px',
+                    borderTop: i === 0 ? 'none' : `1px solid ${SENS.rule}`,
                   }}>
-                    <span style={{ fontSize: 11.5, color: o.pick ? SENS.ink : SENS.inkSoft, fontWeight: o.pick ? 600 : 400 }}>{o.t}</span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ fontSize: 11.5, fontWeight: 700, color: o.pick ? SENS.blueBright : SENS.muted }}>{o.a}</span>
-                      {o.pick && (
-                        <span style={{
-                          fontSize: 7.5, fontWeight: 600, color: SENS.blueBright, letterSpacing: '0.08em',
-                          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                        }}>SENSAI PICK</span>
-                      )}
-                    </span>
+                    <span style={{ fontSize: 11.5, color: SENS.inkSoft }}>{row.d}</span>
+                    <span style={{ fontSize: 11.5, fontWeight: 700, color: SENS.blueBright, textAlign: 'right' }}>{row.b}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <ReasonLine>same expected response, lower cost</ReasonLine>
+            <ReasonLine>calibrated to this player’s response history</ReasonLine>
           </ProductFrame>
           <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
@@ -1239,7 +1262,7 @@ function ValueSection() {
                     {/* Closed rows carry the deliverable, so a scanner gets the checklist without expanding */}
                     {!isActive && (
                       <span className="sensai-value-desc" style={{ fontSize: 13.5, fontWeight: 400, color: SENS.muted, letterSpacing: 0 }}>
-                        <span style={{ padding: '0 7px', color: '#c3cbdd' }}>·</span>{it.d}
+                        <span className="sensai-value-dot" style={{ padding: '0 7px', color: '#c3cbdd' }}>·</span>{it.d}
                       </span>
                     )}
                   </div>
@@ -1267,7 +1290,7 @@ function ValueSection() {
 
         <div style={{ marginTop: 40 }}>
           <button
-            onClick={goBook}
+            onClick={() => goBook('what_you_get')}
             style={{
               background: SENS.blue, color: '#fff', border: 'none',
               padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
@@ -2313,7 +2336,10 @@ function PartnershipSection() {
         </p>
         <div style={{ marginTop: 30 }}>
           <button
-            onClick={() => { window.location.href = '/apply' }}
+            onClick={() => {
+              trackEvent('cta_click', { cta: 'apply_partnership', where: 'design_partnership' })
+              window.location.href = '/apply'
+            }}
             style={{
               background: '#fff', color: SENS.blueBright, border: `1.5px solid ${SENS.blueBright}`,
               padding: '13px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
@@ -2695,7 +2721,7 @@ function CTA() {
 
           <div style={{ marginTop: 32 }}>
             <button
-              onClick={goBook}
+              onClick={() => goBook('scan_close')}
               style={{
                 background: '#fff', color: SENS.ink, border: 'none',
                 padding: '16px 30px', borderRadius: 999, fontSize: 15, fontWeight: 600,
@@ -2818,6 +2844,7 @@ export function SensAiOnePagerV2() {
                            as a suffix inside <CTA />).
         Re-enable by dropping them back into the section list below.
       */}
+      <VisitTracking page="sense" />
       <Nav />
       <Hero />
       <ProblemSection />
