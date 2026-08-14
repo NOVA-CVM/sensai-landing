@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 
 const isVercel = process.env.VERCEL === '1'
 import './globals.css'
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+// Space Grotesk site-wide (round 9, item 7 — AA: the ENTIRE site, not only /sense).
+const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk" });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -39,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${grotesk.variable} font-sans antialiased`}>
         {children}
         {isVercel && <Analytics />}
       </body>

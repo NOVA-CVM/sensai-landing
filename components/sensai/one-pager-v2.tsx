@@ -458,15 +458,15 @@ function Hero() {
             fontWeight: 600, color: '#fff',
           }}>
             You have the data.<br />What&rsquo;s missing is an expert who{' '}
-            <span style={{ color: '#8fa8e0' }}>analyzes every player</span>.
+            <span style={{ color: '#8fa8e0' }}>knows every player</span>.
           </h1>
           <p className="sensai-hero-subline" style={{
             margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 560,
           }}>
-            sensAi gives you a digital customer manager on every player: it watches value,
-            risk, churn and engagement, and pushes the actions into the systems your
-            teams already use.
+            sensAi gives you a digital customer manager on every player: it analyzes value,
+            risk, churn and engagement continuously, and pushes the actions into the systems
+            your teams already use.
           </p>
           <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
             <button
@@ -769,8 +769,13 @@ function RoleSection() {
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
           A digital customer manager for every player.
         </h2>
+        {/* Aphorism pair — same treatment as the problem section's pair (round 9, item 5) */}
+        <p style={{ margin: '20px 0 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 560 }}>
+          Every player, analyzed one by one.<br />
+          The whole base, managed as one asset.
+        </p>
         <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 680 }}>
-          It watches value, risk, churn and engagement, continuously, across every account,
+          It analyzes value, risk, churn and engagement, continuously, across every account,
           and acts through the systems your teams already use. A role no B2C company could
           ever staff. Sensai makes it possible for the first time.
         </p>
@@ -800,6 +805,15 @@ const MonoLabel = ({ children }: { children: React.ReactNode }) => (
   <div style={{
     fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 9.5,
     letterSpacing: '0.1em', color: SENS.muted, textTransform: 'uppercase', marginBottom: 10,
+  }}>{children}</div>
+)
+
+// Every frame carries its reason: one short evidence line in the frame's own register
+// (round 9 — explainability: "Untrusted outputs" is the failure we name, this is the answer).
+const ReasonLine = ({ children }: { children: React.ReactNode }) => (
+  <div style={{
+    padding: '0 10px 9px', fontSize: 9.5, lineHeight: 1.5,
+    color: SENS.muted, fontStyle: 'italic',
   }}>{children}</div>
 )
 
@@ -944,10 +958,10 @@ function RafBurst() {
 function ValueSection() {
   const rowStyle = { fontSize: 12.5, color: SENS.inkSoft, display: 'flex', alignItems: 'center', gap: 10 } as const
   const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
-  const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
+  const tiles: Array<{ n: string; t: string; d: string; s: string; art: React.ReactNode }> = [
     {
-      n: '01', t: 'Risk scoring',
-      s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
+      n: '01', t: 'Risk scoring', d: 'a score on every account',
+      s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence. And harm markers surfaced to your RG team.',
       art: (
         <ArtifactCard>
           <ProductFrame title="Referral network"
@@ -958,14 +972,26 @@ function ValueSection() {
             ]}
             footer="REFERRAL NETWORK · RANKED BY NET LOSS">
             <RafBurst />
+            <ReasonLine>12 accounts · one payment fingerprint · same root inviter</ReasonLine>
+            <div style={{ padding: '0 10px 4px' }}>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999,
+                border: `1px solid ${SENS.rule}`, background: '#fff',
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 8,
+                letterSpacing: '0.08em', color: SENS.inkSoft,
+              }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#c58a3a' }} />
+                HARM MARKERS · SURFACED TO YOUR RG TEAM
+              </span>
+            </div>
           </ProductFrame>
           <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '02', t: 'Value prediction',
-      s: 'LTV on every account, and tomorrow’s VIPs flagged in their first weeks.',
+      n: '02', t: 'Value prediction', d: 'LTV and VIP scores',
+      s: 'LTV on every account, and tomorrow’s VIPs flagged in their first weeks, surfaced to the VIP desk as cases.',
       art: (
         <ArtifactCard>
           <ProductFrame title="FTD cohort · projected NGR"
@@ -992,7 +1018,24 @@ function ValueSection() {
                 </div>
               ))}
               <div style={{ fontSize: 9.5, color: SENS.muted, fontStyle: 'italic', paddingLeft: 2 }}>
-                #48291: deposits steady 6 weeks · session depth rising · flagged day 9
+                #48291: play steady 6 weeks · session depth rising · flagged day 9
+              </div>
+              {/* The VIP desk's worklist: the same scores, arriving as cases (round 9, item 3) */}
+              <div style={{ borderTop: `1px solid ${SENS.rule}`, paddingTop: 7, marginTop: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{
+                  fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 7.5,
+                  letterSpacing: '0.1em', color: SENS.muted, fontWeight: 600, marginBottom: 1,
+                }}>OPEN CASES · VIP DESK</div>
+                {[
+                  'New VIP signal in first weeks · flag to VIP desk',
+                  'Engagement pattern shifted · review',
+                  'Play moved to live tables · host review',
+                ].map(c => (
+                  <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 10, color: SENS.inkSoft }}>
+                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: SENS.blueBright, flexShrink: 0 }} />
+                    {c}
+                  </div>
+                ))}
               </div>
             </div>
           </ProductFrame>
@@ -1001,7 +1044,7 @@ function ValueSection() {
       ),
     },
     {
-      n: '03', t: 'Churn prediction',
+      n: '03', t: 'Churn prediction', d: 'signals with reasons',
       s: 'Early signals on the players worth keeping, with the next action attached.',
       art: (
         <ArtifactCard>
@@ -1029,6 +1072,14 @@ function ValueSection() {
               {[39, 83, 127, 171, 215, 259, 303, 347].map((x, i) => (
                 <circle key={i} cx={x} cy={[26, 45, 56, 63, 68, 73, 76, 79][i]} r="2.4" fill={SENS.blueBright} />
               ))}
+              {/* The cause, seen before the effect: the flag sits ahead of the decline (round 9, item 2) */}
+              <line x1="259" y1="16" x2="259" y2="73" stroke={SENS.ink} strokeWidth="0.8"
+                strokeDasharray="3 3" opacity="0.35" />
+              <circle cx="259" cy="73" r="5.2" fill="none" stroke={SENS.blueBright} strokeWidth="1.4" />
+              <circle cx="259" cy="73" r="2.4" fill={SENS.blueBright} />
+              <text x="253" y="13" fontSize="8.5" fill={SENS.ink} textAnchor="end">play pattern breaks</text>
+              <text x="253" y="23" fontSize="7.5" fill={SENS.blueBright} textAnchor="end"
+                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">SENSAI FLAG</text>
               <text x="332" y="122" fontSize="8" fill={SENS.muted} textAnchor="middle"
                 fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">PROJECTED, IF UNTOUCHED</text>
             </svg>
@@ -1038,11 +1089,11 @@ function ValueSection() {
       ),
     },
     {
-      n: '04', t: 'Health scoring',
+      n: '04', t: 'Health scoring', d: 'engagement health',
       s: 'Every account scored for activity and engagement health.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="Deposit health"
+          <ProductFrame title="Engagement health"
             kpis={[
               { l: 'ACCOUNTS BELOW THEIR OWN WEEKLY NORMAL', v: '38' },
             ]}>
@@ -1056,13 +1107,14 @@ function ValueSection() {
                 <span style={{ fontSize: 9, color: '#b03a3a', fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>DECLINING · 14</span>
               </div>
             </div>
+            <ReasonLine>session depth down · 9 days since last visit</ReasonLine>
           </ProductFrame>
           <OutChip>→ written to your CRM</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '05', t: 'Game recommendations',
+      n: '05', t: 'Game recommendations', d: 'affinities',
       s: 'Per-player game and content affinities, pushed into your CRM journeys.',
       art: (
         <ArtifactCard>
@@ -1074,8 +1126,8 @@ function ValueSection() {
               </div>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {[
-                  { g: 'Slots', s: 92, top: true },
-                  { g: 'Live', s: 74, top: false },
+                  { g: 'High-volatility slots', s: 92, top: true },
+                  { g: 'Megaways', s: 74, top: false },
                   { g: 'Crash', s: 61, top: false },
                 ].map(c => (
                   <span key={c.g} style={{
@@ -1091,13 +1143,14 @@ function ValueSection() {
                 ))}
               </div>
             </div>
+            <ReasonLine>plays high-volatility slots late evening · never live tables</ReasonLine>
           </ProductFrame>
           <OutChip>→ CRM journeys · lobby tools</OutChip>
         </ArtifactCard>
       ),
     },
     {
-      n: '06', t: 'Bonus calculators',
+      n: '06', t: 'Bonus calculators', d: 'the right amount',
       s: 'Bonus economics per player: who responds, who abuses, and what it should cost.',
       art: (
         <ArtifactCard>
@@ -1133,6 +1186,7 @@ function ValueSection() {
                 ))}
               </div>
             </div>
+            <ReasonLine>same expected response, lower cost</ReasonLine>
           </ProductFrame>
           <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
@@ -1180,7 +1234,15 @@ function ValueSection() {
               >
                 <div style={{ fontSize: 30, fontWeight: 300, color: isActive ? SENS.blueBright : '#b6bfd4', letterSpacing: -1, fontFeatureSettings: '"tnum"', transition: 'color 0.25s' }}>{it.n}</div>
                 <div>
-                  <div style={{ fontSize: 17, fontWeight: 600, color: isActive ? SENS.ink : SENS.inkSoft, letterSpacing: -0.3, paddingTop: 6, transition: 'color 0.25s' }}>{it.t}</div>
+                  <div className="sensai-value-title" style={{ fontSize: 17, fontWeight: 600, color: isActive ? SENS.ink : SENS.inkSoft, letterSpacing: -0.3, paddingTop: 6, transition: 'color 0.25s' }}>
+                    {it.t}
+                    {/* Closed rows carry the deliverable, so a scanner gets the checklist without expanding */}
+                    {!isActive && (
+                      <span className="sensai-value-desc" style={{ fontSize: 13.5, fontWeight: 400, color: SENS.muted, letterSpacing: 0 }}>
+                        <span style={{ padding: '0 7px', color: '#c3cbdd' }}>·</span>{it.d}
+                      </span>
+                    )}
+                  </div>
                   {isActive && (
                     <div className="sensai-fade-in">
                       <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 560, marginTop: 8 }}>{it.s}</div>

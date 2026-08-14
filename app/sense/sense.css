@@ -274,6 +274,11 @@
     gap: 12px !important;
   }
 
+  /* Closed-row deliverable descriptor: must stay on one line at 390px */
+  .sensai-page .sensai-value-desc {
+    font-size: 11.5px !important;
+  }
+
   /* Proof-strip: stacked rows separate with top borders, not left */
   .sensai-page .sensai-proof-strip > div {
     border-left: none !important;
