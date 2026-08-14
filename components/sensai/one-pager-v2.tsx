@@ -858,6 +858,41 @@ const EventMark = ({ x, y, label, ly }: { x: number; y: number; label: string; l
   </g>
 )
 
+function ProductFrame({ title, kpis, footer, children }: {
+  title: string
+  kpis?: Array<{ l: string; v: string; neg?: boolean }>
+  footer?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ background: '#0d1530', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57' }} />
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e' }} />
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840' }} />
+        <span style={{ color: '#9aa6c4', fontSize: 9.5, marginLeft: 8 }}>{title}</span>
+      </div>
+      {kpis && (
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${kpis.length}, 1fr)`, gap: 6, padding: '8px 10px 0' }}>
+          {kpis.map(k => (
+            <div key={k.l} style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 8px' }}>
+              <div style={{ fontSize: 7.5, color: SENS.muted, letterSpacing: '0.08em', fontWeight: 600 }}>{k.l}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 700, color: k.neg ? '#b03a3a' : SENS.ink, marginTop: 1 }}>{k.v}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      {children}
+      {footer && (
+        <div style={{
+          padding: '0 10px 8px', fontSize: 8, color: SENS.muted, letterSpacing: '0.1em',
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+        }}>{footer}</div>
+      )}
+    </div>
+  )
+}
+
 function RafBurst() {
   // Dense two-hub referral burst in the product's visual vocabulary: soft-red
   // loss nodes, scattered green wins, thin grey edges, a few ringed highlights.
@@ -874,8 +909,10 @@ function RafBurst() {
   hubs.forEach((hub, hi) => {
     for (let i = 0; i < hub.n; i++) {
       const seed = (hi * 31 + i * 7) % 23
-      const a = i * 2.399963 + hi * 1.7
-      const r = 7 + hub.spread * Math.sqrt((i + 1) / hub.n) * (0.82 + (seed % 5) * 0.09)
+      const h1 = Math.abs(Math.sin(i * 12.9898 + hi * 78.233)) % 1
+      const h2 = Math.abs(Math.sin(i * 39.3468 + hi * 11.135)) % 1
+      const a = h1 * Math.PI * 2
+      const r = 6 + hub.spread * Math.sqrt(h2) * (0.85 + (seed % 5) * 0.08)
       const x = Math.round(hub.x + r * Math.cos(a))
       const y = Math.round(hub.y + r * Math.sin(a) * 0.86)
       const roll = (seed * 13 + i) % 100
@@ -913,31 +950,15 @@ function ValueSection() {
       s: 'Multi-accounting, bonus abuse, coordinated rings. Caught across the whole base and delivered as cases: the accounts, the pattern, the evidence.',
       art: (
         <ArtifactCard>
-          <div style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 10, overflow: 'hidden' }}>
-            <div style={{ background: '#0d1530', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff5f57' }} />
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#febc2e' }} />
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840' }} />
-              <span style={{ color: '#9aa6c4', fontSize: 9.5, marginLeft: 8 }}>Referral network</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, padding: '8px 10px 0' }}>
-              {[
-                { l: 'NETWORK NGR', v: '−$38.4K', neg: true },
-                { l: 'ACCOUNTS', v: '214', neg: false },
-                { l: 'RED RISK', v: '187', neg: true },
-              ].map(k => (
-                <div key={k.l} style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 8px' }}>
-                  <div style={{ fontSize: 7.5, color: SENS.muted, letterSpacing: '0.08em', fontWeight: 600 }}>{k.l}</div>
-                  <div style={{ fontSize: 13.5, fontWeight: 700, color: k.neg ? '#b03a3a' : SENS.ink, marginTop: 1 }}>{k.v}</div>
-                </div>
-              ))}
-            </div>
+          <ProductFrame title="Referral network"
+            kpis={[
+              { l: 'NETWORK NGR', v: '−$38.4K', neg: true },
+              { l: 'ACCOUNTS', v: '214' },
+              { l: 'RED RISK', v: '187', neg: true },
+            ]}
+            footer="REFERRAL NETWORK · RANKED BY NET LOSS">
             <RafBurst />
-            <div style={{
-              padding: '0 10px 8px', fontSize: 8, color: SENS.muted, letterSpacing: '0.1em',
-              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-            }}>REFERRAL NETWORK · RANKED BY NET LOSS</div>
-          </div>
+          </ProductFrame>
           <OutChip>→ Risk queue, with the evidence</OutChip>
         </ArtifactCard>
       ),
@@ -947,16 +968,34 @@ function ValueSection() {
       s: 'LTV on every account, and tomorrow’s VIPs flagged in their first weeks.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Lifetime value, refreshed daily</MonoLabel>
-          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <AxisFrame />
-            <path d="M18 92 C 90 88, 150 72, 210 48 S 280 24, 296 22" fill="none" stroke={SENS.blueBright} strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M18 94 C 100 92, 190 84, 296 66" fill="none" stroke={SENS.ink} strokeWidth="1.1" opacity="0.3" strokeDasharray="3 3" />
-            <circle cx="296" cy="22" r="4" fill={SENS.blueBright} />
-            <text x="306" y="26" fontSize="10" fill={SENS.blueBright} fontWeight="600">A</text>
-            <text x="306" y="70" fontSize="10" fill={SENS.muted}>avg</text>
-            <EventMark x={89} y={84} label="FLAGGED DAY 9" ly={14} />
-          </svg>
+          <ProductFrame title="FTD cohort · projected NGR"
+            kpis={[
+              { l: 'NEW VIP FLAGS · 7D', v: '6' },
+              { l: 'PROJECTED 12-MO NGR', v: '$412K' },
+            ]}>
+            <div style={{ padding: '8px 10px 10px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                { id: '#48291', v: '$2,140', tier: 'A', up: true, spark: 'M2 22 L20 20 L38 16 L56 14 L74 8 L98 4' },
+                { id: '#55107', v: '$860', tier: 'B', up: false, spark: 'M2 14 L20 15 L38 13 L56 15 L74 12 L98 13' },
+                { id: '#61220', v: '$310', tier: 'C', up: false, spark: 'M2 8 L20 10 L38 14 L56 16 L74 20 L98 22' },
+              ].map(r => (
+                <div key={r.id} style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 8px',
+                }}>
+                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>{r.id}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: SENS.ink }}>{r.v}</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: r.tier === 'A' ? SENS.blueBright : SENS.muted }}>Tier {r.tier}</span>
+                  {r.up && <span style={{ fontSize: 11, color: SENS.blueBright, fontWeight: 700 }}>↑</span>}
+                  <span style={{ flex: 1 }} />
+                  <Spark d={r.spark} color={r.up ? SENS.blueBright : '#9fb0d4'} />
+                </div>
+              ))}
+              <div style={{ fontSize: 9.5, color: SENS.muted, fontStyle: 'italic', paddingLeft: 2 }}>
+                #48291: deposits steady 6 weeks · session depth rising · flagged day 9
+              </div>
+            </div>
+          </ProductFrame>
           <OutChip>→ worked as cases · VIP review</OutChip>
         </ArtifactCard>
       ),
@@ -966,21 +1005,34 @@ function ValueSection() {
       s: 'Early signals on the players worth keeping, with the next action attached.',
       art: (
         <ArtifactCard>
-          <MonoLabel>The signal, before the drop</MonoLabel>
-          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            <AxisFrame />
-            <path d="M18 34 C 60 32, 100 33, 138 36" fill="none" stroke={SENS.ink} strokeWidth="1.5" strokeLinecap="round" opacity="0.85" />
-            <path d="M138 36 C 170 40, 186 46, 200 52" fill="none" stroke={SENS.ink} strokeWidth="1.5" strokeLinecap="round" opacity="0.85" />
-            <path d="M200 52 C 240 66, 272 84, 296 96" fill="none" stroke={SENS.ink} strokeWidth="1.3" strokeDasharray="4 3" opacity="0.5" />
-            <EventMark x={138} y={36} label="DEPOSIT PATTERN BREAKS" ly={14} />
-            <g>
-              <line x1="176" y1="44" x2="176" y2="24" stroke={SENS.blueBright} strokeWidth="1.3" />
-              <path d="M176 24 l12 4 -12 4 z" fill={SENS.blueBright} />
-              <circle cx="176" cy="44" r="3.4" fill={SENS.blueBright} />
-            </g>
-            <text x="230" y="112" fontSize="8.5" fill={SENS.muted} textAnchor="middle"
-              fontFamily="'JetBrains Mono', ui-monospace, monospace">PROJECTED, IF UNTOUCHED</text>
-          </svg>
+          <ProductFrame title="Churn curve"
+            kpis={[
+              { l: 'RETENTION', v: '61%' },
+              { l: 'REACTIVATED', v: '14%' },
+            ]}>
+            <svg viewBox="0 0 400 130" style={{ width: '100%', display: 'block', padding: '4px 0 0' }}>
+              {[0, 1, 2, 3, 4, 5, 6, 7].map(i => {
+                const x = 26 + i * 44
+                const total = 96 - i * 3
+                const retained = [96, 78, 66, 58, 52, 47, 43, 40][i] * 0.9
+                return (
+                  <g key={i}>
+                    <rect x={x} y={112 - total * 0.9} width="26" height={total * 0.9} rx="2" fill="rgba(26,68,168,0.10)" />
+                    <rect x={x} y={112 - retained} width="26" height={retained} rx="2" fill="rgba(26,68,168,0.32)" />
+                  </g>
+                )
+              })}
+              <path d="M 39 26 L 83 45 L 127 56 L 171 63 L 215 68 L 259 73 L 303 76 L 347 79"
+                fill="none" stroke={SENS.blueBright} strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M 347 79 C 372 82, 388 88, 398 96" fill="none" stroke={SENS.ink} strokeWidth="1.3"
+                strokeDasharray="4 3" opacity="0.5" />
+              {[39, 83, 127, 171, 215, 259, 303, 347].map((x, i) => (
+                <circle key={i} cx={x} cy={[26, 45, 56, 63, 68, 73, 76, 79][i]} r="2.4" fill={SENS.blueBright} />
+              ))}
+              <text x="332" y="122" fontSize="8" fill={SENS.muted} textAnchor="middle"
+                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">PROJECTED, IF UNTOUCHED</text>
+            </svg>
+          </ProductFrame>
           <OutChip>→ CRM: retention journey, next 24h</OutChip>
         </ArtifactCard>
       ),
@@ -990,27 +1042,21 @@ function ValueSection() {
       s: 'Every account scored for activity and engagement health.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Account health</MonoLabel>
-          <svg viewBox="0 0 320 96" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            {[0, 1, 2].map(i => {
-              const cx = 70 + i * 92
-              const sweep = [0.82, 0.55, 0.3][i]
-              const a0 = Math.PI * 0.75
-              const a1 = a0 + Math.PI * 1.5 * sweep
-              const x0 = cx + 26 * Math.cos(a0), y0 = 52 + 26 * Math.sin(a0)
-              const x1 = cx + 26 * Math.cos(a1), y1 = 52 + 26 * Math.sin(a1)
-              const large = sweep > 0.66 ? 1 : 0
-              return (
-                <g key={i}>
-                  <circle cx={cx} cy={52} r="26" fill="none" stroke={SENS.rule} strokeWidth="1.2" />
-                  <path d={`M ${x0.toFixed(1)} ${y0.toFixed(1)} A 26 26 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`}
-                    fill="none" stroke={i === 2 ? SENS.ink : SENS.blueBright} strokeWidth="2.2" strokeLinecap="round"
-                    opacity={i === 2 ? 0.55 : 1} />
-                  <circle cx={cx} cy={52} r="3" fill={i === 2 ? SENS.ink : SENS.blueBright} opacity={i === 2 ? 0.55 : 1} />
-                </g>
-              )
-            })}
-          </svg>
+          <ProductFrame title="Deposit health"
+            kpis={[
+              { l: 'ACCOUNTS BELOW THEIR OWN WEEKLY NORMAL', v: '38' },
+            ]}>
+            <div style={{ padding: '10px 10px 12px' }}>
+              <div style={{ display: 'flex', height: 16, borderRadius: 6, overflow: 'hidden', border: `1px solid ${SENS.rule}` }}>
+                <div style={{ width: '63%', background: 'rgba(26,68,168,0.30)' }} />
+                <div style={{ width: '37%', background: 'rgba(176,58,58,0.35)' }} />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+                <span style={{ fontSize: 9, color: SENS.inkSoft, fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>RECOVERING · 24</span>
+                <span style={{ fontSize: 9, color: '#b03a3a', fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>DECLINING · 14</span>
+              </div>
+            </div>
+          </ProductFrame>
           <OutChip>→ written to your CRM</OutChip>
         </ArtifactCard>
       ),
@@ -1020,25 +1066,32 @@ function ValueSection() {
       s: 'Per-player game and content affinities, pushed into your CRM journeys.',
       art: (
         <ArtifactCard>
-          <MonoLabel>Player to games, matched</MonoLabel>
-          <svg viewBox="0 0 320 120" style={{ width: '100%', maxWidth: 440, display: 'block' }}>
-            {[...Array(24)].map((_, i) => (
-              <circle key={i} cx={26 + (i % 8) * 38} cy={22 + Math.floor(i / 8) * 38} r="0.9" fill={SENS.rule} />
-            ))}
-            <circle cx="44" cy="60" r="11" fill="none" stroke={SENS.ink} strokeWidth="1.3" />
-            <circle cx="44" cy="56" r="3.6" fill="none" stroke={SENS.ink} strokeWidth="1.1" />
-            <path d="M37 67 c 0 -4.5 3.5 -6.3 7 -6.3 s 7 1.8 7 6.3" fill="none" stroke={SENS.ink} strokeWidth="1.1" />
-            {[0, 1, 2].map(i => (
-              <g key={i}>
-                <path d={`M 57 60 C 110 ${28 + i * 30}, 150 ${24 + i * 31}, 196 ${24 + i * 31}`}
-                  fill="none" stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth={i === 0 ? 1.5 : 1.1} />
-                <rect x="198" y={11 + i * 31} width="104" height="24" rx="6"
-                  fill={i === 0 ? 'rgba(26,68,168,0.07)' : '#fff'} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="1.1" />
-                <circle cx="212" cy={23 + i * 31} r="3.2" fill={i === 0 ? SENS.blueBright : SENS.rule} />
-                <line x1="223" y1={23 + i * 31} x2="290" y2={23 + i * 31} stroke={i === 0 ? SENS.blueBright : SENS.rule} strokeWidth="2.4" strokeLinecap="round" opacity={i === 0 ? 0.5 : 0.6} />
-              </g>
-            ))}
-          </svg>
+          <ProductFrame title="Game catalogue · affinities">
+            <div style={{ padding: '10px 10px 12px', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 9px', flexShrink: 0 }}>
+                <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#7723</div>
+                <div style={{ fontSize: 9, color: SENS.muted, marginTop: 1 }}>Tier B · evening</div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {[
+                  { g: 'Slots', s: 92, top: true },
+                  { g: 'Live', s: 74, top: false },
+                  { g: 'Crash', s: 61, top: false },
+                ].map(c => (
+                  <span key={c.g} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    border: `1px solid ${c.top ? SENS.blueBright : SENS.rule}`,
+                    background: c.top ? 'rgba(26,68,168,0.06)' : '#fff',
+                    borderRadius: 999, padding: '5px 12px',
+                  }}>
+                    <span style={{ fontSize: 11.5, fontWeight: 600, color: c.top ? SENS.ink : SENS.inkSoft }}>{c.g}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: c.top ? SENS.blueBright : SENS.muted,
+                      fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>{c.s}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </ProductFrame>
           <OutChip>→ CRM journeys · lobby tools</OutChip>
         </ArtifactCard>
       ),
@@ -1048,40 +1101,39 @@ function ValueSection() {
       s: 'Bonus economics per player: who responds, who abuses, and what it should cost.',
       art: (
         <ArtifactCard>
-          <MonoLabel>The right offer, at the right amount</MonoLabel>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-            <div style={{
-              border: `1px solid ${SENS.rule}`, borderRadius: 8, padding: '8px 10px', flexShrink: 0,
-            }}>
-              <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</div>
-              <div style={{ fontSize: 9.5, color: SENS.muted, marginTop: 2 }}>Tier B · slots</div>
+          <ProductFrame title="Bonus calculator" footer="PER-PLAYER BONUS ECONOMICS">
+            <div style={{ padding: '10px 10px 8px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 9px', flexShrink: 0 }}>
+                <div style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</div>
+                <div style={{ fontSize: 9, color: SENS.muted, marginTop: 1 }}>Tier B · slots</div>
+              </div>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                {[
+                  { t: 'Cashback 10%', a: '$14', pick: false },
+                  { t: 'Free spins 50', a: '$11', pick: true },
+                  { t: 'Deposit match 100%', a: '$25', pick: false },
+                ].map(o => (
+                  <div key={o.t} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    border: `1px solid ${o.pick ? SENS.blueBright : SENS.rule}`,
+                    background: o.pick ? 'rgba(26,68,168,0.06)' : '#fff',
+                    borderRadius: 7, padding: '5px 9px',
+                  }}>
+                    <span style={{ fontSize: 11.5, color: o.pick ? SENS.ink : SENS.inkSoft, fontWeight: o.pick ? 600 : 400 }}>{o.t}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontSize: 11.5, fontWeight: 700, color: o.pick ? SENS.blueBright : SENS.muted }}>{o.a}</span>
+                      {o.pick && (
+                        <span style={{
+                          fontSize: 7.5, fontWeight: 600, color: SENS.blueBright, letterSpacing: '0.08em',
+                          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                        }}>SENSAI PICK</span>
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {[
-                { t: 'Cashback 10%', a: '$14', pick: false },
-                { t: 'Free spins 50', a: '$11', pick: true },
-                { t: 'Deposit match 100%', a: '$25', pick: false },
-              ].map(o => (
-                <div key={o.t} style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  border: `1px solid ${o.pick ? SENS.blueBright : SENS.rule}`,
-                  background: o.pick ? 'rgba(26,68,168,0.06)' : '#fff',
-                  borderRadius: 8, padding: '6px 10px',
-                }}>
-                  <span style={{ fontSize: 12, color: o.pick ? SENS.ink : SENS.inkSoft, fontWeight: o.pick ? 600 : 400 }}>{o.t}</span>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: o.pick ? SENS.blueBright : SENS.muted }}>{o.a}</span>
-                    {o.pick && (
-                      <span style={{
-                        fontSize: 8, fontWeight: 600, color: SENS.blueBright, letterSpacing: '0.08em',
-                        fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-                      }}>SENSAI PICK</span>
-                    )}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          </ProductFrame>
           <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
       ),
