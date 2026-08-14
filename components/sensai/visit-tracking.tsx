@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from 'react'
-import { refCode, trackEvent } from '@/lib/analytics'
+import { refCode, trackEvent, trackCodedEvent } from '@/lib/analytics'
 
 /**
  * Round 10, items 2+3. Renders nothing, changes nothing on screen.
@@ -12,6 +12,8 @@ export function VisitTracking({ page }: { page: string }) {
   useEffect(() => {
     const r = refCode()
     trackEvent('visit', r ? { page, coded: true } : { page, coded: false })
+    // Readable without Web Analytics Plus: one row per code in the Events panel — `visit_7412`.
+    trackCodedEvent('visit')
 
     const marks = [25, 50, 75, 100]
     const fired = new Set<number>()

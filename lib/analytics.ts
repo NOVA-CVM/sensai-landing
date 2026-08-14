@@ -36,3 +36,21 @@ export function trackEvent(name: string, props: Record<string, string | number |
     /* analytics must never break the page */
   }
 }
+
+/**
+ * Fire an event whose NAME carries the serial code: `visit_7412`.
+ *
+ * Why the name and not just the property: Vercel shows custom event names and counts on the
+ * current plan, but the properties attached to them are gated behind Web Analytics Plus. Putting
+ * the code in the name means "did 7412 open it?" is answerable by reading the Events panel, with
+ * no upgrade. The property version fires too (trackEvent above), so upgrading later adds detail
+ * without another code change.
+ */
+export function trackCodedEvent(name: string) {
+  try {
+    const r = refCode()
+    if (r) track(`${name}_${r}`)
+  } catch {
+    /* analytics must never break the page */
+  }
+}
