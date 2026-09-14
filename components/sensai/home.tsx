@@ -2431,7 +2431,11 @@ function IntegrationSection() {
       </div>
       {/* What it is allowed to touch. Where it runs has its own block below. */}
       <div style={{ marginTop: 26, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {['Read-only access', 'Pseudonymised data', 'No PII'].map(chip => (
+        {/* AA asked for a security line. Only what we can stand behind is here: encryption is a
+            statement of how the deployment is configured, which Gabi confirms. A "highest security
+            standards" claim is deliberately NOT here: there is no certification behind it yet, and
+            it is the first thing a CISO tests. It goes on the day SOC 2 is real. */}
+        {['Read-only access', 'Encrypted in transit and at rest', 'Pseudonymised data', 'No PII'].map(chip => (
           <span key={chip} style={{
             border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
             padding: '9px 18px', fontSize: 13, fontWeight: 500, color: SENS.inkSoft,
