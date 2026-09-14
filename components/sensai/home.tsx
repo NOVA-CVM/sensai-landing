@@ -1196,28 +1196,28 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
   {
     n: '01', t: 'Fraud rings and bonus abuse',
     s: 'Linked accounts, shared payment fingerprints, one root inviter. The ring, ranked by net loss, with the evidence attached.',
-    art: <RawScreen src="/screenshots/film/leak-fraud-rings-graph.png"
+    art: <RawScreen src="/screenshots/film/leak-fraud-rings-graph.webp"
       alt="The referral network around one hub, ranked by net loss"
       caption="Referral network &middot; ranked by net loss" />,
   },
   {
     n: '02', t: 'Daily KPI monitoring, with the root cause',
     s: 'Every morning against expected. When a number moves, the reason, the accounts behind it, and where each one went.',
-    art: <RawScreen src="/screenshots/film/kpi-root-cause.png"
+    art: <RawScreen src="/screenshots/film/kpi-root-cause.webp"
       alt="Deposits by hour against the expected line, with the cause and the accounts behind it"
       caption="Deposits &middot; yesterday vs expected &middot; the cause, the customers, the actions" />,
   },
   {
     n: '03', t: 'In the chat your team already uses',
     s: 'Claude or ChatGPT, through a standard connector (MCP). Ask in plain language; get the accounts, the reason and the action.',
-    art: <RawScreen src="/screenshots/film/chat-only.png"
+    art: <RawScreen src="/screenshots/film/chat-only.webp"
       alt="sensAi answering inside the chat assistant, with the accounts and the reason"
       caption="sensAi, in the chat &middot; no new tool" />,
   },
   {
     n: '04', t: 'Actions through the systems you already run',
     s: 'Cases, lists, triggers, enriched profiles. Into your CRM, case manager and risk tools.',
-    art: <RawScreen src="/screenshots/film/where-it-went.png"
+    art: <RawScreen src="/screenshots/film/where-it-went.webp"
       alt="One finding fanning out to a CRM exclusion list, a watchlist and a risk ticket"
       caption="One finding &middot; four actions &middot; three systems" />,
   },
@@ -1225,7 +1225,7 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     // §10's two required sentences live here, verbatim, and this line always renders.
     n: '05', t: 'Your team stays in control',
     s: 'Nothing is armed without your confirmation. What you confirm becomes a proposed rule, for your CRM team to approve. It never contacts a player.',
-    art: <RawScreen src="/screenshots/film/control-approve.png"
+    art: <RawScreen src="/screenshots/film/control-approve.webp"
       alt="A proposed rule sent for approval, and approved"
       caption="Proposed rule &middot; sent for approval &middot; approved at 13:40" />,
   },
