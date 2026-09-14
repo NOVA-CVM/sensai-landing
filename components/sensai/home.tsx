@@ -151,9 +151,10 @@ function SectionShell({ children, bg, padY = 88 }: {
 export function Logo({ className = "", showMascot = false }: { className?: string; showMascot?: boolean }) {
   return (
     <span className="inline-flex items-center" style={{ gap: 10 }}>
-      {/* The nav here is quieter than /sense's, so the mascot is 40px rather than 56. */}
+      {/* The nav here is quieter than /sense's, so the mascot is 40px rather than 56, and it is
+          served as a 120px webp (3x the render) at 2KB. /sense keeps the 1024px original. */}
       {showMascot && (
-        <img src="/sensai-mascot.png" alt="sensAi" style={{ width: 40, height: 40, borderRadius: 10 }} />
+        <img src="/sensai-mascot-nav.webp" alt="sensAi" width={40} height={40} style={{ width: 40, height: 40, borderRadius: 10 }} />
       )}
       <span
         className={`tracking-[0.08em] ${className}`}
@@ -531,7 +532,7 @@ function Film() {
         position: 'relative', borderRadius: 18, overflow: 'hidden', background: '#0f1420',
         boxShadow: '0 40px 100px -30px rgba(0,0,0,0.75)', border: '1px solid rgba(255,255,255,0.08)',
       }}>
-        <video ref={tallRef} src={cut === 'tall' ? '/film/sensai-45.mp4' : undefined} poster="/film/poster-45.jpg" controls={playing}
+        <video ref={tallRef} src={cut === 'tall' ? '/film/sensai-45.mp4' : undefined} poster="/film/poster-45.webp" controls={playing}
           playsInline preload="metadata" style={{ width: '100%', display: 'block', aspectRatio: '4 / 5' }} />
         {overlay('tall')}
       </div>
