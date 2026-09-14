@@ -15,7 +15,7 @@
   .sensai-home .sh-nav > div { padding: 10px 16px !important; }
   .sensai-home .sh-nav .sh-btn { padding: 8px 12px !important; font-size: 12.5px !important; }
   .sensai-home .sh-nav img { width: 36px !important; height: 36px !important; }
-  .sensai-home h1 { font-size: 36px !important; letter-spacing: -0.8px !important; line-height: 1.1 !important; }
+  .sensai-page.sensai-home h1 { font-size: 32px !important; letter-spacing: -0.7px !important; line-height: 1.12 !important; }
   .sensai-home h2 { font-size: 29px !important; letter-spacing: -0.5px !important; }
   .sensai-home .sh-hero-p { font-size: 15.5px !important; }
   .sensai-home .sh-grid-3, .sensai-home .sh-grid-2, .sensai-home .sh-grid-2-inner { grid-template-columns: 1fr !important; gap: 14px !important; }
@@ -34,6 +34,6 @@
 /* Narrow phones (360px and under): the H1 is the longest line on the page and runs to five lines
    here at 36px. One type step keeps it at four, which is the rule, without touching the copy. */
 @media (max-width: 380px) {
-  .sensai-home h1 { font-size: 33px !important; }
+  .sensai-page.sensai-home h1 { font-size: 29px !important; }
   .sensai-home .sh-hero-p { font-size: 15px !important; }
 }

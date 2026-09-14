@@ -1,127 +1,242 @@
-# getsensai.co — Home Page Brief (Round 2)
+# getsensai.co — Home Page Brief (Round 3: rebase on /sense)
 
-**Read this whole file before touching anything.** Round 1 is done and built; this round is a short list of copy fixes that came out of the film work, a film-file swap, and the deploy. The copy authority is `../../sales/sensai-offer-source-of-truth.md`, now **v5.3** — where this brief and that document disagree, the document wins.
+**Read this whole file before touching anything.** This round changes the base of the page, so start here rather than from your round-2 state.
 
----
-
-## 0. Where things stand (verified 13 Sep, evening)
-
-- Round 1 is complete: the page exists (`components/sensai/home.tsx`), the three approved additions from Gabi's review are in (MCP line, trust row, "computed, not generated"), and `next build` passed on this machine (`.next/BUILD_ID` present). Your own improvement — giving each `<video>` its `src` only when it is the cut being shown — is good; keep it.
-- **Nothing is committed or pushed yet.** `git status` shows `home.tsx`, `home.css`, `public/film/`, this brief as untracked and `app/page.tsx`, `app/layout.tsx`, `one-pager-v2.tsx` as modified. There is a stale `.git/index.lock` — delete it first.
-- **getsensai.co is live with a registrar placeholder** ("Empower Your Business with AI", a contact form). That page must not be the one a viewer lands on from the film. AA does the DNS after this round; your job is to have the real page deployed on the Vercel project so the switch is instant.
+Copy authority: `../../sales/sensai-offer-source-of-truth.md` (v5.3). Where this brief and that document disagree, the document wins.
 
 ---
 
-## 1. Where things live
+## 0. Why we're rebasing, and what happens to round 1–2
 
-| What | Path |
-|---|---|
-| The page component | `components/sensai/home.tsx` |
-| Its responsive rules | `components/sensai/home.css` |
-| Root route | `app/page.tsx` |
-| Site metadata (title, description, OG) | `app/layout.tsx` |
-| Reused, exported from the old page: `HeroResolutionField`, `IntegrationDiagram`, `Logo`, `useInView`, `useReducedMotion` | `components/sensai/one-pager-v2.tsx` |
-| The two films + posters | `public/film/` |
-| Booking / application flows (unchanged) | `/book`, `/apply` |
-| **Copy authority** | `../../sales/sensai-offer-source-of-truth.md` (v5.3) |
+Your round-1/2 page is correct on copy and builds clean — none of that work is thrown away, the copy moves across. But it was written from scratch, and in doing so it lost the thing `/sense` does best: it **shows the product**. A visitor who doesn't press play on the film sees text and one diagram, and never sees a Sensai screen. `/sense` has six real product frames running down the page, in the getmodus-aligned look AA approved.
 
-`/sense` stays exactly as it is.
+AA's decision: **`/sense` is the base.** getsensai.co becomes `/sense`, aligned to the current messages, with the film added, the product stills refreshed, and the weak sections removed.
 
----
+`/sense` itself must keep working exactly as it is — links to it are already in people's inboxes.
 
-## 2. Round-2 copy fixes — apply exactly as written
+### How to set that up
 
-These are rulings AA made while cutting the film; the source-of-truth was updated first (v5.3), so the page now follows it. Each is a find-and-replace; do not paraphrase, do not "improve" nearby lines.
-
-**(a) Hero H1** — `home.tsx`, the `<h1>` in `Hero()`.
-Now: `Sensai finds and stops the revenue leaks in your customer base.`
-Becomes: **`Sensai finds the leaks in your customer base. You keep the revenue.`**
-Keep the accent span on the words *the leaks* (the colour span currently wraps *revenue leaks*).
-
-**(b) Hero paragraph, first sentence** — the first `<p className="sh-hero-p">`.
-Now: `Every operator leaks revenue it has already paid for — to bonuses taken by rings and wasted on players who didn't need them, to VIPs who churn without anyone reading their signals, to customers hit by a failed deposit that nobody picked up.`
-Becomes: **`Even the best operators leak revenue they've already paid for — to bonuses taken by fraud rings and wasted on players who didn't need them, to VIPs who quietly churn without anyone reading their signals, to customers who drop after a failed deposit that nobody picked up.`**
-The second sentence (*Catching it takes…*) is unchanged.
-
-**(c) Hero paragraph, second `<p>` (the slogan close).**
-Now: `Sensai does: every customer watched as a revenue stream, every change caught, every finding pushed into the systems your teams already use.`
-Becomes: **`Sensai does: every customer watched, every change caught, every finding pushed into the systems your teams already use.`**
-
-**(d) How-it-works card** — the `HOW` array, first entry.
-Now the title is `Every customer is a revenue stream.`
-Becomes: **`Every customer generates a revenue stream.`** (body unchanged). Customers are not streams; they produce them.
-
-**(e) Leak card titles** — the `LEAKS` array. Replace three titles only; the numbers and bodies stay:
-- `01`: `Organised bonus abuse` → **`Fraud rings take your bonuses`**
-- `02`: `VIPs churning without anyone reading their signals` → **`VIPs quietly churn`**
-- `04`: `Customers hit by a technical failure nobody follows up` → **`Customers drop after product failures`**
-Keep `LEAK 01…06` as the small labels on this page — the cards are a full list of six here, so numbering is honest. (In the film the leaks are *named*, not numbered, because only three are shown.)
-
-**(f) Footer line** — `Footer()`.
-Now: `Finds and stops the revenue leaks in your customer base.`
-Becomes: **`Finds the leaks in your customer base. You keep the revenue.`**
-
-**(g) Metadata** — `app/layout.tsx`, the `TITLE` and `DESC` constants.
-`TITLE` becomes: **`Sensai — finds the leaks in your customer base. You keep the revenue`**
-`DESC` becomes: **`Even the best operators leak revenue they've already paid for — to fraud rings, to VIPs who quietly churn, to customers who drop after a failed deposit nobody picked up. Sensai watches every customer and pushes what it finds into the systems your teams already use.`**
-
-**(h) Source-of-truth reference** — the comment block at the top of `home.tsx` says `(v5.2)`; make it `(v5.3)`.
-
-After (a)–(h): grep the page for `finds and stops`, `taken by rings`, `is a revenue stream` — all three must return nothing.
+1. Overwrite `components/sensai/home.tsx` with a **copy of `components/sensai/one-pager-v2.tsx`**, renaming the exported component to `SensaiHome` (so `app/page.tsx` needs no change).
+2. `/sense` keeps rendering `one-pager-v2.tsx`, untouched. **Do not** refactor the two into shared components — they will diverge, and a shared edit that breaks `/sense` is worse than duplicated code. The exports you added to `one-pager-v2.tsx` in round 1 (`HeroResolutionField`, `IntegrationDiagram`, `Logo`, `useInView`, `useReducedMotion`) can stay or be dropped; nothing else should import them once the copy exists.
+3. Salvage from your round-1/2 `home.tsx` — it is in git at commit `0a3b0d3`: the **`Film` component** (including your src-per-cut improvement, which is good and must survive), the leak copy, the MCP line and the trust chips.
+4. Keep `home.css`; extend it for the new page rather than replacing it.
 
 ---
 
-## 3. The film files — swap when the finals land
+## 1. The page, section by section
 
-`public/film/sensai-45.mp4` is an **old cut (v7)**: different lines, sentence periods, placeholder music. `public/film/sensai-product-story.mp4` is the long film with placeholder music. Both are being finished now (licensed track pending). When AA drops the finals into this folder:
+Render exactly this list, in this order. Everything else that exists in the file stays defined but **unrendered** — do not delete the functions, we may want them back.
 
-- Keep the filenames exactly (`sensai-45.mp4`, `sensai-product-story.mp4`) so the component needs no change.
-- Re-cut both poster frames from the new files: `poster-45.jpg` from the 4:5 cut (the frame with the fraud-ring graph reads best), `poster-wide.jpg` from the long film (its network-graph scene). Same names, same sizes (810 wide / 1600 wide, JPEG q≈3).
-- Do not swap in the placeholder-music versions "for now" — an un-swapped old file is better than a newer one with the code-synthesised bed.
-- If the finals are not there when you deploy, deploy anyway; the swap is a second commit.
+| # | Component | What to do |
+|---|---|---|
+| 1 | `VisitTracking` | `page="home"` |
+| 2 | `Nav` | Keep. Add the **Book a walkthrough** button on the right (from round 1) — `/sense`'s nav has only the logo. |
+| 3 | `Hero` | Rewrite copy — §2 below. Keep `HeroResolutionField` + scrim. |
+| 4 | **`Film`** | **New, directly under the hero**, still inside the ink band. §3 below. |
+| 5 | `ProblemSection` | Keep the headline; strip the body — §4. |
+| 6 | `ValueSection` → rename `LeaksSection` | The six leaks, on the existing product artifacts — §5. **This is the main work of this round.** |
+| 7 | `IntegrationSection` | Keep, `id="how-it-works"`. Three edits — §6. |
+| 8 | `PartnershipSection` | Keep, copy aligned — §7. |
+| 9 | `Founders` | Currently parked. **Enable it**, with corrected wording — §8. |
+| 10 | `Footer` | Keep. Tagline line becomes *Finds the leaks in your customer base. You keep the revenue.* |
 
----
+**Not rendered** (with the reason, so nobody re-adds them by accident):
 
-## 2b. Look and feel — keep /sense (unchanged from round 1)
+- `TurnSection` — "Your base, now in high resolution" — a transition we no longer need.
+- `RoleSection` — "A digital customer manager for every player" — **§10 bans that descriptor outright.**
+- `AskSensAi` — the animated chat demo. The film shows the chat now; two demos of the same thing is the "too much to look at" note Gabi and AA both made. It is also the heaviest JS on the page.
+- `CTA` — "Quick customer base scan · See where the revenue leaks. In 48 hours." **This breaks §8's print rule** (no findings claims, no magnet language for the scan). The scan survives as one quiet sentence in §7 below.
+- `SocialProof`, `Walkthrough`, `Why`, `ApproachSection`, `HowItWorks` — already parked; leave parked.
 
-The look of `/sense` is the look of this site (built to sit alongside getmodus.com): ink hero with the resolution field under a scrim, light paper sections, white cards with a hairline rule, blue eyebrows with the short dash, Space Grotesk. Copy values from `one-pager-v2.tsx` when in doubt; introduce no new component style, colour, gradient, icon set or font. Cards: `1px solid #dfe4ee`, radius 16, no drop shadows except the film frame and the primary button. Nothing purple, nothing neon, no glassmorphism. If a change makes the page look like a different site from `/sense`, it is wrong whatever else it improves.
-
----
-
-## 4. Rules that are not negotiable (from the source-of-truth §10)
-
-If a request from anyone conflicts with one of these, stop and ask AA.
-
-**Never on the page:** *AI, agent, agentic, autonomous* operator-facing (the claim is carried by *models · context · adapt · keeps learning your business*) · *daily / every day / every morning* · any client name, operator name or calendar date · *your analyst* (always *your team*) · *fraud* as a headline or *risk* as the positioning (*fraud rings* naming the perpetrator inside a leak line is fine) · *purchase, redeem, bankroll, entertainment* · *customer value manager / CVM / digital customer manager* as a descriptor · *onboarding* for any unsigned operator, and nothing at all about a second operator · money figures as impact claims · deposit-amount triggers as VIP/churn examples (behaviour and preference signals only) · *"X don't need more data, they need Y"* or *understanding* as a headline payoff · anything implying the product messages players or runs campaigns itself · a cookie banner · **"finds and stops"** (retired) · **"your revenue is leaking"** as a hook (accusatory) · **"managed loosely"** (say *unwatched*) · **"helps you"** (a hedge) · **"maximise your revenues"** · **"wisdom of the crowd" / patterns shared across clients**.
-
-**Always:** *Your team stays in control* and *It doesn't talk to your players — it works through your teams' systems*, in those words · the scan stays last, quiet, no claims · brand in running copy is *Sensai*; the `Logo` wordmark renders *sensAi*, leave it · Space Grotesk site-wide · palette from the `C` object in `home.tsx`.
-
----
-
-## 5. What to do, in order
-
-1. Delete `.git/index.lock`.
-2. Apply §2 (a)–(h). Run `tsc --noEmit` and `pnpm build` (or `npm run build`); both must be clean.
-3. Verify on a desktop browser and an actual phone (iPhone Safari at least): H1 wraps to three lines or fewer on desktop, four or fewer on a phone, nothing scrolls horizontally at 360px; the right film shows per device and the other has no `src`; posters appear before play; no autoplay; the integration diagram scrolls sideways on a phone and stays legible; all grids stack ≤768px; every *Book a walkthrough* goes to `/book`, *Apply for a partnership* to `/apply`, *How it works* scrolls to `#how-it-works`; analytics events fire (`visit` with `page: "home"`, `cta_click`, `film_play`); OG preview shows title, description and `/film/poster-wide.jpg`; Lighthouse performance not below `/sense`.
-4. Commit and push to `main`. Confirm the Vercel preview build is green; walk step 3 once more on the preview URL.
-5. In the Vercel project (the one serving `www.novacvm.net`): Settings → Domains → add `getsensai.co` and `www.getsensai.co`, `www` primary, apex redirects. Copy the DNS records Vercel shows into your report for AA — **AA sets them at the registrar**; do not wait for them. When the DNS switches, the registrar's placeholder page disappears with it; if a "site builder" is enabled at the registrar, tell AA to switch it off there.
-6. `robots.txt` allows `/`; `/sense` keeps its own `noindex`. Leave both.
-7. Report back in one message: production/preview URL, Lighthouse numbers, devices checked, anything in step 3 that did not pass, the DNS records for AA, and any line of copy you changed beyond §2 (there should be none).
+Result: **six sections plus nav and footer.** Phone-first, short, and the product is visible without pressing anything.
 
 ---
 
-## 6. Requests you may get later — how to handle them
+## 2. Hero
 
-- **"Change a line of copy."** Source-of-truth first (or ask AA to), then the page. Never the reverse.
-- **"Add a logo / client name / case study."** No, until AA says the operator cleared it in writing; then §7 of the document first.
-- **"Move the scan up / make it a button."** No. §8 print rule.
-- **"Add a chat widget."** Not on this page without AA (`chat-widget.tsx` exists; deliberately unused).
-- **"Swap the film."** §3 above. Never embed from YouTube/Vimeo — no third-party players.
-- **"Make it faster."** Compress the films first (wide ≤ 12MB at 1080p, tall ≤ 6MB) before touching anything else.
-- **"Add the fork chart / the awaiting-approval frame."** Two visuals from the film AA may ask for later — the with/without-Sensai revenue chart under "How you know it's working" (clearly labelled as an illustration, never as data), and the proposed-rule "awaiting approval" frame under "Your team stays in control". Only on AA's instruction; ask for the source frames.
+- Eyebrow: `FOR GAMING OPERATORS · THE TEAMS THAT OWN CUSTOMER REVENUE`
+- H1, as **two blocks with an explicit break** — it currently strands "You" at the end of a line on desktop and gives five lines on a phone:
+
+  > **Sensai finds *the leaks* in your customer base.**
+  > **You keep the revenue.**
+
+  Accent colour (`#8fa8e0`) on *the leaks* only.
+- One paragraph, and only one:
+
+  > Every customer watched, every change caught, every finding pushed into the systems your teams already use.
+
+  The longer "Even the best operators leak revenue they've already paid for…" paragraph **moves down** to open the leaks section (§5) — it is a good paragraph in the wrong place.
+- Buttons: **Book a walkthrough** → `/book` · **How it works** → scrolls to `#how-it-works`.
+- Under the buttons, one small muted line (12.5px, `#7d89a8`):
+
+  > Live in production with a tier-1 operator · ~2.5M accounts
+
+  This is the only proof claim on the page this round. No percentages, no case numbers, no client name.
 
 ---
 
-## 7. Voice, for anything you must write yourself
+## 3. The film
 
-Short sentences. Buyer's words. Outcome before mechanism. No exclamation marks, no superlatives, no "leverage". No sentence-ending periods in headlines or card titles. If a sentence could be on a competitor's page, cut it. When unsure, take the nearest sentence from the source-of-truth verbatim.
+Directly under the hero, max-width ~1080, centred, inside the ink band.
+
+- Desktop: `/film/sensai-product-story.mp4`, poster `/film/poster-wide.jpg`, 16:9.
+- Phone (≤768px): `/film/sensai-45.mp4`, poster `/film/poster-45.jpg`, 4:5.
+- Click to play; no autoplay; `playsInline`; `preload="metadata"`; native controls once playing; only the cut actually shown gets a `src` (your round-1 improvement).
+- Caption under it, small and muted: *The product, shown inside the assistant your team already uses. Values transformed, accounts masked.* — **do not name the assistant in the caption.**
+
+**The films currently in `public/film/` are stale** — `sensai-45.mp4` is an old cut with different copy and placeholder music, and the long film has the same placeholder bed. AA will drop the finals in with the **same filenames**. When he does: re-cut both posters from the new files (`poster-45.jpg` from the 4:5 at 810 wide, `poster-wide.jpg` from the long film at 1600 wide, JPEG q≈3, pick a frame showing the network graph) and commit. **Never ship a placeholder-music version deliberately** — if the finals aren't in yet, deploy with what's there and swap in a follow-up commit.
+
+---
+
+## 4. Problem section
+
+Keep the existing headline — it is exactly on-message:
+
+> **Nobody can watch a million players. So the revenue leaks.**
+
+Remove the three failure-mode blocks (`MarkShallow` / `MarkDrifting` / `MarkUntrusted` and their copy). That is internal vocabulary, it is abstract, and it is three more paragraphs on a page we are shortening.
+
+In their place, one short quote, styled as `/sense` styles quotes — attributed to *what we hear from the people who own the revenue line*, **never to a named person or operator**:
+
+> *"Every angle of the customer sits with a different team. Fraud doesn't cover bonus abuse, so I lose money to abusers. VIPs go quietly. Payments fixed the deposit error — but who's acting on the customers it hit?"*
+
+Nothing else in this section.
+
+---
+
+## 5. The leaks (the old ValueSection) — the main work
+
+Keep the section's structure, grid, `ProductFrame` system, `OutChip`s, `ReasonLine`s and the `ILLUSTRATIVE · SYNTHETIC DATA` marker. **That marker stays — it is an honesty requirement, not decoration.**
+
+- Eyebrow: `THE LEAKS WE STOP`
+- Title: **Retention is the outcome. These are the leaks that drain it.**
+- Lede — the paragraph moved down from the hero:
+
+  > Even the best operators leak revenue they've already paid for — to bonuses taken by fraud rings and wasted on players who didn't need them, to VIPs who quietly churn without anyone reading their signals, to customers who drop after a failed deposit that nobody picked up.
+
+Then six tiles. **The artifacts already exist** — you are re-labelling them and swapping two, not building new ones:
+
+| # | Title (exact) | One line under it | Artifact |
+|---|---|---|---|
+| 01 | **Fraud rings take your bonuses** | Rings, syndicates, multi-accounting — taking promotional money consistently, from a budget that runs 10–20% of your revenue. | Keep the existing *Referral network* frame (`RafBurst`). |
+| 02 | **VIPs quietly churn** | The signals are in the play, weeks before the revenue moves — caught while there is still someone to keep. | Keep the existing *Account health · churn curve* frame. |
+| 03 | **Valuable players identified too late** | Tomorrow's VIPs, flagged in their first weeks, while nurturing still changes the outcome. | Keep the existing *FTD cohort · projected NGR* frame. |
+| 04 | **Customers drop after product failures** | A failed deposit, a payment error, a disconnection. The error gets fixed; the customers it hit don't get actioned. | **New:** `/screenshots/film/leak-product-failures.png` (the deposits-by-hour chart, the night-time gap in red). Present it inside a `ProductFrame` titled `Deposits · yesterday vs expected` so it matches its neighbours. |
+| 05 | **Wrong offers to the wrong players** | Over-bonused players who would have played anyway, under-bonused players who were worth keeping — the same budget, leaking both ways. | Keep the existing *Deposit → bonus ladder* frame (currently tile 06). |
+| 06 | **Accounts closed or restricted without you knowing** | Over-closure — fraud shutting too many accounts, or adding too much friction — lands on your revenue line, not theirs. | No artifact. Text-only card; let it sit as the quiet last tile. |
+
+The two tiles that come out of this grid: *Responsible gaming* and *Game recommendations*. RG stays out of this page deliberately — on a landing page it invites "is this a compliance product?", which §9 says we are not. Neither capability is being dropped from the business, only from this grid.
+
+`OutChip`s stay where they exist and stay accurate (→ Risk queue with the evidence, → CRM retention journey, → promo planning · CRM, and for 04: **→ CRM: declined deposits, for reach-out**).
+
+---
+
+## 6. How it works (IntegrationSection, `id="how-it-works"`)
+
+Keep the section, the diagram, and the trust chips. Three edits:
+
+1. **Delete the line "Scan in 48 hours. Live in 4 weeks."** (the 22px blue line). §8 forbids magnet language for the scan. Replace with, in the same slot and style: **Live within weeks.**
+2. **The diagram** (`IntegrationDiagram`): outputs become `CRM · Case manager · Risk tools · BI · Other` — **drop "Compliance"**, which pulls the reader toward the risk pocket we deliberately don't sell into. Node caption: `WATCHING EVERY CUSTOMER`.
+3. **Add, centred under the diagram** (13px, muted), then the chip row beneath it:
+
+   > Works inside the assistant your team already uses — Claude, ChatGPT — through a standard connector (MCP).
+
+   Chips: `Read-only access` · `Pseudonymised data` · `No PII`.
+
+Optionally, if the section looks thin on a phone after the deletions, place `/screenshots/film/where-it-went.png` (one finding fanning out to CRM, watchlist, risk ticket) under the chips at modest width. Your call; don't force it.
+
+---
+
+## 7. Design partnership
+
+Title: **Design partnerships — a small number, open now.**
+
+Body (from §8):
+
+> Read access, scripts approved by you, live within weeks. The first leak lands in your CRM with the accounts — and a measure you own. Partners work directly with the founders, shape what gets built next, and lock early terms.
+
+Buttons: **Apply for a partnership** → `/apply` · **Book a walkthrough** → `/book`.
+
+Then, at the very bottom of the section, one quiet muted sentence — no headline, no button, no figures:
+
+> Need to see it on your own data first? One extract, 48 hours, no integration — a read of your base, less tuned than a live deployment, and we say so. Ask for it on the call.
+
+**No year anywhere.** "Design partnerships open for 2026/2027" is retired: a date on a page ages while the page keeps circulating, and §10 bars calendar dates.
+
+---
+
+## 8. Who's building this (enable `Founders`)
+
+The round-2 wording said "built by people who ran these teams", which is wrong for Gabi — he is engineering, not CRM. Corrected:
+
+- Eyebrow: `WHO'S BUILDING THIS`
+- Title: **Built on years inside the industry.**
+- Lede: *Years on the operator side — the CRM playbooks, the abuse patterns, the churn signals — and the engineering to run it at scale.*
+- Cards:
+  - **Amit Assa · CEO** — 17 years in customer value management across iGaming and digital platforms.
+  - **Gabi Dvir · Co-founder** — 20+ years in tech leadership. Ex-VP DevOps at 888 and Fiverr.
+
+---
+
+## 9. Assets provided
+
+Four stills exported from the film master at high resolution, in `public/screenshots/film/`:
+
+| File | What it is | Where it goes |
+|---|---|---|
+| `leak-product-failures.png` | Deposits by hour, the 01:00–04:00 gap in red, −$310K | Leak 04 (§5) |
+| `leak-fraud-rings.png` | The referral-network graph around one hub | Spare — only if the `RafBurst` frame ever needs replacing |
+| `where-it-went.png` | One finding → CRM exclusion list, watchlist, risk ticket | Optional, §6 |
+| `account-tiles.png` | One account's KPI tiles (deposited, staked, balance, wagering ratio) | Spare |
+
+All are synthetic/transformed values with masked account IDs, same as the film — safe to publish. The old `public/screenshots/*.png` files are an earlier build of the product; **do not put them on this page.**
+
+---
+
+## 10. Look and feel — this is now literal
+
+Round 2 said "keep the /sense look". Now the page *is* /sense, so the rule is simpler: **don't restyle anything.** Same palette, same `ProductFrame` system, same eyebrows, same card rule and radius, same Space Grotesk, same spacing rhythm. No new component styles, colours, gradients, icon sets or fonts. Nothing purple, nothing neon, no glassmorphism.
+
+**Mobile is the primary device.** Test at 390 and 360 wide on a real phone, not only DevTools. Every product frame must stay legible — scroll a frame sideways in its own container rather than shrinking it to unreadable. No horizontal scroll on the page body at any width.
+
+---
+
+## 11. Rules that are not negotiable (source-of-truth §10)
+
+If any request conflicts with one of these, stop and ask AA.
+
+**Never on the page:** *AI, agent, agentic, autonomous* operator-facing (the claim is carried by *models · context · adapt · keeps learning your business*) · *daily / every day / every morning* · any client name, operator name or calendar date · *your analyst* (always *your team*) · *fraud* as a headline or *risk* as the positioning (*fraud rings* naming the perpetrator inside a leak line is fine) · *purchase, redeem, bankroll, entertainment* · *customer value manager / CVM / digital customer manager* as a descriptor · *onboarding* for any unsigned operator, and nothing at all about a second operator · money figures as impact claims · deposit-amount triggers as VIP/churn examples (behaviour and preference signals only) · *"X don't need more data, they need Y"* or *understanding* as a headline payoff · anything implying the product messages players or runs campaigns itself · a cookie banner · **"finds and stops"** (retired) · **"your revenue is leaking"** as a hook · **"managed loosely"** (say *unwatched*) · **"helps you"** · **"maximise your revenues"** · **"bonus optimisation"** (§9: we are not an offer-optimisation engine — "bonus allocation" is our version) · **"wisdom of the crowd" / patterns shared across clients**.
+
+**Always:** *Your team stays in control* and *It doesn't talk to your players — it works through your teams' systems*, in those words · the scan last, quiet, no claims · the `ILLUSTRATIVE · SYNTHETIC DATA` marker on the product frames · brand in running copy is *Sensai* (the `Logo` wordmark renders *sensAi* — leave it) · palette and type from `/sense`.
+
+---
+
+## 12. What to do, in order
+
+1. Delete `.git/index.lock` if it is back.
+2. Make the copy (§0), render the section list (§1), apply §§2–8.
+3. Drop the four stills into `public/screenshots/film/`.
+4. `tsc --noEmit` clean, then `pnpm build` (or `npm run build`) clean.
+5. Verify on a desktop browser **and a real phone**: H1 breaks as two blocks; the right film per device and no `src` on the other; posters show before play; no autoplay; the six leak tiles and their frames are legible at 390; the integration diagram is legible (sideways scroll, not shrunk); every grid stacks; **Book a walkthrough** → `/book`, **Apply** → `/apply`, **How it works** → `#how-it-works`; analytics fire (`visit` with `page: "home"`, `cta_click`, `film_play`); OG preview shows title, description and `/film/poster-wide.jpg`; Lighthouse performance not below `/sense`.
+6. **Push** — your three round-2 commits are still unpushed, so nothing has deployed yet. Push them with this round's work, confirm the Vercel preview is green, and walk step 5 on the preview URL.
+7. Vercel project (the one serving `www.novacvm.net`) → Settings → Domains → add `getsensai.co` and `www.getsensai.co`, `www` primary, apex redirects. **Put the DNS records Vercel gives you into your report — AA sets them at the registrar.** Don't wait on them. Note for AA: the registrar currently serves a placeholder page ("Empower Your Business with AI"); if a site-builder is switched on there it must be switched off, not just overridden.
+8. `robots.txt` allows `/`; `/sense` keeps its own `noindex`. Leave both.
+9. Report in one message: preview/production URL, Lighthouse numbers, devices checked, anything in step 5 that failed, the DNS records, and any copy you changed beyond this brief (there should be none).
+
+---
+
+## 13. Requests you may get later
+
+- **"Change a line of copy."** Source-of-truth first, then the page. Never the reverse.
+- **"Add a logo / client name / case study."** No, until AA confirms the operator cleared it in writing.
+- **"Bring back the proof numbers."** Only with benchmarks AA supplies; the old 58% / "their automation" tiles were cut for needing explanation.
+- **"Put the scan higher."** No. §8.
+- **"Re-add the chat demo."** Ask AA — it is parked deliberately, not lost.
+- **"Swap the film."** §3.
+- **"Make it faster."** Compress the films first (wide ≤ 12MB at 1080p, tall ≤ 6MB).
+
+---
+
+## 14. Voice, for anything you must write yourself
+
+Short sentences. Buyer's words. Outcome before mechanism. No exclamation marks, no superlatives, no "leverage". No sentence-ending periods in card titles. If a sentence could sit on a competitor's page, cut it. When unsure, take the nearest sentence from the source-of-truth verbatim.
