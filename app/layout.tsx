@@ -14,8 +14,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
 }
 
-const TITLE = 'Sensai · finds the leaks in your customer base. You keep the revenue'
-const DESC = 'Even the best operators leak revenue they’ve already paid for: to fraud rings, to VIPs who quietly churn, to customers who drop after a failed deposit nobody picked up. Sensai watches every customer and pushes what it finds into the systems your teams already use.'
+const TITLE = 'Sensai · stops the revenue leaks in your customer base'
+const DESC = 'Sensai stops the revenue leaks in your customer base, so you can focus on growth. Bonus abuse, silent VIP churn, customers lost to product failures: found, actioned through the systems your teams already run.'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.getsensai.co'),

@@ -155,10 +155,10 @@ export function Logo({ className = "", showMascot = false }: { className?: strin
         <img src="/sensai-mascot.png" alt="sensAi" className="w-14 h-14 rounded-xl" />
       )}
       <span
-        className={`tracking-[0.08em] ${className}`}
+        className={`tracking-[-0.02em] ${className}`}
         style={{ fontFamily: 'inherit', fontWeight: 600 }}
       >
-        sens<span style={{ textTransform: 'none', fontSize: '1.15em', fontWeight: 700 }}>A</span>i
+        Sensai
       </span>
     </span>
   )
@@ -340,17 +340,9 @@ function Nav() {
       borderColor: 'rgba(255,255,255,0.08)',
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
-        <Logo className="text-xl sm:text-2xl md:text-4xl font-semibold text-white" showMascot />
-        <button
-          onClick={() => goBook('nav')}
-          style={{
-            background: '#fff', color: SENS.ink, border: 'none',
-            padding: '10px 18px', borderRadius: 999, fontSize: 14, fontWeight: 600,
-            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap',
-          }}
-        >
-          Book a walkthrough <ArrowRight className="w-4 h-4" />
-        </button>
+        {/* Round 5 enumerates the page's three buttons (hero x2, partnership x1); the nav CTA
+            added in round 3 is not one of them, so the nav carries the wordmark alone. */}
+        <Logo className="text-xl sm:text-2xl md:text-3xl font-semibold text-white" />
       </div>
     </nav>
   )
@@ -362,7 +354,7 @@ function Nav() {
 
 function HeroField() {
   // Atmospheric field of players: blurred at the edges, sharpening toward a
-  // focus point right of center. Deterministic — no randomness.
+  // focus point right of center. Deterministic, no randomness.
   const w = 1440
   const h = 860
   const cols = 36
@@ -454,7 +446,7 @@ export function HeroResolutionField() {
 
 // ─── The film (salvaged from the round-1/2 page, src-per-cut kept) ───
 // Both cuts stay in the markup so CSS picks one without a layout shift, but only the cut
-// actually shown gets a `src` — otherwise a phone range-fetches the 16:9 film it never plays.
+// actually shown gets a `src`, otherwise a phone range-fetches the 16:9 film it never plays.
 // The page plays the 57-second cut, at every width. The 113-second film is a sales-conversation
 // asset, not a cold-page asset. When the 16:9 rendering of the short cut lands, flip this to true
 // and desktop plays it wide again. One line, nothing else to change.
@@ -466,7 +458,7 @@ function Film() {
   const tallRef = useRef<HTMLVideoElement | null>(null)
   const [playing, setPlaying] = useState(false)
   // Both cuts are in the markup so CSS can pick one without a layout shift, but only the cut that
-  // is actually shown gets a `src` — otherwise a phone range-fetches the 16:9 film it will never
+  // is actually shown gets a `src`, otherwise a phone range-fetches the 16:9 film it will never
   // play. Posters render without a src, so the frame is there before this resolves.
   const [cut, setCut] = useState<'wide' | 'tall' | null>(null)
   useEffect(() => {
@@ -505,7 +497,7 @@ function Film() {
     </button>
   )
   return (
-    <div className={'sh-film' + (WIDE_CUT_READY ? '' : ' sh-film-shortonly')} style={{ position: 'relative', maxWidth: 1080, margin: '44px auto 0' }}>
+    <div className={'sh-film' + (WIDE_CUT_READY ? '' : ' sh-film-shortonly')} style={{ position: 'relative', maxWidth: 1080, margin: 0 }}>
       <div className="sh-film-wide" style={{
         position: 'relative', borderRadius: 18, overflow: 'hidden', background: '#0f1420',
         boxShadow: '0 40px 100px -30px rgba(0,0,0,0.75)', border: '1px solid rgba(255,255,255,0.08)',
@@ -534,78 +526,49 @@ function Hero() {
     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
   }
   return (
-    <section style={{ padding: '72px 80px 120px', paddingTop: 170, background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
-      {/* full-bleed resolution field, slowly revealing left to right */}
-      <div aria-hidden className="sensai-hero-field" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <HeroResolutionField />
-      </div>
-      {/* scrim for text legibility over the field */}
-      <div aria-hidden style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 58% 60% at 50% 42%, rgba(11,21,48,0.95) 0%, rgba(11,21,48,0.72) 52%, rgba(11,21,48,0) 100%)',
-      }} />
-      <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
-        <div style={{ textAlign: 'center', maxWidth: 860, margin: '0 auto' }}>
-          <div style={{
-            color: '#7d89a8', fontSize: 12, fontWeight: 500,
-            letterSpacing: '0.14em', marginBottom: 22,
-          }}>FOR GAMING OPERATORS</div>
-          {/* Two blocks with an explicit break, so "You" never strands at the end of a line */}
-          <h1 style={{
-            margin: 0, fontSize: 56, lineHeight: 1.12, letterSpacing: -1.6,
-            fontWeight: 600, color: '#fff',
-          }}>
-            Sensai finds <span style={{ color: '#8fa8e0' }}>the leaks</span> in your customer base.
-            <br />You keep the revenue.
-          </h1>
-          {/* Names the category in one glance: three nouns, no verbs. */}
-          <div style={{
-            margin: '20px auto 0', maxWidth: 620, fontSize: 15, lineHeight: 1.7,
-            color: '#9fb0d4', letterSpacing: '0.02em',
-          }}>
-            Bonus abuse. Silent VIP churn. Customers lost to product failures.
+    <section className="sh-hero" style={{ padding: '72px 80px 96px', paddingTop: 150, background: SENS.ink }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div className="sh-2col" style={{ display: 'grid', gridTemplateColumns: '1.35fr 0.65fr', gap: 48, alignItems: 'center' }}>
+          <div>
+            <div style={{ color: '#7d89a8', fontSize: 12, fontWeight: 500, letterSpacing: '0.14em', marginBottom: 22 }}>FOR GAMING OPERATORS</div>
+            {/* Explicit breaks: after "leaks" and after "so you", so no line ends on a preposition.
+                The column is sized to fit the longest of the three lines at 52px. */}
+            <h1 style={{ margin: 0, fontSize: 52, lineHeight: 1.1, letterSpacing: -1.5, fontWeight: 600, color: '#fff', maxWidth: 880 }}>
+              Sensai stops the <span style={{ color: '#8fa8e0' }}>revenue leaks</span>{' '}
+              <br className="sh-h1-break" />in your customer base, so you{' '}
+              <br className="sh-h1-break" />can focus on growth.
+            </h1>
+            {/* Names the category in one glance: three nouns, no verbs. */}
+            <div style={{ margin: '22px 0 0', maxWidth: 560, fontSize: 16, lineHeight: 1.6, color: '#c3cde6' }}>
+              Bonus abuse. Silent VIP churn. Customers lost to product failures.
+            </div>
+            <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => goBook('hero')}
+                style={{
+                  background: '#fff', color: SENS.ink, border: 'none',
+                  padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 600,
+                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                  boxShadow: '0 18px 44px -14px rgba(0,0,0,0.5)',
+                }}
+              >
+                Book a walkthrough <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => { trackEvent('cta_click', { cta: 'how_it_works', where: 'hero' }); scrollToHow() }}
+                style={{
+                  background: 'transparent', color: '#dfe7f8', border: '1.5px solid rgba(255,255,255,0.35)',
+                  padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}
+              >
+                How it works
+              </button>
+            </div>
           </div>
-          <p className="sensai-hero-subline" style={{
-            margin: '14px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
-            maxWidth: 560,
-          }}>
-            Every customer watched. Every change caught. Nothing missed.
-          </p>
-          <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
-            <button
-              onClick={() => goBook('hero')}
-              style={{
-                background: '#fff', color: SENS.ink, border: 'none',
-                padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 600,
-                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                boxShadow: '0 18px 44px -14px rgba(0,0,0,0.5)',
-              }}
-            >
-              Book a walkthrough <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => { trackEvent('cta_click', { cta: 'how_it_works', where: 'hero' }); scrollToHow() }}
-              style={{
-                background: 'transparent', color: '#dfe7f8', border: '1.5px solid rgba(255,255,255,0.35)',
-                padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
-                cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              }}
-            >
-              How it works
-            </button>
-          </div>
-          {/* The only proof claim on the page: no percentages, no case numbers, no name.
-              Set as a fact block, not a caption. */}
-          <div style={{
-            margin: '30px auto 0', maxWidth: 560, paddingTop: 16,
-            borderTop: '1px solid rgba(255,255,255,0.14)',
-            fontSize: 14, lineHeight: 1.6, color: '#b6c1dd', letterSpacing: '0.02em',
-          }}>
-            Live in production with a tier-1 operator &middot; ~2.5M accounts
-          </div>
+          <Film />
         </div>
       </div>
-      <Film />
     </section>
   )
 }
@@ -882,7 +845,7 @@ function RoleSection() {
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 760 }}>
           A digital customer manager for every player.
         </h2>
-        {/* Aphorism pair — same treatment as the problem section's pair (round 9, item 5) */}
+        {/* Aphorism pair: same treatment as the problem section's pair (round 9, item 5) */}
         <p style={{ margin: '20px 0 0', fontSize: 16, lineHeight: 1.65, color: SENS.inkSoft, maxWidth: 560 }}>
           Every player, analyzed one by one.<br />
           The whole base, managed as one asset.
@@ -922,7 +885,7 @@ const MonoLabel = ({ children }: { children: React.ReactNode }) => (
 )
 
 // Every frame carries its reason: one short evidence line in the frame's own register
-// (round 9 — explainability: "Untrusted outputs" is the failure we name, this is the answer).
+// (round 9, explainability: "Untrusted outputs" is the failure we name, this is the answer).
 const ReasonLine = ({ children }: { children: React.ReactNode }) => (
   <div style={{
     padding: '0 10px 9px', fontSize: 9.5, lineHeight: 1.5,
@@ -940,11 +903,11 @@ const OutChip = ({ children }: { children: React.ReactNode }) => (
 
 // Every product image on this page is captioned, the way documentation captions a figure.
 // Mono, 11px, uppercase: the cheapest seriousness on the page (round 4, §2e).
-function ProductShot({ src, alt, caption, frame = true }: {
-  src: string; alt: string; caption: string; frame?: boolean
+function ProductShot({ src, alt, caption, frame = true, style = {} }: {
+  src: string; alt: string; caption: string; frame?: boolean; style?: React.CSSProperties
 }) {
   return (
-    <figure style={{ margin: 0, width: '100%' }}>
+    <figure style={{ margin: 0, width: '100%', ...style }}>
       <div style={{
         background: '#fff', borderRadius: 14, overflow: 'hidden',
         border: frame ? `1px solid ${SENS.rule}` : 'none',
@@ -1090,202 +1053,215 @@ function RafBurst() {
   )
 }
 
+// §3. The six leaks, stated and nothing more. No numbers, no chevrons, no screens:
+// the product screens all live in "What it does" below.
+const LEAKS: Array<{ t: string; s: string }> = [
+  { t: 'Fraud rings take your bonuses', s: 'Rings, syndicates and multi-accounting, taking promotional money from a budget that runs 10–20% of your revenue.' },
+  { t: 'VIPs quietly churn', s: 'The signals are in the play weeks before the revenue moves.' },
+  { t: 'Valuable players identified too late', s: 'Tomorrow’s VIPs, visible in their first weeks, while nurturing still changes the outcome.' },
+  { t: 'Customers drop after product failures', s: 'A failed deposit, a payment error, a disconnection. The error gets fixed; the customers it hit don’t get actioned.' },
+  { t: 'Wrong offers to the wrong players', s: 'Over-bonused players who would have played anyway; under-bonused players who were worth keeping.' },
+  { t: 'Accounts closed or restricted without you knowing', s: 'Fraud closing too many accounts, or adding too much friction, lands on your revenue line.' },
+]
+
 function LeaksSection() {
-  const rowStyle = { fontSize: 12.5, color: SENS.inkSoft, display: 'flex', alignItems: 'center', gap: 10 } as const
-  const idStyle = { fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11.5, color: SENS.ink } as const
-  const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
-    {
-      n: '01', t: 'Fraud rings take your bonuses',
-      s: 'Rings, syndicates, multi-accounting, taking promotional money consistently, from a budget that runs 10–20% of your revenue.',
-      art: (
-        <ArtifactCard>
-          <ProductFrame title="Referral network"
-            kpis={[
-              { l: 'NETWORK NGR', v: '−$38.4K', neg: true },
-              { l: 'ACCOUNTS', v: '214' },
-              { l: 'RED RISK', v: '187', neg: true },
-            ]}
-            footer="REFERRAL NETWORK · RANKED BY NET LOSS">
-            <div style={{ padding: '10px 10px 12px' }}>
-              <img
-                src="/screenshots/film/leak-fraud-rings-graph.png"
-                alt="The referral network around one hub, ranked by net loss"
-                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
-              />
+  return (
+    <section style={{ padding: '104px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
+        <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
+          The leaks we stop
+        </h2>
+        <div className="sh-grid-3" style={{
+          marginTop: 44, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          columnGap: 44, rowGap: 0,
+        }}>
+          {LEAKS.map((l, i) => (
+            <div key={l.t} style={{
+              padding: '26px 0 28px',
+              borderTop: `1px solid ${SENS.rule}`,
+              borderBottom: i >= LEAKS.length - 3 ? `1px solid ${SENS.rule}` : 'none',
+            }}>
+              <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.3, lineHeight: 1.3 }}>{l.t}</div>
+              <div style={{ marginTop: 10, fontSize: 14.5, color: SENS.inkSoft, lineHeight: 1.55 }}>{l.s}</div>
             </div>
-            <ReasonLine>12 accounts · one payment fingerprint · same root inviter</ReasonLine>
-          </ProductFrame>
-          <OutChip>→ Risk queue, with the evidence</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '02', t: 'VIPs quietly churn',
-      s: 'The signals are in the play, weeks before the revenue moves. Caught while there is still someone to keep.',
-      art: (
-        <ArtifactCard>
-          <ProductFrame title="Account health · churn curve"
-            kpis={[
-              { l: 'RETENTION', v: '61%' },
-              { l: 'REACTIVATED', v: '14%' },
-            ]}>
-            <svg viewBox="0 0 400 130" style={{ width: '100%', display: 'block', padding: '4px 0 0' }}>
-              {[0, 1, 2, 3, 4, 5, 6, 7].map(i => {
-                const x = 26 + i * 44
-                const total = 96 - i * 3
-                const retained = [96, 78, 66, 58, 52, 47, 43, 40][i] * 0.9
-                return (
-                  <g key={i}>
-                    <rect x={x} y={112 - total * 0.9} width="26" height={total * 0.9} rx="2" fill="rgba(26,68,168,0.10)" />
-                    <rect x={x} y={112 - retained} width="26" height={retained} rx="2" fill="rgba(26,68,168,0.32)" />
-                  </g>
-                )
-              })}
-              <path d="M 39 26 L 83 45 L 127 56 L 171 63 L 215 68 L 259 73 L 303 76 L 347 79"
-                fill="none" stroke={SENS.blueBright} strokeWidth="1.8" strokeLinecap="round" />
-              <path d="M 347 79 C 372 82, 388 88, 398 96" fill="none" stroke={SENS.ink} strokeWidth="1.3"
-                strokeDasharray="4 3" opacity="0.5" />
-              {[39, 83, 127, 171, 215, 259, 303, 347].map((x, i) => (
-                <circle key={i} cx={x} cy={[26, 45, 56, 63, 68, 73, 76, 79][i]} r="2.4" fill={SENS.blueBright} />
-              ))}
-              {/* The cause, seen before the effect: the flag sits ahead of the decline (round 9, item 2) */}
-              <line x1="259" y1="16" x2="259" y2="73" stroke={SENS.ink} strokeWidth="0.8"
-                strokeDasharray="3 3" opacity="0.35" />
-              <circle cx="259" cy="73" r="5.2" fill="none" stroke={SENS.blueBright} strokeWidth="1.4" />
-              <circle cx="259" cy="73" r="2.4" fill={SENS.blueBright} />
-              <text x="253" y="13" fontSize="8.5" fill={SENS.ink} textAnchor="end">play pattern breaks</text>
-              <text x="253" y="23" fontSize="7.5" fill={SENS.blueBright} textAnchor="end"
-                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">SENSAI FLAG</text>
-              <text x="332" y="122" fontSize="8" fill={SENS.muted} textAnchor="middle"
-                fontFamily="'JetBrains Mono', ui-monospace, monospace" letterSpacing="0.06em">PROJECTED, IF UNTOUCHED</text>
-            </svg>
-            {/* The health half of the merged tile: the score's own reason, behavioural (round 9, item 2/03) */}
-            <ReasonLine>health score falling: session depth down · 9 days since last visit</ReasonLine>
-          </ProductFrame>
-          <OutChip>→ CRM: retention journey, next 24h</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '03', t: 'Valuable players identified too late',
-      s: 'Tomorrow’s VIPs, flagged in their first weeks, while nurturing still changes the outcome.',
-      art: (
-        <ArtifactCard>
-          <ProductFrame title="Account · first weeks">
-            <div style={{ padding: '10px 10px 12px' }}>
-              <img
-                src="/screenshots/film/account-tiles.png"
-                alt="One account's tiles: deposited, staked, balance, wagering ratio"
-                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
-              />
-            </div>
-            <ReasonLine>play steady 6 weeks · session depth rising · flagged day 9</ReasonLine>
-          </ProductFrame>
-          <OutChip>→ worked as cases · VIP review</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '04', t: 'Customers drop after product failures',
-      s: 'A failed deposit, a payment error, a disconnection. The error gets fixed; the customers it hit don’t get actioned.',
-      art: (
-        <ArtifactCard>
-          <ProductFrame title="Deposits · yesterday vs expected">
-            <div style={{ padding: '10px 10px 12px' }}>
-              <img
-                src="/screenshots/film/leak-product-failures.png"
-                alt="Deposits by hour against the expected line for this weekday, with the small-hours shortfall marked"
-                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
-              />
-            </div>
-          </ProductFrame>
-          <OutChip>→ CRM: declined deposits, for reach-out</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '05', t: 'Wrong offers to the wrong players',
-      s: 'Over-bonused players who would have played anyway; under-bonused players who were worth keeping.',
-      art: (
-        <ArtifactCard>
-          <ProductFrame title="One finding, where it went">
-            <div style={{ padding: '10px 10px 12px' }}>
-              <img
-                src="/screenshots/film/where-it-went.png"
-                alt="One finding fanning out to a CRM exclusion list, a watchlist and a risk ticket"
-                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
-              />
-            </div>
-            <ReasonLine>same expected response, lower cost</ReasonLine>
-          </ProductFrame>
-          <OutChip>→ promo planning · CRM</OutChip>
-        </ArtifactCard>
-      ),
-    },
-    {
-      n: '06', t: 'Accounts closed or restricted without you knowing',
-      s: 'Fraud closing too many accounts, or adding too much friction, lands on your revenue line.',
-      art: null,
-    },
-  ]
+          ))}
+        </div>
+        <div style={{ marginTop: 30, fontSize: 15.5, fontWeight: 600, color: SENS.blueBright, maxWidth: 640, lineHeight: 1.5 }}>
+          All of it lands in the systems you already run: cases, lists, triggers and enriched profiles. No new tool.
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// §4. What it does. The expanding-row pattern: rows left, the active row's screen sticky on the
+// right; on a phone the screen sits under its own row. Every screen is a still from the film.
+function DoesScreen({ src, alt, frameTitle, kpis, reason, out }: {
+  src: string
+  alt: string
+  frameTitle: string
+  kpis?: Array<{ l: string; v: string; neg?: boolean }>
+  reason: string
+  out: string
+}) {
+  return (
+    <ArtifactCard>
+      <ProductFrame title={frameTitle} kpis={kpis}>
+        <div style={{ padding: '10px 10px 12px' }}>
+          <img src={src} alt={alt} loading="lazy" style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }} />
+        </div>
+        <ReasonLine>{reason}</ReasonLine>
+      </ProductFrame>
+      <OutChip>{out}</OutChip>
+    </ArtifactCard>
+  )
+}
+
+const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
+  {
+    n: '01', t: 'Fraud rings and bonus abuse',
+    s: 'Linked accounts, shared payment fingerprints, one root inviter. The ring, ranked by net loss, with the evidence attached.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/leak-fraud-rings-graph.png"
+        alt="The referral network around one hub, ranked by net loss"
+        frameTitle="Referral network"
+        kpis={[
+          { l: 'NETWORK NGR', v: '−$38.4K', neg: true },
+          { l: 'ACCOUNTS', v: '214' },
+          { l: 'RED RISK', v: '187', neg: true },
+        ]}
+        reason="12 accounts · one payment fingerprint · same root inviter"
+        out="→ Risk queue, with the evidence"
+      />
+    ),
+  },
+  {
+    n: '02', t: 'Every account watched: VIPs, churn, early value',
+    s: 'Signals in the play, weeks before the revenue moves. Tomorrow’s VIPs flagged in their first weeks.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/account-tiles.png"
+        alt="One account's tiles: deposited, staked, balance, wagering ratio"
+        frameTitle="Account · first weeks"
+        reason="play steady 6 weeks · session depth rising · flagged day 9"
+        out="→ VIP team: nurture list"
+      />
+    ),
+  },
+  {
+    n: '03', t: 'KPI monitoring, with the root cause',
+    s: 'Deposits, wagering and bonus cost against expected. When a number moves, the reason and the accounts behind it.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/leak-product-failures.png"
+        alt="Deposits by hour against the expected line for this weekday, with the small-hours shortfall marked"
+        frameTitle="Deposits · yesterday vs expected"
+        reason="01:00–04:00 below expected · the accounts that failed to deposit, listed"
+        out="→ CRM: declined deposits, for reach-out"
+      />
+    ),
+  },
+  {
+    n: '04', t: 'In the chat your team already uses',
+    s: 'Claude or ChatGPT, through a standard connector (MCP). Ask in plain language; get the accounts, the reason and the action.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/chat-surface.png"
+        alt="Sensai answering inside the chat assistant, with the accounts and the reason"
+        frameTitle="Sensai, in the chat"
+        reason="one question · the accounts, the reason, the action"
+        out="→ same chat, no new tool"
+      />
+    ),
+  },
+  {
+    n: '05', t: 'Actions through the systems you already run',
+    s: 'Cases, lists, triggers, enriched profiles. Into your CRM, case manager and risk tools.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/where-it-went.png"
+        alt="One finding fanning out to a CRM exclusion list, a watchlist and a risk ticket"
+        frameTitle="One finding, where it went"
+        reason="four actions · three systems · one decision"
+        out="→ CRM · Risk · Case manager"
+      />
+    ),
+  },
+  {
+    // The two required sentences (source-of-truth §10) live verbatim in this one-liner.
+    n: '06', t: 'Your team stays in control, and it learns',
+    s: 'Nothing is armed without your confirmation. What you confirm becomes a proposed rule for your CRM team to approve. It never contacts a player.',
+    art: (
+      <DoesScreen
+        src="/screenshots/film/proposed-rule.png"
+        alt="A proposed rule waiting for approval, with the actions already completed listed above it"
+        frameTitle="Proposed rule · awaiting approval"
+        reason="learned from what you confirmed · backtested on your history"
+        out="→ your CRM team, for approval"
+      />
+    ),
+  },
+]
+
+function WhatItDoesSection() {
   const [active, setActive] = useState(0)
   return (
-    <section style={{ padding: '110px 80px', background: '#ffffff' }}>
+    <section id="how-it-works" style={{ padding: '110px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
       <div className="max-w-[1280px] mx-auto">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
-              The leaks we stop
-            </h2>
-          </div>
+          <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
+            What it does
+          </h2>
           <div style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10,
             letterSpacing: '0.1em', color: SENS.muted, paddingBottom: 6,
           }}>ILLUSTRATIVE · SYNTHETIC DATA</div>
         </div>
 
-        <div style={{ marginTop: 48, maxWidth: 880 }}>
-          {tiles.map((it, i) => {
-            const isActive = i === active
-            return (
-              <div
-                key={it.n}
-                className="sensai-value-row"
-                onClick={() => setActive(i)}
-                style={{
-                  display: 'grid', gridTemplateColumns: '90px 1fr 36px', gap: 24, alignItems: 'start',
-                  padding: '22px 0', cursor: 'pointer',
-                  borderTop: `1px solid ${SENS.rule}`,
-                  borderBottom: i === tiles.length - 1 ? `1px solid ${SENS.rule}` : 'none',
-                }}
-              >
-                <div style={{ fontSize: 30, fontWeight: 300, color: isActive ? SENS.blueBright : '#b6bfd4', letterSpacing: -1, fontFeatureSettings: '"tnum"', transition: 'color 0.25s' }}>{it.n}</div>
-                <div>
-                  <div className="sensai-value-title" style={{ fontSize: 17, fontWeight: 600, color: isActive ? SENS.ink : SENS.inkSoft, letterSpacing: -0.3, paddingTop: 6, transition: 'color 0.25s' }}>
-                    {it.t}
-                  </div>
-                  {isActive && (
-                    <div className="sensai-fade-in">
-                      <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 560, marginTop: 8 }}>{it.s}</div>
-                      {it.art}
+        <div className="sh-2col" style={{ marginTop: 44, display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: 56, alignItems: 'start' }}>
+          <div>
+            {DOES.map((it, i) => {
+              const isActive = i === active
+              return (
+                <div
+                  key={it.n}
+                  className="sensai-value-row"
+                  onClick={() => setActive(i)}
+                  style={{
+                    display: 'grid', gridTemplateColumns: '64px 1fr 36px', gap: 20, alignItems: 'start',
+                    padding: '20px 0', cursor: 'pointer',
+                    borderTop: `1px solid ${SENS.rule}`,
+                    borderBottom: i === DOES.length - 1 ? `1px solid ${SENS.rule}` : 'none',
+                  }}
+                >
+                  <div style={{ fontSize: 28, fontWeight: 300, color: isActive ? SENS.blueBright : '#b6bfd4', letterSpacing: -1, fontFeatureSettings: '"tnum"', transition: 'color 0.25s' }}>{it.n}</div>
+                  <div>
+                    <div className="sensai-value-title" style={{ fontSize: 17, fontWeight: 600, color: isActive ? SENS.ink : SENS.inkSoft, letterSpacing: -0.3, paddingTop: 6, transition: 'color 0.25s' }}>
+                      {it.t}
                     </div>
-                  )}
+                    {isActive && (
+                      <div className="sensai-fade-in">
+                        <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 460, marginTop: 8 }}>{it.s}</div>
+                        {/* On a phone the screen sits under its own row; on a desktop, in the right column. */}
+                        <div className="sh-leaks-art-inline">{it.art}</div>
+                      </div>
+                    )}
+                  </div>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{
+                    marginTop: 12, justifySelf: 'end',
+                    transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s',
+                  }}>
+                    <path d="M3 6l5 5 5-5" stroke={SENS.blueBright} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{
-                  marginTop: 12, justifySelf: 'end',
-                  transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s',
-                }}>
-                  <path d="M3 6l5 5 5-5" stroke={SENS.blueBright} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
+          <div className="sh-leaks-art" style={{ position: 'sticky', top: 104 }}>
+            {DOES[active].art}
+          </div>
         </div>
-
-        <div style={{ marginTop: 30, fontSize: 16, fontWeight: 600, color: SENS.blueBright, maxWidth: 720, lineHeight: 1.5 }}>
-          All of it lands in the systems you already run: cases, lists, triggers and enriched profiles. No new tool.
-        </div>
-
       </div>
     </section>
   )
@@ -1323,12 +1299,13 @@ function WhatLeaksSection() {
   return (
     <section style={{ padding: '84px 80px', background: SENS.bg }}>
       <div className="max-w-[1280px] mx-auto">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: -0.7, lineHeight: 1.3, color: SENS.ink, maxWidth: 470 }}>
+        <div className="sh-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: 34, fontWeight: 600, letterSpacing: -0.8, lineHeight: 1.28, color: SENS.ink, maxWidth: 470 }}>
             Every customer generates a revenue stream. Together, the streams are your revenue.
             Unwatched, it leaks.
           </h2>
           <ProductShot
+            style={{ maxWidth: 520, justifySelf: 'end' }}
             src="/screenshots/film/revenue-two-futures.png"
             alt="The whole base plotted over twelve weeks, with and without Sensai"
             caption="The whole base &middot; two futures &middot; illustrative"
@@ -1339,32 +1316,104 @@ function WhatLeaksSection() {
   )
 }
 
+// Four quotes in the voice of what we hear. Role and operator type only, never a name and never
+// a company. The list is one array of {text, role} so AA can edit or extend it in place.
+const OPERATOR_QUOTES: Array<{ text: string; role: string }> = [
+  {
+    text: 'Every angle of the customer sits with a different team. Payments fixed the deposit error, but who’s acting on the customers it hit?',
+    role: 'Head of CRM, multi-brand operator',
+  },
+  {
+    text: 'Fraud doesn’t cover bonus abuse. So I lose promotional money to rings, and nobody owns it.',
+    role: 'Chief Revenue Officer, European operator',
+  },
+  {
+    text: 'My VIP team finds out a player has gone when the revenue is already gone. The signals were there for weeks.',
+    role: 'VIP Director, casino operator',
+  },
+  {
+    text: 'Thirty dashboards and one question: why did deposits drop yesterday? Nobody answers it before the next day drops too.',
+    role: 'CRM Director, sportsbook and casino',
+  },
+]
+
 function ProblemSection() {
+  const [i, setI] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const reduced = useReducedMotion()
+  const touchX = useRef<number | null>(null)
+  const n = OPERATOR_QUOTES.length
+
+  // Auto-advance, unless the reader is hovering it or has asked for reduced motion.
+  useEffect(() => {
+    if (paused || reduced) return
+    const t = setInterval(() => setI(v => (v + 1) % n), 6000)
+    return () => clearInterval(t)
+  }, [paused, reduced, n])
+
+  const onTouchStart = (e: React.TouchEvent) => { touchX.current = e.touches[0].clientX }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchX.current
+    if (Math.abs(dx) > 40) setI(v => (v + (dx < 0 ? 1 : n - 1)) % n)
+    touchX.current = null
+  }
+
+  const q = OPERATOR_QUOTES[i]
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
       <div className="max-w-[1280px] mx-auto">
         <div style={{ textAlign: 'center' }}>
-          <div style={{
-            color: SENS.blueBright, fontSize: 14, fontWeight: 600,
-            letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 20,
-          }}>Problem</div>
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
             Even the best operators leak revenue they&rsquo;ve already paid for.
           </h2>
-        </div>
-        {/* One quote, never attributed to a named person or operator. */}
-        <blockquote style={{
-          margin: '44px auto 0', maxWidth: 780, background: '#fff',
-          border: `1px solid ${SENS.rule}`, borderRadius: 18, padding: '32px 36px',
-          fontSize: 18.5, lineHeight: 1.62, color: SENS.ink, fontStyle: 'italic', position: 'relative',
-        }}>
-          <span aria-hidden style={{ position: 'absolute', top: 14, left: 22, fontSize: 64, lineHeight: 1, color: '#c9d3ea', fontStyle: 'normal' }}>&ldquo;</span>
-          Every angle of the customer sits with a different team. Payments fixed the deposit error,
-          but who&rsquo;s acting on the customers it hit?
-          <div style={{ marginTop: 16, fontSize: 12.5, fontStyle: 'normal', color: SENS.muted, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          <div style={{
+            marginTop: 26, fontSize: 12.5, color: SENS.muted,
+            letterSpacing: '0.1em', textTransform: 'uppercase',
+          }}>
             What we hear from the people who own the revenue line
           </div>
-        </blockquote>
+        </div>
+
+        <div
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          style={{ margin: '22px auto 0', maxWidth: 780 }}
+        >
+          <blockquote
+            aria-live="polite"
+            style={{
+              margin: 0, background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 18,
+              padding: '32px 36px', minHeight: 188, display: 'flex', flexDirection: 'column',
+              justifyContent: 'center', position: 'relative',
+              fontSize: 18.5, lineHeight: 1.62, color: SENS.ink, fontStyle: 'italic',
+            }}
+          >
+            <span aria-hidden style={{ position: 'absolute', top: 14, left: 22, fontSize: 64, lineHeight: 1, color: '#c9d3ea', fontStyle: 'normal' }}>&ldquo;</span>
+            <span key={i} className="sensai-fade-in">{q.text}</span>
+            <div style={{ marginTop: 16, fontSize: 12.5, fontStyle: 'normal', color: SENS.muted, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              {q.role}
+            </div>
+          </blockquote>
+
+          <div style={{ marginTop: 18, display: 'flex', gap: 8, justifyContent: 'center' }}>
+            {OPERATOR_QUOTES.map((_, k) => (
+              <button
+                key={k}
+                aria-label={`Quote ${k + 1} of ${n}`}
+                aria-current={k === i}
+                onClick={() => setI(k)}
+                style={{
+                  width: k === i ? 22 : 8, height: 8, borderRadius: 999, padding: 0, border: 'none',
+                  background: k === i ? SENS.blueBright : '#cdd5e6', cursor: 'pointer',
+                  transition: 'width 0.25s, background 0.25s',
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -2056,9 +2105,9 @@ function HowItWorks() {
   const angles = [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6]
   const pts = angles.map(a => ({ x: Math.round(cx + r * Math.cos(a)), y: Math.round(cy + r * Math.sin(a)) }))
   const labels = [
-    { step: '01', label: 'SENSE', body: 'Monitors every player, every day — value, activity, risk and abuse, account health, churn. Always current.' },
-    { step: '02', label: 'ACT', body: 'Pushes cases into your CRM, support, and risk systems. Your team acts with full context — no new tool, no new channel.' },
-    { step: '03', label: 'LEARN', body: 'Your teams give feedback in plain language. Every approval, every reject — it keeps tuning to your business logic.' },
+    { step: '01', label: 'SENSE', body: 'Monitors every player, every day: value, activity, risk and abuse, account health, churn. Always current.' },
+    { step: '02', label: 'ACT', body: 'Pushes cases into your CRM, support, and risk systems. Your team acts with full context. No new tool, no new channel.' },
+    { step: '03', label: 'LEARN', body: 'Your teams give feedback in plain language. Every approval, every reject: it keeps tuning to your business logic.' },
   ]
 
   return (
@@ -2066,7 +2115,7 @@ function HowItWorks() {
       <Eyebrow>Always current</Eyebrow>
       <SectionTitle max={680}>The hardest part isn&rsquo;t detection. It&rsquo;s staying current.</SectionTitle>
       <Lede max={640}>Promotions change, abusers adapt, players evolve. With your teams&rsquo; feedback,
-      sensAi keeps tuning to your business logic &mdash; Sense. Act. Learn. Repeat.</Lede>
+      sensAi keeps tuning to your business logic. Sense. Act. Learn. Repeat.</Lede>
 
       <div style={{ marginTop: 56, display: 'flex', justifyContent: 'center' }}>
         {/* Circular cycle diagram */}
@@ -2254,7 +2303,7 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
         <rect x={nodeL} y={nodeY - 34} width="196" height="68" rx="16" fill="#ffffff" stroke={SENS.rule}
           style={{ filter: 'drop-shadow(0 16px 28px rgba(15,28,70,0.22))' }} />
         <text x={cx} y={nodeY + 3} textAnchor="middle" fill="#0b1530" fontSize="23" fontWeight="700"
-          letterSpacing="0.06em">sens<tspan fontSize="26">A</tspan>i</text>
+          letterSpacing="-0.01em">Sensai</text>
         <text x={cx} y={nodeY + 22} textAnchor="middle" fill="#7a849c" fontSize="10.5"
           letterSpacing="0.12em">{nodeCaption}</text>
       </g>
@@ -2288,11 +2337,10 @@ function PartnershipSection() {
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
         }}>Design partnership</div>
         <h2 style={{ margin: '0 auto', fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
-          Design partnerships - a small number, open now.
+          Design partnerships open now.
         </h2>
         <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
-          Read access, scripts approved by you, live within weeks. A small number of operators, chosen
-          for fit; partners shape what gets built next.
+          Read access, scripts approved by you, live within weeks. Partners shape what gets built next.
         </p>
         <div className="sensai-hero-ctas" style={{ marginTop: 30, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
           <button
@@ -2323,7 +2371,7 @@ function PartnershipSection() {
   )
 }
 
-// Integration band — modus's "enterprise-grade by default" slot.
+// Integration band, modus's "enterprise-grade by default" slot.
 function IntegrationSection() {
   const { ref, inView } = useInView()
   const reduced = useReducedMotion()
@@ -2343,7 +2391,7 @@ function IntegrationSection() {
         </div>
       </div>
       {/* On a phone the diagram scrolls sideways in its own container rather than shrinking
-          to unreadable — same mechanism the round-1 page used (home.css). */}
+          to unreadable, same mechanism the round-1 page used (home.css). */}
       <div ref={ref} className="sh-diagram-scroll" style={{ marginTop: 64, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
         <div className="sh-diagram-inner">
         <IntegrationDiagram
@@ -2440,11 +2488,11 @@ function ApproachSection() {
     },
     {
       t: 'Not another dashboard.',
-      s: 'It doesn’t hand you more charts. It hands your teams cases — the accounts, the pattern, the evidence.',
+      s: 'It doesn’t hand you more charts. It hands your teams cases: the accounts, the pattern, the evidence.',
     },
     {
       t: 'Not a VIP chat tool.',
-      s: 'It never talks to players. It’s the analytical engine behind your hosts and engagement tools — making them sharper.',
+      s: 'It never talks to players. It’s the analytical engine behind your hosts and engagement tools, making them sharper.',
     },
     {
       t: 'Not another platform to manage.',
@@ -2636,7 +2684,7 @@ function Walkthrough() {
       <Eyebrow>How it lands</Eyebrow>
       <SectionTitle max={620}>Every finding arrives as a case.</SectionTitle>
       <div className="sensai-card-body">
-        <Lede max={720}>The accounts, the pattern, the evidence &mdash; not a black-box score &mdash; pushed
+        <Lede max={720}>The accounts, the pattern, the evidence, not a black-box score, pushed
         straight into your teams&rsquo; workflows: a CRM campaign, a support ticket, the personal account
         manager, the risk tools. No new tool, no new channel. And with your teams&rsquo; feedback, it keeps
         tuning to your business logic.</Lede>
@@ -2644,16 +2692,16 @@ function Walkthrough() {
 
       <div style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
         <WalkthroughCard step="1" title="Case delivered"
-          body="sensAi surfaces what needs attention: abuse rings, churning VIPs, anomalies — all triaged and ready."
+          body="sensAi surfaces what needs attention: abuse rings, churning VIPs, anomalies, all triaged and ready."
           screenshot="/screenshots/daily-digest.png" />
         <WalkthroughCard step="2" title="Evidence mapped"
-          body="Connects the accounts and lays out the pattern — a full evidence trail, not a score."
+          body="Connects the accounts and lays out the pattern: a full evidence trail, not a score."
           screenshot="/screenshots/raf-network-new.png" />
         <WalkthroughCard step="3" title="Team reviews and confirms"
           body="Your team opens the case, reviews the 360, and approves the action."
           screenshot="/screenshots/account-360.png" />
         <WalkthroughCard step="4" title="Systems act"
-          body="The action routes through your CRM, support, or risk tools — and the feedback tunes the next case."
+          body="The action routes through your CRM, support, or risk tools, and the feedback tunes the next case."
           screenshot="/screenshots/Journeys.png" />
       </div>
       <div style={{ marginTop: 36, textAlign: 'center', fontSize: 16, fontWeight: 600, color: SENS.blueBright }}>
@@ -2669,9 +2717,9 @@ function Walkthrough() {
 
 function Why() {
   const cards = [
-    { t: '17 years of customer value management encoded.', s: 'VIP playbooks, abuse patterns, churn signals — encoded from years on the operator side, not learned from scratch on your data.' },
+    { t: '17 years of customer value management encoded.', s: 'VIP playbooks, abuse patterns, churn signals, encoded from years on the operator side, not learned from scratch on your data.' },
     { t: 'Integration is light.', s: 'Read access to the source tables, no PII required, no heavy project on your side. The rest happens on ours.' },
-    { t: 'Live in production today.', s: 'Running with one operator today — and onboarding a 1M+ MAU multi-brand group.' },
+    { t: 'Live in production today.', s: 'Running with one operator today, and onboarding a 1M+ MAU multi-brand group.' },
   ]
   return (
     <SectionShell padY={96} bg={SENS.bgDeeper}>
@@ -2791,13 +2839,7 @@ function Footer() {
       <div className="max-w-[1280px] mx-auto flex justify-between items-center" style={{ minHeight: 34 }}>
         <Logo className="text-base font-semibold" />
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <span style={{ fontSize: 12.5, color: SENS.inkSoft }}>Finds the leaks in your customer base. You keep the revenue.</span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: SENS.inkSoft }}>
-            <span className="sensai-heartbeat" style={{
-              width: 7, height: 7, borderRadius: '50%', background: '#4f8a68', display: 'inline-block',
-            }} />
-            Live in production.
-          </span>
+          <span style={{ fontSize: 12.5, color: SENS.inkSoft }}>Stops the revenue leaks in your customer base.</span>
         </div>
       </div>
     </footer>
@@ -2886,26 +2928,25 @@ export function SensaiHome() {
     /* `sensai-page` brings the /sense stylesheet, `sensai-home` the film + home-only rules. */
     <div className="sensai-page sensai-home" style={{ background: SENS.ink, color: '#fff', width: '100%', minHeight: '100vh' }}>
       {/*
-        ─── DEFINED BUT NOT RENDERED (deliberate — do not re-add without AA) ───
-        <TurnSection />   — "Your base, now in high resolution": a transition we no longer need.
-        <RoleSection />   — "A digital customer manager for every player": that descriptor is banned.
-        <AskSensAi />     — the animated chat demo: the film shows the chat now, and this is the
+        ─── DEFINED BUT NOT RENDERED (deliberate, do not re-add without AA) ───
+        <TurnSection />   : "Your base, now in high resolution", a transition we no longer need.
+        <RoleSection />   : "A digital customer manager for every player", that descriptor is banned.
+        <AskSensAi />     : the animated chat demo. The film shows the chat now, and this is the
                             heaviest JS on the page.
-        <CTA />           — the 48-hour scan close: breaks the scan's print rule. The scan survives
+        <CTA />           : the 48-hour scan close, breaks the scan's print rule. The scan survives
                             as one quiet sentence at the end of the partnership section.
-        <SocialProof /> <Walkthrough /> <Why /> <ApproachSection /> <HowItWorks /> — already parked.
+        <SocialProof /> <Walkthrough /> <Why /> <ApproachSection /> <HowItWorks /> : already parked.
+        <WhatLeaksSection />   : "Every customer generates a revenue stream", folded into §4 (round 5).
+        <WhereItLivesSection /> : the MCP block, now row 04 of "What it does", with the screen.
+        <ControlSection />     : "It works through your teams' systems", now row 06, with the screen.
       */}
       <VisitTracking page="home" />
       <Nav />
       <Hero />
-      <WhatLeaksSection />
       <ProblemSection />
       <LeaksSection />
-      <div id="how-it-works">
-        <IntegrationSection />
-      </div>
-      <WhereItLivesSection />
-      <ControlSection />
+      <WhatItDoesSection />
+      <IntegrationSection />
       <PartnershipSection />
       <Founders />
       <Footer />
