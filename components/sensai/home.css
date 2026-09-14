@@ -47,13 +47,16 @@
   /* Inside the leaks accordion the artifact is boxed by the row's number and chevron gutters,
      which leaves a product screen ~180px wide at 360. Reclaim both gutters on mobile so the
      frames stay legible (round 4, §6) without changing the row layout itself. */
-  .sensai-home .sensai-artifact {
+  .sensai-home .sensai-artifact,
+  .sensai-home .sh-leaks-art-inline {
+    /* the mobile row is 44px 1fr 22px with a 12px gap, so reclaiming both gutters is
+       56px on the left and 34px on the right */
     margin-left: -56px;
-    margin-right: -22px;
-    /* /sense caps these cards at 100% of their column on mobile; the negative margins only
+    margin-right: -34px;
+    /* /sense caps these at 100% of their column on mobile; the negative margins only
        take effect once that cap is lifted. */
     max-width: none !important;
-    width: calc(100% + 78px) !important;
+    width: calc(100% + 90px) !important;
   }
 }
 
