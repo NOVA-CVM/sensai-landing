@@ -1,0 +1,39 @@
+/* getsensai.co home — responsive rules. Desktop values are inline in home.tsx; these only override below 1024px. */
+.sensai-home .sh-btn { transition: transform .15s ease, box-shadow .15s ease; }
+.sensai-home .sh-btn:hover { transform: translateY(-1px); }
+.sensai-home .sh-film-tall { display: none; }
+
+@media (max-width: 1024px) {
+  .sensai-home .sh-section { padding-left: 28px !important; padding-right: 28px !important; }
+  .sensai-home .sh-nav > div { padding-left: 24px !important; padding-right: 24px !important; }
+  .sensai-home .sh-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 768px) {
+  .sensai-home .sh-section { padding-left: 18px !important; padding-right: 18px !important; padding-top: 60px !important; padding-bottom: 60px !important; }
+  .sensai-home .sh-hero { padding-top: 112px !important; }
+  .sensai-home .sh-nav > div { padding: 10px 16px !important; }
+  .sensai-home .sh-nav .sh-btn { padding: 8px 12px !important; font-size: 12.5px !important; }
+  .sensai-home .sh-nav img { width: 36px !important; height: 36px !important; }
+  .sensai-home h1 { font-size: 36px !important; letter-spacing: -0.8px !important; line-height: 1.1 !important; }
+  .sensai-home h2 { font-size: 29px !important; letter-spacing: -0.5px !important; }
+  .sensai-home .sh-hero-p { font-size: 15.5px !important; }
+  .sensai-home .sh-grid-3, .sensai-home .sh-grid-2, .sensai-home .sh-grid-2-inner { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .sensai-home .sh-grid-2 { gap: 28px !important; }
+  .sensai-home .sh-ctas { flex-direction: column; }
+  .sensai-home .sh-ctas .sh-btn { width: 100%; }
+  .sensai-home .sh-film-wide { display: none; }
+  .sensai-home .sh-film-tall { display: block; max-width: 420px; margin: 0 auto; }
+  .sensai-home .sh-diagram { padding: 12px 6px 6px !important; }
+  /* the integration diagram keeps its desktop layout and scrolls sideways on a phone, so the chips stay legible */
+  .sensai-home .sh-diagram-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .sensai-home .sh-diagram-inner { min-width: 760px; }
+  .sensai-home blockquote { font-size: 16.5px !important; padding: 24px 22px !important; }
+}
+
+/* Narrow phones (360px and under): the H1 is the longest line on the page and runs to five lines
+   here at 36px. One type step keeps it at four, which is the rule, without touching the copy. */
+@media (max-width: 380px) {
+  .sensai-home h1 { font-size: 33px !important; }
+  .sensai-home .sh-hero-p { font-size: 15px !important; }
+}

@@ -14,10 +14,15 @@ export const viewport: Viewport = {
   maximumScale: 5,
 }
 
+const TITLE = 'Sensai — finds the leaks in your customer base. You keep the revenue'
+const DESC = 'Even the best operators leak revenue they’ve already paid for — to fraud rings, to VIPs who quietly churn, to customers who drop after a failed deposit nobody picked up. Sensai watches every customer and pushes what it finds into the systems your teams already use.'
+
 export const metadata: Metadata = {
-  title: 'sensAi - Adaptive Intelligence for iGaming',
-  description: 'sensAi is an adaptive intelligence engine for iGaming operators. Sense, Act, Learn from your player data.',
-  generator: 'v0.app',
+  metadataBase: new URL('https://www.getsensai.co'),
+  title: TITLE,
+  description: DESC,
+  openGraph: { title: TITLE, description: DESC, images: ['/film/poster-wide.jpg'], siteName: 'Sensai', type: 'website', url: 'https://www.getsensai.co' },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESC, images: ['/film/poster-wide.jpg'] },
   icons: {
     icon: [
       {

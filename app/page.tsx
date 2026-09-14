@@ -1,9 +1,9 @@
-import { SensAiOnePager } from "@/components/sensai/one-pager"
+import { SensaiHome } from "@/components/sensai/home"
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-background">
-      <SensAiOnePager />
+    <main className="min-h-screen">
+      <SensaiHome />
     </main>
   )
 }

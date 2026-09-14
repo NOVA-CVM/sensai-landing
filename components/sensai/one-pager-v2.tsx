@@ -30,7 +30,7 @@ const goBook = (where = 'unknown') => {
 }
 
 // ─── Performance hooks: pause animations off-viewport, honor reduced motion ───
-function useInView(margin = '200px') {
+export function useInView(margin = '200px') {
   const ref = useRef<HTMLDivElement | null>(null)
   const [inView, setInView] = useState(false)
   useEffect(() => {
@@ -43,7 +43,7 @@ function useInView(margin = '200px') {
   return { ref, inView }
 }
 
-function useReducedMotion() {
+export function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -143,7 +143,7 @@ function SectionShell({ children, bg, padY = 88 }: {
 }
 
 // ─── Logo (kept from original) ──────────────────────────────────────
-function Logo({ className = "", showMascot = false }: { className?: string; showMascot?: boolean }) {
+export function Logo({ className = "", showMascot = false }: { className?: string; showMascot?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       {showMascot && (
@@ -385,7 +385,7 @@ function HeroField() {
   )
 }
 
-function HeroResolutionField() {
+export function HeroResolutionField() {
   // A clearly readable left-to-right gradient: few large blurred blobs on the
   // left resolving into a dense, crisp crowd on the right, a few players in
   // state colors at the sharp end. Structured, not bokeh. Deterministic.
@@ -2160,7 +2160,7 @@ function HowItWorks() {
   )
 }
 
-function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
+export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Compliance', 'Other'], nodeCaption = 'WATCHING EVERY PLAYER' }: { animate?: boolean; outputs?: string[]; nodeCaption?: string }) {
   // Source tables → (read access) → sensAi inside the player base → (actions out) → the teams' systems.
   const sources = [
     { name: 'Players', glyph: 'person' },
@@ -2171,9 +2171,8 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
     { name: 'Sessions', glyph: 'clock' },
     { name: 'Other', glyph: 'dots' },
   ]
-  const outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Compliance', 'Other']
   const srcYs = [84, 158, 232, 306, 380, 454, 528]
-  const outYs = [120, 194, 268, 342, 416, 490]
+  const outYs = outputs.length === 6 ? [120, 194, 268, 342, 416, 490] : outputs.map((_, i) => 320 - ((outputs.length - 1) * 74) / 2 + i * 74)
   // Ball + node centered between the chip columns (left edge 252, right edge 872)
   const cx = 562, gy = 320, R = 148
   const nodeY = gy
@@ -2295,7 +2294,7 @@ function IntegrationDiagram({ animate = true }: { animate?: boolean }) {
         <text x={cx} y={nodeY + 3} textAnchor="middle" fill="#0b1530" fontSize="23" fontWeight="700"
           letterSpacing="0.06em">sens<tspan fontSize="26">A</tspan>i</text>
         <text x={cx} y={nodeY + 22} textAnchor="middle" fill="#7a849c" fontSize="10.5"
-          letterSpacing="0.12em">WATCHING EVERY PLAYER</text>
+          letterSpacing="0.12em">{nodeCaption}</text>
       </g>
 
       {/* system chips */}
