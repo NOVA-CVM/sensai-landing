@@ -40,11 +40,10 @@ const labelStyle: React.CSSProperties = {
 
 function Logo() {
   return (
-    <a href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-      <img src="/sensai-mascot.png" alt="sensAi" style={{ width: 40, height: 40, borderRadius: 10 }} />
+    <a href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
       <span style={{
-        fontWeight: 600, fontSize: 22, letterSpacing: '0.08em', color: '#fff',
-      }}>sens<span style={{ fontSize: '1.15em', fontWeight: 700 }}>A</span>i</span>
+        fontWeight: 600, fontSize: 24, letterSpacing: '-0.02em', color: '#fff',
+      }}>Sensai</span>
     </a>
   )
 }
@@ -156,7 +155,7 @@ export function BookPage({ program = false }: { program?: boolean }) {
                 margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1,
                 lineHeight: 1.12, color: SENS.ink,
               }}>
-                {program ? 'Apply to the design partnership.' : 'Get an expert on every player.'}
+                {program ? 'Apply to the design partnership.' : 'Stop the revenue leaks in your customer base.'}
               </h1>
               <p style={{ margin: '14px 0 10px', fontSize: 16, lineHeight: 1.55, color: SENS.inkSoft }}>
                 Tell us a little about your operation. We take it from there.

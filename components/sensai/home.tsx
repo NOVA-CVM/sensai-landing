@@ -993,8 +993,11 @@ function ProductFrame({ title, kpis, footer, children }: {
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28c840' }} />
         <span style={{ color: '#9aa6c4', fontSize: 9.5, marginLeft: 8 }}>{title}</span>
       </div>
+      {/* The KPI column count is set in home.css by data-n, deliberately NOT in the inline style:
+          /sense's mobile rules match on the style attribute ([style*="repeat(3, 1fr)"]) to collapse
+          grids, and those selectors outrank anything scoped to this page. */}
       {kpis && (
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${kpis.length}, 1fr)`, gap: 6, padding: '8px 10px 0' }}>
+        <div className="sh-kpis" data-n={kpis.length} style={{ display: 'grid', gap: 6, padding: '8px 10px 0' }}>
           {kpis.map(k => (
             <div key={k.l} style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '6px 8px' }}>
               <div style={{ fontSize: 7.5, color: SENS.muted, letterSpacing: '0.08em', fontWeight: 600 }}>{k.l}</div>

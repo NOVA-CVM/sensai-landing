@@ -83,3 +83,17 @@
 @media (max-width: 400px) {
   .sensai-home .sh-hero h1 { font-size: 31px !important; }
 }
+
+/* iOS Safari inflates small text inside narrow blocks ("font boosting"), which turned the
+   product frames' 7.5px mono labels into headlines on a real iPhone. The property inherits, so
+   scoping it to this page leaves /sense exactly as it was. */
+.sensai-home {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* The KPI tiles stay a compact row at every width, phones included: inside a 300px frame,
+   three full-width slabs pushed the graph off the screen. */
+.sensai-home .sh-kpis[data-n="1"] { grid-template-columns: 1fr; }
+.sensai-home .sh-kpis[data-n="2"] { grid-template-columns: 1fr 1fr; }
+.sensai-home .sh-kpis[data-n="3"] { grid-template-columns: 1fr 1fr 1fr; }
