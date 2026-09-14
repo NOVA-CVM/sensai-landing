@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-// Analytics caught a real visitor landing on `/%20sense` — a link pasted with a leading space,
+// Analytics caught a real visitor landing on `/%20sense`: a link pasted with a leading space,
 // which WhatsApp and mail clients do routinely. That was a 404 for someone we had sent the page to.
 // Anything that cleans up to a route we actually serve gets redirected there, query string intact.
 // Deliberately narrow: only known routes are rescued, so no legitimate path can be rewritten.
@@ -13,6 +13,13 @@ const LEGACY_HOSTS = new Set(['novacvm.net', 'www.novacvm.net'])
 
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl
+
+  // /apply folded into /book in round 6: one form, one label. The route stays in the repo.
+  if (pathname === '/apply') {
+    const book = req.nextUrl.clone()
+    book.pathname = '/book'
+    return NextResponse.redirect(book, 308)
+  }
 
   const host = (req.headers.get('host') || '').split(':')[0].toLowerCase()
   if (pathname === '/' && LEGACY_HOSTS.has(host)) {

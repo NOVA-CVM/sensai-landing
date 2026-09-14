@@ -1,4 +1,4 @@
-/* getsensai.co home — responsive rules. Desktop values are inline in home.tsx; these only override below 1024px. */
+/* getsensai.co home , responsive rules. Desktop values are inline in home.tsx; these only override below 1024px. */
 .sensai-home .sh-btn { transition: transform .15s ease, box-shadow .15s ease; }
 .sensai-home .sh-btn:hover { transform: translateY(-1px); }
 .sensai-home .sh-film-tall { display: none; }
@@ -97,3 +97,6 @@
 .sensai-home .sh-kpis[data-n="1"] { grid-template-columns: 1fr; }
 .sensai-home .sh-kpis[data-n="2"] { grid-template-columns: 1fr 1fr; }
 .sensai-home .sh-kpis[data-n="3"] { grid-template-columns: 1fr 1fr 1fr; }
+
+/* The field returns at 60% of its /sense weight: present, never competing with the copy. */
+.sensai-home .sh-hero-dots { opacity: 0.6; }

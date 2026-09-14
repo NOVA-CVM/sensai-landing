@@ -17,12 +17,12 @@ const SENS = {
 
 const BOOKING_URL = "https://calendar.app.google/K15ZBdA3E6WBxbWXA"
 
-// Round 10, item 4 — nothing may be lost.
+// Round 10, item 4: nothing may be lost.
 // Submissions POST to a hosted form endpoint (Web3Forms: instant email to AA, submissions kept
 // in the provider dashboard, no account needed to get a key). The key is an env var so it can be
 // rotated without a code change: set NEXT_PUBLIC_WEB3FORMS_KEY in the Vercel project.
 // Until the key is set, the form keeps its previous behaviour (straight to the calendar) so the
-// page never regresses — see the memo for the one step AA has to do.
+// page never regresses. See the memo for the one step AA has to do.
 const FORM_ENDPOINT = "https://api.web3forms.com/submit"
 const FORM_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? ""
 
@@ -42,8 +42,8 @@ function Logo() {
   return (
     <a href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
       <span style={{
-        fontWeight: 600, fontSize: 24, letterSpacing: '-0.02em', color: '#fff',
-      }}>Sensai</span>
+        fontWeight: 600, fontSize: 24, letterSpacing: '0.08em', color: '#fff',
+      }}>sens<span style={{ fontSize: '1.15em', fontWeight: 700 }}>A</span>i</span>
     </a>
   )
 }
@@ -58,7 +58,7 @@ export function BookPage({ program = false }: { program?: boolean }) {
     e.preventDefault()
     const form = e.currentTarget
 
-    // Honeypot: bots fill every field they find. No captcha — friction costs us leads.
+    // Honeypot: bots fill every field they find. No captcha: friction costs us leads.
     const data = new FormData(form)
     if ((data.get('botcheck') as string | null)?.length) return
 
@@ -73,8 +73,8 @@ export function BookPage({ program = false }: { program?: boolean }) {
 
     data.set('access_key', FORM_KEY)
     data.set('subject', program
-      ? 'sensAi — design partnership application'
-      : 'sensAi — walkthrough request')
+      ? 'sensAi · design partnership application'
+      : 'sensAi · walkthrough request')
     data.set('from_name', 'getsensai.co')
 
     try {
@@ -121,7 +121,7 @@ export function BookPage({ program = false }: { program?: boolean }) {
               boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
             }}
           >
-            Pick a walkthrough slot <ArrowRight className="w-4 h-4" />
+            Pick a slot now <ArrowRight className="w-4 h-4" />
           </a>
         </main>
       </div>
@@ -155,13 +155,13 @@ export function BookPage({ program = false }: { program?: boolean }) {
                 margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1,
                 lineHeight: 1.12, color: SENS.ink,
               }}>
-                {program ? 'Apply to the design partnership.' : 'Stop the revenue leaks in your customer base.'}
+                {program ? 'Apply to the design partnership.' : 'Talk to us.'}
               </h1>
               <p style={{ margin: '14px 0 10px', fontSize: 16, lineHeight: 1.55, color: SENS.inkSoft }}>
-                Tell us a little about your operation. We take it from there.
+                Tell us a little about your operation. You&rsquo;ll hear back from one of the founders.
               </p>
 
-              {/* Which CTA this came from — partnership applications must stay distinguishable */}
+              {/* Which CTA this came from: partnership applications must stay distinguishable */}
               <input type="hidden" name="type" value={source} />
               <input type="hidden" name="source" value={source} />
               {/* Honeypot: hidden from people, irresistible to bots. No captcha. */}
@@ -207,7 +207,7 @@ export function BookPage({ program = false }: { program?: boolean }) {
                   boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
                   opacity: submitted ? 0.7 : 1,
                 }}>
-                  {submitted ? 'Sending…' : program ? 'Apply to the program' : 'Book a walkthrough'} <ArrowRight className="w-4 h-4" />
+                  {submitted ? 'Sending…' : 'Talk to us'} <ArrowRight className="w-4 h-4" />
                 </button>
                 <div style={{ fontSize: 12, color: SENS.muted, textAlign: 'right' }}>
                   We&rsquo;ll use your details only to reply to your enquiry.

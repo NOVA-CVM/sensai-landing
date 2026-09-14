@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 const isVercel = process.env.VERCEL === '1'
 import './globals.css'
 
-// Space Grotesk site-wide (round 9, item 7 — AA: the ENTIRE site, not only /sense).
+// Space Grotesk site-wide (round 9, item 7. AA: the ENTIRE site, not only /sense).
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-grotesk" });
 
 export const viewport: Viewport = {
@@ -14,8 +14,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
 }
 
-const TITLE = 'Sensai · stops the revenue leaks in your customer base'
-const DESC = 'Sensai stops the revenue leaks in your customer base, so you can focus on growth. Bonus abuse, silent VIP churn, customers lost to product failures: found, actioned through the systems your teams already run.'
+const TITLE = 'sensAi · stops the revenue leaks, so you can focus on growth'
+const DESC = 'Bonus abuse, silent VIP churn, customers lost to product failures. sensAi finds them and actions them through the systems your teams already run.'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.getsensai.co'),
