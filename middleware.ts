@@ -6,8 +6,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 // Deliberately narrow: only known routes are rescued, so no legitimate path can be rewritten.
 const KNOWN_ROUTES = new Set(['/', '/sense', '/book', '/apply', '/v2', '/chat'])
 
+// novacvm.net keeps the page it has always served; getsensai.co is the repositioned site.
+// Both domains are one Vercel project, so the split happens here, on the Host header.
+// A rewrite, not a redirect: the URL stays novacvm.net/ and nobody is bounced to another domain.
+const LEGACY_HOSTS = new Set(['novacvm.net', 'www.novacvm.net'])
+
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl
+
+  const host = (req.headers.get('host') || '').split(':')[0].toLowerCase()
+  if (pathname === '/' && LEGACY_HOSTS.has(host)) {
+    const legacy = req.nextUrl.clone()
+    legacy.pathname = '/legacy'
+    return NextResponse.rewrite(legacy)
+  }
 
   let decoded = pathname
   try {

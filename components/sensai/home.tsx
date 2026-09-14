@@ -473,6 +473,15 @@ function Film() {
     if (!v) return
     trackEvent('film_play', { where: 'hero', cut: which })
     v.play().then(() => setPlaying(true)).catch(() => {})
+    // Take the screen. Both calls have to sit inside the click that started playback, or the
+    // browser refuses them. iOS Safari has no element fullscreen, only the native video player.
+    try {
+      const anyV = v as HTMLVideoElement & { webkitEnterFullscreen?: () => void }
+      if (v.requestFullscreen) void v.requestFullscreen().catch(() => {})
+      else if (anyV.webkitEnterFullscreen) anyV.webkitEnterFullscreen()
+    } catch {
+      /* no fullscreen available: the film still plays in place */
+    }
   }
   useEffect(() => {
     const onEnd = () => setPlaying(false)

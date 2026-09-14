@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.getsensai.co'),
   title: TITLE,
   description: DESC,
-  openGraph: { title: TITLE, description: DESC, images: ['/film/poster-wide.jpg'], siteName: 'Sensai', type: 'website', url: 'https://www.getsensai.co' },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESC, images: ['/film/poster-wide.jpg'] },
+  openGraph: { title: TITLE, description: DESC, images: ['/og-home.png'], siteName: 'Sensai', type: 'website', url: 'https://www.getsensai.co' },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESC, images: ['/og-home.png'] },
   icons: {
     icon: [
       {
