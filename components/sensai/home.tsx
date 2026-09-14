@@ -2401,14 +2401,15 @@ function IntegrationSection() {
       </div>
       {/* On a phone the diagram scrolls sideways in its own container rather than shrinking
           to unreadable, same mechanism the round-1 page used (home.css). */}
-      <div ref={ref} className="sh-diagram-scroll" style={{ marginTop: 64, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
-        <div className="sh-diagram-inner">
+      {/* The SVG is a viewBox at width:100%, so it scales to any screen on its own. It is
+          deliberately NOT in a sideways-scroll container: /sense lets it shrink, and that is
+          the behaviour AA wants here too. */}
+      <div ref={ref} style={{ marginTop: 64, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
         <IntegrationDiagram
           animate={inView && !reduced}
           outputs={['CRM', 'Case manager', 'Risk tools', 'BI', 'Other']}
           nodeCaption="WATCHING EVERY CUSTOMER"
         />
-        </div>
       </div>
       {/* What it is allowed to touch. Where it runs has its own block below. */}
       <div style={{ marginTop: 26, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -2890,9 +2891,11 @@ function SocialProof() {
 // ═══════════════════════════════════════════════════════════════════
 
 function Founders() {
+  // No names on the page (AA, 14 Sep). The experience is the point, not who holds it, and the
+  // previous bio named an operator, which §10 bars anywhere on the site.
   const people = [
-    { n: 'Amit Assa', s: '17 years in customer value management across iGaming and digital platforms.' },
-    { n: 'Gabi Dvir', s: '20+ years in engineering leadership. Ex-VP DevOps at 888 and Fiverr.' },
+    { n: 'Customer value management', s: '17 years across online gaming and digital platforms: CRM, VIP and retention, on the operator side.' },
+    { n: 'Engineering', s: '20+ years in engineering leadership, building and running platforms at scale.' },
   ]
   return (
     <section style={{ padding: '88px 80px', background: '#ffffff' }}>
