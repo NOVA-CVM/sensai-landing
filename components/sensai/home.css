@@ -2,6 +2,9 @@
 .sensai-home .sh-btn { transition: transform .15s ease, box-shadow .15s ease; }
 .sensai-home .sh-btn:hover { transform: translateY(-1px); }
 .sensai-home .sh-film-tall { display: none; }
+/* Short-cut-only mode: the 4:5 cut plays at every width, capped so it does not dominate a desktop. */
+.sensai-home .sh-film-shortonly .sh-film-wide { display: none; }
+.sensai-home .sh-film-shortonly .sh-film-tall { display: block; max-width: 460px; margin: 0 auto; }
 
 @media (max-width: 1024px) {
   .sensai-home .sh-section { padding-left: 28px !important; padding-right: 28px !important; }
@@ -36,4 +39,18 @@
 @media (max-width: 380px) {
   .sensai-page.sensai-home h1 { font-size: 29px !important; }
   .sensai-home .sh-hero-p { font-size: 15px !important; }
+}
+
+@media (max-width: 768px) {
+  /* Inside the leaks accordion the artifact is boxed by the row's number and chevron gutters,
+     which leaves a product screen ~180px wide at 360. Reclaim both gutters on mobile so the
+     frames stay legible (round 4, §6) without changing the row layout itself. */
+  .sensai-home .sensai-artifact {
+    margin-left: -56px;
+    margin-right: -22px;
+    /* /sense caps these cards at 100% of their column on mobile; the negative margins only
+       take effect once that cap is lifted. */
+    max-width: none !important;
+    width: calc(100% + 78px) !important;
+  }
 }

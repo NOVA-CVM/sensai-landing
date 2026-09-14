@@ -455,8 +455,13 @@ export function HeroResolutionField() {
 // ─── The film (salvaged from the round-1/2 page, src-per-cut kept) ───
 // Both cuts stay in the markup so CSS picks one without a layout shift, but only the cut
 // actually shown gets a `src` — otherwise a phone range-fetches the 16:9 film it never plays.
+// The page plays the 57-second cut, at every width. The 113-second film is a sales-conversation
+// asset, not a cold-page asset. When the 16:9 rendering of the short cut lands, flip this to true
+// and desktop plays it wide again. One line, nothing else to change.
+const WIDE_CUT_READY = false
+
 function Film() {
-  // Wide film on desktop, the 4:5 cut on phones. One plays at a time; the poster is a real frame.
+  // The short cut on every screen; the wide slot stays wired for when the 16:9 short cut is rendered.
   const wideRef = useRef<HTMLVideoElement | null>(null)
   const tallRef = useRef<HTMLVideoElement | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -466,7 +471,7 @@ function Film() {
   const [cut, setCut] = useState<'wide' | 'tall' | null>(null)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)')
-    const pick = () => setCut(mq.matches ? 'tall' : 'wide')
+    const pick = () => setCut(WIDE_CUT_READY && !mq.matches ? 'wide' : 'tall')
     pick()
     mq.addEventListener('change', pick)
     return () => mq.removeEventListener('change', pick)
@@ -500,7 +505,7 @@ function Film() {
     </button>
   )
   return (
-    <div className="sh-film" style={{ position: 'relative', maxWidth: 1080, margin: '44px auto 0' }}>
+    <div className={'sh-film' + (WIDE_CUT_READY ? '' : ' sh-film-shortonly')} style={{ position: 'relative', maxWidth: 1080, margin: '44px auto 0' }}>
       <div className="sh-film-wide" style={{
         position: 'relative', borderRadius: 18, overflow: 'hidden', background: '#0f1420',
         boxShadow: '0 40px 100px -30px rgba(0,0,0,0.75)', border: '1px solid rgba(255,255,255,0.08)',
@@ -517,7 +522,6 @@ function Film() {
           playsInline preload="metadata" style={{ width: '100%', display: 'block', aspectRatio: '4 / 5' }} />
         {overlay('tall')}
       </div>
-      {/* The assistant is deliberately not named here. */}
       <div style={{ marginTop: 14, textAlign: 'center', fontSize: 12.5, lineHeight: 1.6, color: '#7d89a8' }}>
         The product, shown inside the assistant your team already uses. Values transformed, accounts masked.
       </div>
@@ -545,7 +549,7 @@ function Hero() {
           <div style={{
             color: '#7d89a8', fontSize: 12, fontWeight: 500,
             letterSpacing: '0.14em', marginBottom: 22,
-          }}>FOR GAMING OPERATORS &middot; THE TEAMS THAT OWN CUSTOMER REVENUE</div>
+          }}>FOR GAMING OPERATORS</div>
           {/* Two blocks with an explicit break, so "You" never strands at the end of a line */}
           <h1 style={{
             margin: 0, fontSize: 56, lineHeight: 1.12, letterSpacing: -1.6,
@@ -554,12 +558,18 @@ function Hero() {
             Sensai finds <span style={{ color: '#8fa8e0' }}>the leaks</span> in your customer base.
             <br />You keep the revenue.
           </h1>
+          {/* Names the category in one glance: three nouns, no verbs. */}
+          <div style={{
+            margin: '20px auto 0', maxWidth: 620, fontSize: 15, lineHeight: 1.7,
+            color: '#9fb0d4', letterSpacing: '0.02em',
+          }}>
+            Bonus abuse. Silent VIP churn. Customers lost to product failures.
+          </div>
           <p className="sensai-hero-subline" style={{
-            margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
+            margin: '14px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 560,
           }}>
-            Every customer watched, every change caught, every finding pushed into the systems
-            your teams already use.
+            Every customer watched. Every change caught. Nothing missed.
           </p>
           <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center' }}>
             <button
@@ -584,8 +594,13 @@ function Hero() {
               How it works
             </button>
           </div>
-          {/* The only proof claim on the page this round: no percentages, no case numbers, no name. */}
-          <div style={{ marginTop: 20, fontSize: 12.5, color: '#7d89a8', letterSpacing: '0.02em' }}>
+          {/* The only proof claim on the page: no percentages, no case numbers, no name.
+              Set as a fact block, not a caption. */}
+          <div style={{
+            margin: '30px auto 0', maxWidth: 560, paddingTop: 16,
+            borderTop: '1px solid rgba(255,255,255,0.14)',
+            fontSize: 14, lineHeight: 1.6, color: '#b6c1dd', letterSpacing: '0.02em',
+          }}>
             Live in production with a tier-1 operator &middot; ~2.5M accounts
           </div>
         </div>
@@ -923,9 +938,31 @@ const OutChip = ({ children }: { children: React.ReactNode }) => (
   }}>{children}</span>
 )
 
+// Every product image on this page is captioned, the way documentation captions a figure.
+// Mono, 11px, uppercase: the cheapest seriousness on the page (round 4, §2e).
+function ProductShot({ src, alt, caption, frame = true }: {
+  src: string; alt: string; caption: string; frame?: boolean
+}) {
+  return (
+    <figure style={{ margin: 0, width: '100%' }}>
+      <div style={{
+        background: '#fff', borderRadius: 14, overflow: 'hidden',
+        border: frame ? `1px solid ${SENS.rule}` : 'none',
+      }}>
+        <img src={src} alt={alt} loading="lazy" style={{ width: '100%', height: 'auto', display: 'block', maxWidth: '100%' }} />
+      </div>
+      <figcaption style={{
+        marginTop: 10, fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+        fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+        color: SENS.muted, lineHeight: 1.5,
+      }}>{caption}</figcaption>
+    </figure>
+  )
+}
+
 function ArtifactCard({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{
+    <div className="sensai-artifact" style={{
       marginTop: 14, background: '#f7f9fd', border: `1px solid ${SENS.rule}`,
       borderRadius: 12, padding: '14px 16px', maxWidth: 560,
     }}>{children}</div>
@@ -1059,7 +1096,7 @@ function LeaksSection() {
   const tiles: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     {
       n: '01', t: 'Fraud rings take your bonuses',
-      s: 'Rings, syndicates, multi-accounting — taking promotional money consistently, from a budget that runs 10–20% of your revenue.',
+      s: 'Rings, syndicates, multi-accounting, taking promotional money consistently, from a budget that runs 10–20% of your revenue.',
       art: (
         <ArtifactCard>
           <ProductFrame title="Referral network"
@@ -1069,7 +1106,13 @@ function LeaksSection() {
               { l: 'RED RISK', v: '187', neg: true },
             ]}
             footer="REFERRAL NETWORK · RANKED BY NET LOSS">
-            <RafBurst />
+            <div style={{ padding: '10px 10px 12px' }}>
+              <img
+                src="/screenshots/film/leak-fraud-rings-graph.png"
+                alt="The referral network around one hub, ranked by net loss"
+                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
+              />
+            </div>
             <ReasonLine>12 accounts · one payment fingerprint · same root inviter</ReasonLine>
           </ProductFrame>
           <OutChip>→ Risk queue, with the evidence</OutChip>
@@ -1078,7 +1121,7 @@ function LeaksSection() {
     },
     {
       n: '02', t: 'VIPs quietly churn',
-      s: 'The signals are in the play, weeks before the revenue moves — caught while there is still someone to keep.',
+      s: 'The signals are in the play, weeks before the revenue moves. Caught while there is still someone to keep.',
       art: (
         <ArtifactCard>
           <ProductFrame title="Account health · churn curve"
@@ -1128,50 +1171,15 @@ function LeaksSection() {
       s: 'Tomorrow’s VIPs, flagged in their first weeks, while nurturing still changes the outcome.',
       art: (
         <ArtifactCard>
-          <ProductFrame title="FTD cohort · projected NGR"
-            kpis={[
-              { l: 'NEW VIP FLAGS · 7D', v: '6' },
-              { l: 'PROJECTED 12-MO NGR', v: '$412K' },
-            ]}>
-            <div style={{ padding: '8px 10px 10px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {[
-                { id: '#48291', v: '$2,140', tier: 'A', up: true, spark: 'M2 22 L20 20 L38 16 L56 14 L74 8 L98 4' },
-                { id: '#55107', v: '$860', tier: 'B', up: false, spark: 'M2 14 L20 15 L38 13 L56 15 L74 12 L98 13' },
-                { id: '#61220', v: '$310', tier: 'C', up: false, spark: 'M2 8 L20 10 L38 14 L56 16 L74 20 L98 22' },
-              ].map(r => (
-                <div key={r.id} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 8px',
-                }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>{r.id}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: SENS.ink }}>{r.v}</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: r.tier === 'A' ? SENS.blueBright : SENS.muted }}>Tier {r.tier}</span>
-                  {r.up && <span style={{ fontSize: 11, color: SENS.blueBright, fontWeight: 700 }}>↑</span>}
-                  <span style={{ flex: 1 }} />
-                  <Spark d={r.spark} color={r.up ? SENS.blueBright : '#9fb0d4'} />
-                </div>
-              ))}
-              <div style={{ fontSize: 9.5, color: SENS.muted, fontStyle: 'italic', paddingLeft: 2 }}>
-                #48291: play steady 6 weeks · session depth rising · flagged day 9
-              </div>
-              {/* The VIP desk's worklist: the same scores, arriving as cases (round 9, item 3) */}
-              <div style={{ borderTop: `1px solid ${SENS.rule}`, paddingTop: 7, marginTop: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{
-                  fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 7.5,
-                  letterSpacing: '0.1em', color: SENS.muted, fontWeight: 600, marginBottom: 1,
-                }}>OPEN CASES · VIP DESK</div>
-                {[
-                  'New VIP signal in first weeks · flag to VIP desk',
-                  'Engagement pattern shifted · review',
-                  'Play moved to live tables · host review',
-                ].map(c => (
-                  <div key={c} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 10, color: SENS.inkSoft }}>
-                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: SENS.blueBright, flexShrink: 0 }} />
-                    {c}
-                  </div>
-                ))}
-              </div>
+          <ProductFrame title="Account · first weeks">
+            <div style={{ padding: '10px 10px 12px' }}>
+              <img
+                src="/screenshots/film/account-tiles.png"
+                alt="One account's tiles: deposited, staked, balance, wagering ratio"
+                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
+              />
             </div>
+            <ReasonLine>play steady 6 weeks · session depth rising · flagged day 9</ReasonLine>
           </ProductFrame>
           <OutChip>→ worked as cases · VIP review</OutChip>
         </ArtifactCard>
@@ -1197,45 +1205,18 @@ function LeaksSection() {
     },
     {
       n: '05', t: 'Wrong offers to the wrong players',
-      s: 'Over-bonused players who would have played anyway, under-bonused players who were worth keeping — the same budget, leaking both ways.',
+      s: 'Over-bonused players who would have played anyway; under-bonused players who were worth keeping.',
       art: (
         <ArtifactCard>
-          {/* The deliverable is the ladder calculated for this player: deposit in, bonus out.
-              Standard commercial offer mechanics (RG carve-out, round 9 item 2/06). */}
-          <ProductFrame title="Deposit → bonus ladder" footer="CALCULATED PER PLAYER">
-            <div style={{ padding: '8px 10px 2px' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'baseline', gap: 8,
-                border: `1px solid ${SENS.rule}`, borderRadius: 7, padding: '5px 9px', marginBottom: 7,
-              }}>
-                <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10.5, color: SENS.ink }}>#52108</span>
-                <span style={{ fontSize: 9, color: SENS.muted }}>Tier B · slots</span>
-              </div>
-              <div style={{ border: `1px solid ${SENS.rule}`, borderRadius: 7, overflow: 'hidden' }}>
-                <div style={{
-                  display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '4px 9px',
-                  background: '#f7f9fd', borderBottom: `1px solid ${SENS.rule}`,
-                  fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 7.5,
-                  letterSpacing: '0.1em', color: SENS.muted, fontWeight: 600,
-                }}>
-                  <span>DEPOSIT</span><span style={{ textAlign: 'right' }}>BONUS</span>
-                </div>
-                {[
-                  { d: '$10', b: '$2' },
-                  { d: '$20', b: '$5' },
-                  { d: '$50', b: '$20' },
-                ].map((row, i) => (
-                  <div key={row.d} style={{
-                    display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '5px 9px',
-                    borderTop: i === 0 ? 'none' : `1px solid ${SENS.rule}`,
-                  }}>
-                    <span style={{ fontSize: 11.5, color: SENS.inkSoft }}>{row.d}</span>
-                    <span style={{ fontSize: 11.5, fontWeight: 700, color: SENS.blueBright, textAlign: 'right' }}>{row.b}</span>
-                  </div>
-                ))}
-              </div>
+          <ProductFrame title="One finding, where it went">
+            <div style={{ padding: '10px 10px 12px' }}>
+              <img
+                src="/screenshots/film/where-it-went.png"
+                alt="One finding fanning out to a CRM exclusion list, a watchlist and a risk ticket"
+                style={{ width: '100%', display: 'block', borderRadius: 8, border: `1px solid ${SENS.rule}` }}
+              />
             </div>
-            <ReasonLine>calibrated to this player’s response history</ReasonLine>
+            <ReasonLine>same expected response, lower cost</ReasonLine>
           </ProductFrame>
           <OutChip>→ promo planning · CRM</OutChip>
         </ArtifactCard>
@@ -1243,7 +1224,7 @@ function LeaksSection() {
     },
     {
       n: '06', t: 'Accounts closed or restricted without you knowing',
-      s: 'Over-closure — fraud shutting too many accounts, or adding too much friction — lands on your revenue line, not theirs.',
+      s: 'Fraud closing too many accounts, or adding too much friction, lands on your revenue line.',
       art: null,
     },
   ]
@@ -1253,23 +1234,9 @@ function LeaksSection() {
       <div className="max-w-[1280px] mx-auto">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div style={{
-              color: SENS.blueBright, fontSize: 13, fontWeight: 500,
-              letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14,
-              display: 'flex', alignItems: 'center', gap: 10,
-            }}>
-              <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
-              The leaks we stop
-            </div>
             <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
-              Retention is the outcome. These are the leaks that drain it.
+              The leaks we stop
             </h2>
-            {/* The paragraph that opened the hero in round 2 — a good paragraph, in its right place. */}
-            <p style={{ margin: '20px 0 0', fontSize: 16, lineHeight: 1.62, color: SENS.inkSoft, maxWidth: 700 }}>
-              Even the best operators leak revenue they&rsquo;ve already paid for &mdash; to bonuses taken by
-              fraud rings and wasted on players who didn&rsquo;t need them, to VIPs who quietly churn without
-              anyone reading their signals, to customers who drop after a failed deposit that nobody picked up.
-            </p>
           </div>
           <div style={{
             fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10,
@@ -1319,19 +1286,6 @@ function LeaksSection() {
           All of it lands in the systems you already run: cases, lists, triggers and enriched profiles. No new tool.
         </div>
 
-        <div style={{ marginTop: 40 }}>
-          <button
-            onClick={() => goBook('what_you_get')}
-            style={{
-              background: SENS.blue, color: '#fff', border: 'none',
-              padding: '14px 26px', borderRadius: 999, fontSize: 15, fontWeight: 500,
-              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-              boxShadow: '0 14px 34px -12px rgba(12,44,99,0.5)',
-            }}
-          >
-            Book a walkthrough <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
     </section>
   )
@@ -1363,6 +1317,28 @@ const MarkUntrusted = () => (
   </svg>
 )
 
+// The page's missing explanation, straight from the film's aggregation card.
+// No paragraph, no button: one sentence and the picture of it.
+function WhatLeaksSection() {
+  return (
+    <section style={{ padding: '84px 80px', background: SENS.bg }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
+          <h2 style={{ margin: 0, fontSize: 32, fontWeight: 600, letterSpacing: -0.7, lineHeight: 1.3, color: SENS.ink, maxWidth: 470 }}>
+            Every customer generates a revenue stream. Together, the streams are your revenue.
+            Unwatched, it leaks.
+          </h2>
+          <ProductShot
+            src="/screenshots/film/revenue-two-futures.png"
+            alt="The whole base plotted over twelve weeks, with and without Sensai"
+            caption="The whole base &middot; two futures &middot; illustrative"
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ProblemSection() {
   return (
     <section style={{ padding: '104px 80px', background: '#ffffff' }}>
@@ -1373,7 +1349,7 @@ function ProblemSection() {
             letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 20,
           }}>Problem</div>
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
-            Nobody can watch a million players.<br />So the revenue leaks.
+            Even the best operators leak revenue they&rsquo;ve already paid for.
           </h2>
         </div>
         {/* One quote, never attributed to a named person or operator. */}
@@ -1383,9 +1359,8 @@ function ProblemSection() {
           fontSize: 18.5, lineHeight: 1.62, color: SENS.ink, fontStyle: 'italic', position: 'relative',
         }}>
           <span aria-hidden style={{ position: 'absolute', top: 14, left: 22, fontSize: 64, lineHeight: 1, color: '#c9d3ea', fontStyle: 'normal' }}>&ldquo;</span>
-          Every angle of the customer sits with a different team. Fraud doesn&rsquo;t cover bonus abuse,
-          so I lose money to abusers. VIPs go quietly. Payments fixed the deposit error &mdash; but
-          who&rsquo;s acting on the customers it hit?
+          Every angle of the customer sits with a different team. Payments fixed the deposit error,
+          but who&rsquo;s acting on the customers it hit?
           <div style={{ marginTop: 16, fontSize: 12.5, fontStyle: 'normal', color: SENS.muted, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             What we hear from the people who own the revenue line
           </div>
@@ -2313,12 +2288,11 @@ function PartnershipSection() {
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
         }}>Design partnership</div>
         <h2 style={{ margin: '0 auto', fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
-          Design partnerships &mdash; a small number, open now.
+          Design partnerships - a small number, open now.
         </h2>
         <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
-          Read access, scripts approved by you, live within weeks. The first leak lands in your CRM with
-          the accounts &mdash; and a measure you own. Partners work directly with the founders, shape what
-          gets built next, and lock early terms.
+          Read access, scripts approved by you, live within weeks. A small number of operators, chosen
+          for fit; partners shape what gets built next.
         </p>
         <div className="sensai-hero-ctas" style={{ marginTop: 30, display: 'flex', gap: 14, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
           <button
@@ -2335,24 +2309,14 @@ function PartnershipSection() {
           >
             Apply for a partnership <ArrowRight className="w-4 h-4" />
           </button>
-          <button
-            onClick={() => goBook('design_partnership')}
-            style={{
-              background: '#fff', color: SENS.blueBright, border: `1.5px solid ${SENS.blueBright}`,
-              padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
-              cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10,
-            }}
-          >
-            Book a walkthrough
-          </button>
         </div>
         {/* The scan: last, quiet, no headline, no button, no figures. */}
         <div style={{
           marginTop: 52, paddingTop: 24, borderTop: `1px solid ${SENS.rule}`,
           fontSize: 14, lineHeight: 1.7, color: SENS.muted, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto',
         }}>
-          Need to see it on your own data first? One extract, 48 hours, no integration &mdash; a read of your
-          base, less tuned than a live deployment, and we say so. Ask for it on the call.
+          Need to see it on your own data first? One extract, 48 hours, no integration. A read of your
+          base, less tuned than a live deployment. Ask for it on the call.
         </div>
       </div>
     </section>
@@ -2377,10 +2341,6 @@ function IntegrationSection() {
         <div style={{ margin: '22px auto 0', fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: SENS.blueBright }}>
           Live within weeks.
         </div>
-        <p style={{ margin: '16px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
-          Read access to the source tables. We take it from there. Outputs pushed
-          back into the tools your teams run.
-        </p>
       </div>
       {/* On a phone the diagram scrolls sideways in its own container rather than shrinking
           to unreadable — same mechanism the round-1 page used (home.css). */}
@@ -2393,11 +2353,8 @@ function IntegrationSection() {
         />
         </div>
       </div>
-      {/* Where it runs, then what it is allowed to touch. The trust chips live here now. */}
-      <div style={{ marginTop: 22, textAlign: 'center', fontSize: 13, lineHeight: 1.6, color: SENS.muted, maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
-        Works inside the assistant your team already uses &mdash; Claude, ChatGPT &mdash; through a standard connector (MCP).
-      </div>
-      <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+      {/* What it is allowed to touch. Where it runs has its own block below. */}
+      <div style={{ marginTop: 26, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
         {['Read-only access', 'Pseudonymised data', 'No PII'].map(chip => (
           <span key={chip} style={{
             border: `1px solid ${SENS.rule}`, background: '#fff', borderRadius: 999,
@@ -2405,14 +2362,71 @@ function IntegrationSection() {
           }}>{chip}</span>
         ))}
       </div>
-      {/* Both sentences are required on the page verbatim (source-of-truth §10). */}
-      <div style={{
-        margin: '34px auto 0', maxWidth: 660, textAlign: 'center',
-        fontSize: 15.5, lineHeight: 1.65, color: SENS.inkSoft,
-      }}>
-        It doesn&rsquo;t talk to your players &mdash; it works through your teams&rsquo; systems.
-        <br />Your team stays in control: nothing is armed without your confirmation.
       </div>
+    </section>
+  )
+}
+
+// MCP is the most differentiated thing about the product, so it gets a block, not a caption.
+// The assistant is named here and in the screenshot: concrete beats coy (round 4, §4).
+function WhereItLivesSection() {
+  return (
+    <section style={{ padding: '96px 80px', background: SENS.bg, borderTop: `1px solid ${SENS.rule}` }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 56, alignItems: 'center' }}>
+          <div>
+            <div style={{
+              color: SENS.blueBright, fontSize: 12.5, fontWeight: 600,
+              letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16,
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
+              Where it lives
+            </div>
+            <h2 style={{ margin: 0, fontSize: 36, fontWeight: 600, letterSpacing: -0.9, lineHeight: 1.2, color: SENS.ink, maxWidth: 460 }}>
+              It works in the assistant your team already uses.
+            </h2>
+            <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.62, color: SENS.inkSoft, maxWidth: 470 }}>
+              Claude or ChatGPT, through a standard connector. Your team asks in plain language and gets
+              the accounts, the reason and the action.
+            </p>
+            <div style={{
+              marginTop: 18, fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+              fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: SENS.muted,
+            }}>Connected over MCP</div>
+          </div>
+          <ProductShot
+            src="/screenshots/film/chat-surface.png"
+            alt="Sensai answering inside the chat assistant, with the accounts and the reason"
+            caption="Sensai, in the chat &middot; values transformed, accounts masked"
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// Both facts are required on the page verbatim (source-of-truth §10), stated forward rather
+// than as a denial, with the screen that proves them instead of asserting them.
+function ControlSection() {
+  return (
+    <section style={{ padding: '96px 80px', background: '#ffffff' }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 34, fontWeight: 600, letterSpacing: -0.8, lineHeight: 1.28, color: SENS.ink, maxWidth: 470 }}>
+              It works through your teams&rsquo; systems. It never contacts a player.
+            </h2>
+            <p style={{ margin: '18px 0 0', fontSize: 16.5, lineHeight: 1.62, color: SENS.inkSoft, maxWidth: 470 }}>
+              Your team stays in control: nothing is armed without your confirmation.
+            </p>
+          </div>
+          <ProductShot
+            src="/screenshots/film/proposed-rule.png"
+            alt="A proposed rule waiting for approval, with the actions already completed listed above it"
+            caption="Proposed rule &middot; awaiting CRM approval &middot; values transformed"
+          />
+        </div>
       </div>
     </section>
   )
@@ -2826,8 +2840,8 @@ function SocialProof() {
 
 function Founders() {
   const people = [
-    { n: 'Amit Assa', r: 'CEO', s: '17 years in customer value management across iGaming and digital platforms.' },
-    { n: 'Gabi Dvir', r: 'Co-founder', s: '20+ years in tech leadership. Ex-VP DevOps at 888 and Fiverr.' },
+    { n: 'Amit Assa', s: '17 years in customer value management across iGaming and digital platforms.' },
+    { n: 'Gabi Dvir', s: '20+ years in engineering leadership. Ex-VP DevOps at 888 and Fiverr.' },
   ]
   return (
     <section style={{ padding: '88px 80px', background: '#ffffff' }}>
@@ -2846,18 +2860,13 @@ function Founders() {
               Built on years inside the industry.
             </h2>
             <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 460 }}>
-              Years on the operator side &mdash; the CRM playbooks, the abuse patterns, the churn signals
-              &mdash; and the engineering to run it at scale.
+              The CRM playbooks and the abuse patterns, and the engineering to run them at scale.
             </p>
           </div>
           <div className="sensai-founders-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
             {people.map(p => (
               <div key={p.n} style={{ background: '#fff', border: `1px solid ${SENS.rule}`, borderRadius: 16, padding: '24px 24px 26px' }}>
                 <div style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.2 }}>{p.n}</div>
-                <div style={{
-                  marginTop: 4, fontSize: 11.5, fontWeight: 600, color: SENS.blueBright,
-                  letterSpacing: '0.12em', textTransform: 'uppercase',
-                }}>{p.r}</div>
                 <div style={{ marginTop: 12, fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55 }}>{p.s}</div>
               </div>
             ))}
@@ -2889,11 +2898,14 @@ export function SensaiHome() {
       <VisitTracking page="home" />
       <Nav />
       <Hero />
+      <WhatLeaksSection />
       <ProblemSection />
       <LeaksSection />
       <div id="how-it-works">
         <IntegrationSection />
       </div>
+      <WhereItLivesSection />
+      <ControlSection />
       <PartnershipSection />
       <Founders />
       <Footer />
