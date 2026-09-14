@@ -1227,11 +1227,11 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
       caption="Referral network &middot; ranked by net loss" />,
   },
   {
-    n: '02', t: 'Daily KPI monitoring, with the root cause',
-    s: 'Every morning against expected. When a number moves, the reason, the accounts behind it, and where each one went.',
+    n: '02', t: 'KPI monitoring, with the root cause',
+    s: 'Against expected. When a number moves, the reason, the accounts behind it, and where each one went.',
     art: <RawScreen src="/screenshots/film/kpi-root-cause.webp"
       alt="Deposits by hour against the expected line, with the cause and the accounts behind it"
-      caption="Deposits &middot; yesterday vs expected &middot; the cause, the customers, the actions" />,
+      caption="Deposits &middot; vs expected &middot; the cause, the customers, the actions" />,
   },
   {
     n: '03', t: 'In the chat your team already uses',
@@ -1373,6 +1373,10 @@ const OPERATOR_QUOTES: Array<{ text: string; role: string }> = [
   {
     text: 'My VIP team finds out a player has gone when the revenue is already gone. The signals were there for weeks.',
     role: 'VIP Director, casino operator',
+  },
+  {
+    text: 'Every KPI has an alert on it, so I get two hundred a day and read none of them. When deposits really drop, I hear it from finance.',
+    role: 'Chief Revenue Officer, sportsbook and casino',
   },
 ]
 
@@ -2495,7 +2499,7 @@ function OutcomesStrip() {
   const items = [
     { mark: <MarkOffer />, t: 'Bonus budget spent on real players.' },
     { mark: <MarkChurn />, t: 'VIPs kept before they\u2019re gone.' },
-    { mark: <MarkFailure />, t: 'Deposits recovered after a failure.' },
+    { mark: <MarkFailure />, t: 'Customers recovered after a product failure.' },
   ]
   return (
     <section style={{ padding: '72px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
@@ -2542,13 +2546,21 @@ const StepAct = () => (
   </svg>
 )
 
+const StepLearn = () => (
+  <svg {...bandMark}>
+    <path d="M20 12a8 8 0 1 1-2.4-5.7" />
+    <path d="M21 3v4.2h-4.2" />
+  </svg>
+)
+
 function HowItWorksBand() {
   const { ref, inView } = useInView()
   const reduced = useReducedMotion()
   const steps = [
     { w: 'Connect', s: 'Read-only access to your source tables. Nothing moves, nothing changes.', m: <StepConnect /> },
-    { w: 'Watch', s: 'Every customer, every day, against what it should look like.', m: <StepWatch /> },
+    { w: 'Watch', s: 'Every customer, against what it should look like.', m: <StepWatch /> },
     { w: 'Act', s: 'Cases, lists, triggers and rules, into your CRM, case manager and risk tools. Your team approves.', m: <StepAct /> },
+    { w: 'Learn', s: 'What your team confirms becomes the logic. It proposes the rule; your CRM team approves.', m: <StepLearn /> },
   ]
   return (
     <section id="how-it-works" style={{ padding: '104px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
@@ -2566,14 +2578,14 @@ function HowItWorksBand() {
             letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8fa8e0', marginBottom: 18,
           }}>How it works</div>
           <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.12, color: '#fff' }}>
-            Connect. Watch. Act.
+            Connect. Watch. Act. Learn.
           </h2>
           <p style={{ margin: '18px auto 0', fontSize: 17, lineHeight: 1.6, color: '#b6c1dd', maxWidth: 660 }}>
-            Read access in, every customer watched every day, actions out through the systems you already run.
+            Read access in, every customer watched, actions out through the systems you already run.
           </p>
         </div>
 
-        <div className="sh-grid-3" style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }}>
+        <div className="sh-band-tiles" style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
           {steps.map(st => (
             <div key={st.w} style={{
               border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '26px 24px 28px',

@@ -22,7 +22,13 @@
 /* §B5 — the mid-page ink band carries the same field at 40%. */
 .sensai-cro .sh-band-dots { opacity: 0.4; }
 
+/* Four steps: four across, two by two at tablet, stacked on a phone. */
+@media (max-width: 1024px) {
+  .sensai-cro .sh-band-tiles { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
 @media (max-width: 768px) {
+  .sensai-cro .sh-band-tiles { grid-template-columns: 1fr !important; }
   .sensai-cro .sh-ink-card { padding: 12px; border-radius: 14px; }
   /* The nav anchors collide with the wordmark at 390. The CTA is the one thing that must stay. */
   .sensai-cro .sh-nav-link { display: none; }
