@@ -1269,7 +1269,10 @@ const CAPABILITIES = [
 ]
 
 function WhatItDoesSection() {
-  const [active, setActive] = useState(0)
+  // One row open at a time, and an open row closes on a second tap: on a phone, five rows that
+  // only ever open leave the reader scrolling past five screens with no way back.
+  const [active, setActive] = useState<number | null>(0)
+  const toggle = (i: number) => setActive(cur => (cur === i ? null : i))
   return (
     <section style={{ padding: '110px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
       <div className="max-w-[1280px] mx-auto">
@@ -1291,7 +1294,13 @@ function WhatItDoesSection() {
                 <div
                   key={it.n}
                   className="sensai-value-row"
-                  onClick={() => setActive(i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isActive}
+                  onClick={() => toggle(i)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(i) }
+                  }}
                   style={{
                     display: 'grid', gridTemplateColumns: '64px 1fr 36px', gap: 20, alignItems: 'start',
                     padding: '22px 0', cursor: 'pointer',
@@ -1307,7 +1316,13 @@ function WhatItDoesSection() {
                     {/* Always rendered: the rows are scannable without clicking, and row 05's two
                         required sentences are in the served HTML on load. */}
                     <div style={{ fontSize: 14, color: SENS.inkSoft, lineHeight: 1.55, maxWidth: 460, marginTop: 8 }}>{it.s}</div>
-                    {isActive && <div className="sh-leaks-art-inline sensai-fade-in">{it.art}</div>}
+                    {/* The screen itself is not part of the toggle: tapping it should not close
+                        the row you just opened. The number, the title and the chevron are. */}
+                    {isActive && (
+                      <div className="sh-leaks-art-inline sensai-fade-in" onClick={e => e.stopPropagation()}>
+                        {it.art}
+                      </div>
+                    )}
                   </div>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{
                     marginTop: 12, justifySelf: 'end',
@@ -1320,7 +1335,7 @@ function WhatItDoesSection() {
             })}
           </div>
           <div className="sh-leaks-art" style={{ position: 'sticky', top: 104 }}>
-            {DOES[active].art}
+            {active !== null && DOES[active].art}
           </div>
         </div>
 
@@ -2619,8 +2634,20 @@ function HowItWorksBand() {
           ))}
         </div>
 
-        <div style={{ marginTop: 34, textAlign: 'center', fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: '#fff' }}>
-          Live within 4 weeks.
+        {/* The timeline on its own invites a CRO to price it against the last CRM project he ran.
+            The second sentence says what his side of the four weeks actually is. */}
+        <div style={{ marginTop: 34, textAlign: 'center' }}>
+          <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: '#fff' }}>
+            Live within 4 weeks.
+          </div>
+          <div style={{
+            /* 660 so the sentence holds one line on a desktop and wraps to two on a phone,
+               in both cases without the two sentences ever sharing a line. */
+            margin: '10px auto 0', maxWidth: 660, fontSize: 17, lineHeight: 1.5,
+            color: 'rgba(255,255,255,0.8)',
+          }}>
+            Your side is one read-only credential from your data team; there is no project.
+          </div>
         </div>
       </div>
     </section>
