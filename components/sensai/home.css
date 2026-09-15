@@ -49,14 +49,16 @@
      frames stay legible (round 4, §6) without changing the row layout itself. */
   .sensai-home .sensai-artifact,
   .sensai-home .sh-leaks-art-inline {
-    /* the mobile row is 44px 1fr 22px with a 12px gap, so reclaiming both gutters is
-       56px on the left and 34px on the right */
-    margin-left: -56px;
+    /* The mobile row is 44px 1fr 22px with a 12px gap, so the gutters are 56px on the left and
+       34px on the right. Reclaiming both made the card sit 56 left and 34 right of the text,
+       which reads as misaligned now that it is an ink card. So the bleed is symmetric: the
+       smaller gutter on each side, and the card sits centred under the text column. */
+    margin-left: -34px;
     margin-right: -34px;
     /* /sense caps these at 100% of their column on mobile; the negative margins only
        take effect once that cap is lifted. */
     max-width: none !important;
-    width: calc(100% + 90px) !important;
+    width: calc(100% + 68px) !important;
   }
 }
 
