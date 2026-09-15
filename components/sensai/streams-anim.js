@@ -1,5 +1,5 @@
 /* streams-anim.js — "every customer is a stream", the film's card 3 extended for getsensai.co.
-   Generated from sensai-story/kit/reel2/page_agg.py (v10, 14 Sep 2026). Do not hand-edit; regenerate.
+   Generated from sensai-story/kit/reel2/page_agg.py (v11, 15 Sep 2026: no revenue figure). Do not hand-edit; regenerate.
    Two variants of the same animation: desktop (1000×560 box, the film's type) and phone (640×520 box,
    larger type, shorter labels). Pick by breakpoint; never scale the desktop one below ~700px wide.
    Usage (React):
@@ -16,10 +16,11 @@
    Inject STREAMS.desktop.css + STREAMS.phone.css once. Reduced motion: call a.render(1). */
 export const STREAMS = {
   desktop: { width: 1000, height: 560, css: `
+
  *{margin:0;padding:0} .sa-desktop{width:1000px;height:560px;background:#F6F7F9;overflow:hidden;font-family:'JetBrains Mono',ui-monospace,monospace}
  .sa-desktop svg{position:absolute;left:0;top:0;width:1000px;height:560px}
  .sa-desktop .s{opacity:0} .sa-desktop .hud{position:absolute;font-size:11.0px;letter-spacing:2.0px;color:#6B7280;opacity:0}
- .sa-desktop #lab{left:36px;top:24px} .sa-desktop #ytop{left:36px;top:52px;font-size:13.0px;color:#0F1420;font-weight:600}
+ .sa-desktop #lab{left:36px;top:24px}
  .sa-desktop #wk{left:70px;right:130px;bottom:18px;display:flex;justify-content:space-between}
  .sa-desktop text{paint-order:stroke;stroke:#F6F7F9;stroke-width:5.0px;stroke-linejoin:round}
 `, markup: `<svg id="v" viewBox="0 0 1000 560">
@@ -38,13 +39,13 @@ export const STREAMS = {
  <text class="l1" data-e="0" text-anchor="end" x="797.3" y="172.4" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="1.6" fill="#2F5BE0" opacity="0">CHURN · FADES, THEN GONE</text><text class="l1" data-e="1" text-anchor="start" x="589.1" y="231.7" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="1.6" fill="#2F5BE0" opacity="0">A FAILED DEPOSIT · STOPS DEAD</text><text class="l1" data-e="2" text-anchor="end" x="870.0" y="477.2" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10.5" letter-spacing="1.6" fill="#D63B3B" opacity="0">BONUS ABUSE · MONEY OUT</text>
 </svg>
 <div id="lab" class="hud">ONE CUSTOMER · REVENUE OVER TIME</div>
-<div id="ytop" class="hud">$16K</div>
 <div id="wk" class="hud"></div>` },
-  phone:   { width: 640,  height: 520, css: `
+  phone: { width: 640, height: 520, css: `
+
  *{margin:0;padding:0} .sa-phone{width:640px;height:520px;background:#F6F7F9;overflow:hidden;font-family:'JetBrains Mono',ui-monospace,monospace}
  .sa-phone svg{position:absolute;left:0;top:0;width:640px;height:520px}
  .sa-phone .s{opacity:0} .sa-phone .hud{position:absolute;font-size:15.9px;letter-spacing:2.9px;color:#6B7280;opacity:0}
- .sa-phone #lab{left:52px;top:35px} .sa-phone #ytop{left:52px;top:75px;font-size:18.8px;color:#0F1420;font-weight:600}
+ .sa-phone #lab{left:52px;top:35px}
  .sa-phone #wk{left:44px;right:188px;bottom:26px;display:flex;justify-content:space-between}
  .sa-phone text{paint-order:stroke;stroke:#F6F7F9;stroke-width:7.2px;stroke-linejoin:round}
 `, markup: `<svg id="v" viewBox="0 0 640 520">
@@ -63,7 +64,6 @@ export const STREAMS = {
  <text class="l1" data-e="0" text-anchor="start" x="422.9" y="239.8" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15.2" letter-spacing="2.3" fill="#2F5BE0" opacity="0">CHURN · FADES OUT</text><text class="l1" data-e="1" text-anchor="start" x="311.6" y="272.1" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15.2" letter-spacing="2.3" fill="#2F5BE0" opacity="0">FAILED DEPOSIT · STOPS</text><text class="l1" data-e="2" text-anchor="end" x="452.0" y="437.0" font-family="JetBrains Mono, ui-monospace, monospace" font-size="15.2" letter-spacing="2.3" fill="#D63B3B" opacity="0">BONUS ABUSE · MONEY OUT</text>
 </svg>
 <div id="lab" class="hud">ONE CUSTOMER · REVENUE OVER TIME</div>
-<div id="ytop" class="hud">$16K</div>
 <div id="wk" class="hud"></div>` },
 };
 export function mountStreams(root, opts = {}) {
@@ -78,7 +78,7 @@ export function mountStreams(root, opts = {}) {
 
  const V=root.querySelector('#v'), S=[...root.querySelectorAll('.s')], TOP=root.querySelector('#top'),
        AREA=root.querySelector('#area'), GAP=root.querySelector('#gap'), CF=root.querySelector('#cf'),
-       LAB=root.querySelector('#lab'), YT=root.querySelector('#ytop'), WK=root.querySelector('#wk'),
+       LAB=root.querySelector('#lab'), WK=root.querySelector('#wk'),
        FUT=root.querySelector('#fut'), NOW=root.querySelector('#now'), NOWL=root.querySelector('#nowl'), CFL=root.querySelector('#cfl'),
        GROW=root.querySelector('#growr'), L1=[...root.querySelectorAll('.l1')];
  const cl=(x,a,b)=>Math.min(b,Math.max(a,x)), sm=t=>t*t*(3-2*t), eo=t=>1-Math.pow(1-t,3);
@@ -117,8 +117,7 @@ export function mountStreams(root, opts = {}) {
    GAP.style.opacity=L>0?0.22:0; CF.style.opacity=L>0?1:0; CFL.style.opacity=cl((L-0.85)/0.15,0,1);
    const F=eo(cl((u-0.83)/0.05,0,1)); FUT.style.opacity=F; NOW.style.opacity=F; NOWL.style.opacity=F;   // TODAY arrives only for the fork, as in the film
    LAB.style.opacity=u<0.08?eo(cl(u/0.05,0,1)):1;
-   LAB.textContent = m<0.5 ? (z<0.5?'ONE CUSTOMER · REVENUE OVER TIME':(u<0.32?'EVERY CUSTOMER · A STREAM EACH':(u<0.62?'THREE OF THE STREAMS · WHERE IT LEAKS':'EVERY CUSTOMER · A STREAM EACH'))) : 'THE WHOLE BASE · SUMMED';
-   YT.style.opacity=z; YT.textContent = m<0.55 ? '$16K' : '$3.1M';
+   LAB.textContent = m<0.5 ? (z<0.5?'ONE CUSTOMER · REVENUE OVER TIME':(u<0.32?'EVERY CUSTOMER · A STREAM EACH':(u<0.62?'THREE OF THE STREAMS · WHERE IT LEAKS':'EVERY CUSTOMER · A STREAM EACH'))) : 'THE BASE · SUMMED';
    WK.style.opacity=z;
  };
  renderP(0);
@@ -128,7 +127,7 @@ export function mountStreams(root, opts = {}) {
 
  const V=root.querySelector('#v'), S=[...root.querySelectorAll('.s')], TOP=root.querySelector('#top'),
        AREA=root.querySelector('#area'), GAP=root.querySelector('#gap'), CF=root.querySelector('#cf'),
-       LAB=root.querySelector('#lab'), YT=root.querySelector('#ytop'), WK=root.querySelector('#wk'),
+       LAB=root.querySelector('#lab'), WK=root.querySelector('#wk'),
        FUT=root.querySelector('#fut'), NOW=root.querySelector('#now'), NOWL=root.querySelector('#nowl'), CFL=root.querySelector('#cfl'),
        GROW=root.querySelector('#growr'), L1=[...root.querySelectorAll('.l1')];
  const cl=(x,a,b)=>Math.min(b,Math.max(a,x)), sm=t=>t*t*(3-2*t), eo=t=>1-Math.pow(1-t,3);
@@ -168,7 +167,6 @@ export function mountStreams(root, opts = {}) {
    const F=eo(cl((u-0.83)/0.05,0,1)); FUT.style.opacity=F; NOW.style.opacity=F; NOWL.style.opacity=F;   // TODAY arrives only for the fork, as in the film
    LAB.style.opacity=u<0.08?eo(cl(u/0.05,0,1)):1;
    LAB.textContent = m<0.5 ? (z<0.5?'ONE CUSTOMER · REVENUE OVER TIME':(u<0.32?'EVERY CUSTOMER · A STREAM EACH':(u<0.62?'THREE OF THE STREAMS · WHERE IT LEAKS':'EVERY CUSTOMER · A STREAM EACH'))) : 'THE WHOLE BASE · SUMMED';
-   YT.style.opacity=z; YT.textContent = m<0.55 ? '$16K' : '$3.1M';
    WK.style.opacity=z;
  };
  renderD(0);
