@@ -30,15 +30,15 @@ Three text changes, nothing else in the policy moves:
 
 | Now | Becomes |
 |---|---|
-| *This website is operated by **NOVA CVM Solutions SL**, a company registered in Spain ("we", "us").* | *This website is operated by **Sensai Technologies, Inc.**, a Delaware corporation, United States ("we", "us").* |
+| *This website is operated by **NOVA CVM Solutions SL**, a company registered in Spain ("we", "us").* | *This website is operated by **Sensai Technologies, Inc.**, a Delaware corporation ("we", "us").* |
 | *…contact us at **privacy@novacvm.com**.* | *…contact us at **privacy@getsensai.co**.* |
 | *…by emailing **privacy@novacvm.com**; we will respond…* | *…by emailing **privacy@getsensai.co**; we will respond…* |
 | **Last updated:** 14 August 2026 | **Last updated:** the deploy date |
 
-Also add one sentence at the end of the "who we share it with" paragraph, before the EEA
-sentence: *We are based in the United States.* Leave the standard-contractual-clauses sentence as
-it is; the page stays noindexed and pending legal review, and that review is where the US-transfer
-wording gets settled.
+Do not add any sentence about where the company is based or operates; the entity and its state of
+incorporation are the identity, and that is all the page states. Leave the standard-contractual-
+clauses sentence as it is; the page stays noindexed and pending legal review, and that review is
+where the transfer wording and any EU-representative requirement get settled.
 
 ## 3. Everywhere else
 
