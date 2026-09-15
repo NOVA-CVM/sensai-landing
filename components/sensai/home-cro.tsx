@@ -1202,11 +1202,16 @@ function RawScreen({ src, alt, caption }: { src: string; alt: string; caption: s
       {/* A screen on white reads as pasted; on the brand ground it reads as designed. */}
       <div className="sh-ink-card">
         <div aria-hidden className="sh-ink-dots"><HeroResolutionField /></div>
+        {/* The screens are never cropped: the card letterboxes on ink instead. */}
         <img
           src={src}
           alt={alt}
           loading="lazy"
-          style={{ width: '100%', display: 'block', borderRadius: 12 }}
+          style={{
+            display: 'block', width: '100%', height: 'auto', maxWidth: '100%',
+            objectFit: 'contain', objectPosition: 'center', margin: '0 auto',
+            borderRadius: 12,
+          }}
         />
       </div>
       <figcaption style={{
@@ -2499,7 +2504,7 @@ function OutcomesStrip() {
   const items = [
     { mark: <MarkOffer />, t: 'Bonus budget spent on real players.' },
     { mark: <MarkChurn />, t: 'VIPs kept before they\u2019re gone.' },
-    { mark: <MarkFailure />, t: 'Customers recovered after a product failure.' },
+    { mark: <MarkFailure />, t: 'Customers hit by a product failure, in your CRM before they leave.' },
   ]
   return (
     <section style={{ padding: '72px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
