@@ -3069,14 +3069,14 @@ function CTA() {
 function Footer() {
   return (
     <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '14px 80px', background: '#ffffff' }}>
-      <div className="max-w-[1280px] mx-auto flex justify-between items-center" style={{ minHeight: 34 }}>
+      <div className="sh-footer max-w-[1280px] mx-auto flex justify-between items-center" style={{ minHeight: 34 }}>
         <Logo className="text-base font-semibold" />
-        {/* B10. Two of the four items AA listed are not here yet and should not be invented:
-            getsensai.co has no MX records, so a contact@getsensai.co address would bounce, and
-            there is no LinkedIn company page on record. Both are one line to add. */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12.5, color: SENS.inkSoft }}>Stops the revenue leaks in your customer base.</span>
-          <a href="/privacy" style={{ fontSize: 12.5, color: SENS.inkSoft, textDecoration: 'none' }}>Privacy</a>
+        {/* No LinkedIn link: there is no company page URL on record. No Terms link: no source
+            text yet. Neither gets invented here. */}
+        <div className="sh-footer-links" style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
+          <a className="sh-footer-link" href="mailto:contact@getsensai.co" style={{ fontSize: 14, color: SENS.inkSoft, textDecoration: 'none' }}>contact@getsensai.co</a>
+          <a className="sh-footer-link" href="/privacy" style={{ fontSize: 14, color: SENS.inkSoft, textDecoration: 'none' }}>Privacy</a>
+          <span style={{ fontSize: 14, color: SENS.inkSoft }}>© 2026 Sensai Technologies, Inc.</span>
         </div>
       </div>
     </footer>

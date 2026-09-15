@@ -142,3 +142,19 @@
   /* The nav anchors collide with the wordmark at 390. The CTA is the one thing that must stay. */
   .sensai-cro .sh-nav-link { display: none; }
 }
+
+/* Footer: the address, Privacy and the entity line. Underlined on hover only, and on a phone the
+   group drops to its own line under the wordmark, left-aligned. */
+.sensai-home .sh-footer-link:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  .sensai-home .sh-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  /* !important: the desktop gap is an inline style on the group. */
+  .sensai-home .sh-footer-links { gap: 12px !important; justify-content: flex-start; }
+}
