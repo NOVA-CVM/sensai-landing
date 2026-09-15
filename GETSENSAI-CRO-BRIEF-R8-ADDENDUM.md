@@ -1,7 +1,7 @@
-# getsensai.co — Round 8 addendum: three small things on `/cro`
+# getsensai.co — Round 8 addendum: three small things on `/cro`, then `/cro` becomes `/`
 
-AA walked the R8 preview on his phone. Three corrections, no new structure. `home-cro.tsx` /
-`home-cro.css` only; `/` stays untouched.
+AA walked the R8 preview on his phone. Three corrections, no new structure, then the promotion:
+AA has picked `/cro`. It becomes the home page in this same round (§4).
 
 ## 1. The product screens are cropped in the ink cards on phones
 
@@ -34,10 +34,37 @@ the `$16K` figure on the single customer is gone, the `$3.1M` now appears only w
 summed, and the phone variant's fork caption is shorter so it clears the SENSAI marker. If you
 have a local copy of the file, take the committed one.
 
+## 4. Promote: `/cro` is the home page
+
+AA compared the two on the live site and picked `/cro`. Do the three fixes above first, then:
+
+- `app/page.tsx` renders `SensaiHomeCro`. The old `SensaiHome` (`home.tsx`, `home.css`) is deleted;
+  git has it at `56a766d` if anyone ever wants it. Leave `/legacy`, `/sense`, `/v2` as they are.
+- Rename `home-cro.tsx` → `home.tsx` and `home-cro.css` → `home.css` once the old ones are gone,
+  so the tree has one home page. Keep the `.sensai-cro` class names; they are scoped rules, not a
+  route. Export name `SensaiHome`.
+- `app/cro/page.tsx` is deleted and `/cro` becomes a permanent redirect to `/` (`redirects()` in
+  `next.config`, `permanent: true`). The preview links that were shared keep working.
+- The `noindex` goes with the `/cro` route; the root has no robots override and inherits the
+  layout metadata. `robots.txt` needs nothing.
+- `<VisitTracking page="cro" />` → `page="home"`, so the analytics series continues under one name.
+- `og-home.png` (1200×630) must show the current hero. If it was exported from the round-6 hero it
+  still matches (the hero did not change in R7/R8); if it doesn't, re-export it from the promoted
+  page at 1200×630 and say so in the report.
+- Lighthouse on `/` once deployed (mobile), numbers in the report.
+
+Copy audit on the promoted page, in the served HTML: "every day", "daily", "every morning",
+"yesterday", "continuously", "real time", "recovered", "onboarding", "tier-1", "in production":
+all absent. Screen filenames and the product screens' own chrome don't count. Anything you find,
+list in the report with where it sits; don't reword it yourself.
+
 ## Done means
 
-- Preview URL at the top of your report; AA opens `/cro` on his phone.
+- Preview URL at the top of your report; AA opens `/` on the preview on his phone, then says merge.
+- On the preview: `/` is the new page, `/cro` redirects to `/`, `/sense` unchanged.
 - All five product screens centred and uncropped in their ink cards at 390 and 1440.
 - Outcome line 3 exactly as above; grep the served HTML for "recovered": absent.
 - The animation on the preview shows no `$16K` at any point and `$3.1M` only after the sum.
-- `tsc --noEmit` and `next build` clean. Commit on `main` as `Round 8 addendum: /cro`.
+- The copy audit above: clean, or listed.
+- `tsc --noEmit` and `next build` clean. Two commits on `main`: `Round 8 addendum: /cro`, then
+  `Round 8: /cro is the home page`. Production deploy only after AA says merge.
