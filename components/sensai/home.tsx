@@ -1140,6 +1140,14 @@ const MarkOffer = () => (
     <path d="M15.5 15.5 21.5 21.5M21.5 15.5l-6 6" />
   </svg>
 )
+// a stack of cards: the patterns that are already there on day one
+const MarkLibrary = () => (
+  <svg {...markProps}>
+    <rect x="2.5" y="15" width="19" height="5" rx="1.5" />
+    <path d="M4.5 12h15" />
+    <path d="M6.5 9h11" />
+  </svg>
+)
 // a padlock, and nobody told you
 const MarkClosed = () => (
   <svg {...markProps}>
@@ -2519,6 +2527,7 @@ function OutcomesStrip() {
     { mark: <MarkOffer />, t: 'Bonus budget spent on real players.' },
     { mark: <MarkChurn />, t: 'VIPs kept before they\u2019re gone.' },
     { mark: <MarkFailure />, t: 'Customers hit by a product failure, in your CRM before they leave.' },
+    { mark: <MarkLibrary />, t: 'Dozens of known gaming patterns watching your base from day one.' },
   ]
   return (
     <section style={{ padding: '72px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
@@ -2527,7 +2536,9 @@ function OutcomesStrip() {
           fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12,
           letterSpacing: '0.12em', textTransform: 'uppercase', color: SENS.muted, marginBottom: 26,
         }}>What changes for you</div>
-        <div className="sh-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 40 }}>
+        {/* Four across would put two of these lines on four ragged lines each at 1280, so the
+            four sit two by two on a desktop and stack on a phone (sh-grid-3 does the rest). */}
+        <div className="sh-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '28px 40px' }}>
           {items.map(it => (
             <div key={it.t} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
               <span style={{ flexShrink: 0, marginTop: 2 }}>{it.mark}</span>
@@ -2579,7 +2590,7 @@ function HowItWorksBand() {
     { w: 'Connect', s: 'Read-only access to your source tables. Nothing moves, nothing changes.', m: <StepConnect /> },
     { w: 'Watch', s: 'Every customer, against what it should look like.', m: <StepWatch /> },
     { w: 'Act', s: 'Cases, lists, triggers and rules, into your CRM, case manager and risk tools. Your team approves.', m: <StepAct /> },
-    { w: 'Learn', s: 'sensAi finds new behavioural patterns and proposes them. Once your team approves, they’re added.', m: <StepLearn /> },
+    { w: 'Learn', s: 'Starts with dozens of known gaming patterns, built over years of operator work. sensAi finds new ones and proposes them; once your team approves, they’re added.', m: <StepLearn /> },
   ]
   return (
     <section id="how-it-works" style={{ padding: '104px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
