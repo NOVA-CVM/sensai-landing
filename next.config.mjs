@@ -15,6 +15,11 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // `/cro` was the comparison version until it became the home page. The links that were shared
+  // while it lived there keep working.
+  async redirects() {
+    return [{ source: '/cro', destination: '/', permanent: true }]
+  },
 }
 
 export default nextConfig

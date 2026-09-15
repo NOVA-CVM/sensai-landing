@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 import { trackEvent } from "@/lib/analytics"
 import { VisitTracking } from "@/components/sensai/visit-tracking"
+import { Streams } from "@/components/sensai/streams"
 // The page IS /sense, so it needs /sense's stylesheet; home.css carries the film rules
 // and the home-only overrides on top of it.
 import "@/app/sense/sense.css"
@@ -343,6 +344,10 @@ function Nav() {
     }}>
       <div className="max-w-[1280px] mx-auto flex items-center justify-between" style={{ padding: '18px 80px' }}>
         <Logo className="text-xl sm:text-2xl md:text-3xl font-semibold text-white" showMascot />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+          {/* A CRO who is not ready to talk needs somewhere to go. */}
+          <a className="sh-nav-link" href="#how-it-works" style={{ fontSize: 14, color: '#c3cde6', textDecoration: 'none' }}>How it works</a>
+          <a className="sh-nav-link" href="#partnership" style={{ fontSize: 14, color: '#c3cde6', textDecoration: 'none' }}>Partnership</a>
         <button
           onClick={() => goBook('nav')}
           style={{
@@ -353,6 +358,7 @@ function Nav() {
         >
           Talk to us <ArrowRight className="w-4 h-4" />
         </button>
+        </div>
       </div>
     </nav>
   )
@@ -577,6 +583,19 @@ function Hero() {
                 }}
               >
                 Talk to us <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => {
+                  trackEvent('cta_click', { cta: 'how_it_works', where: 'hero' })
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })
+                }}
+                style={{
+                  background: 'transparent', color: '#dfe7f8', border: '1.5px solid rgba(255,255,255,0.35)',
+                  padding: '13px 24px', borderRadius: 999, fontSize: 15, fontWeight: 500,
+                  cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}
+              >
+                How it works
               </button>
             </div>
           </div>
@@ -1072,6 +1091,10 @@ function RafBurst() {
 
 // B6: one line mark per leak, in the /sense drawing language: 24px, 1.5px stroke, accent blue,
 // monochrome, no fill. Each says what the leak is before the title does.
+const bandMark = {
+  width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none',
+  stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const,
+}
 const markProps = {
   width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none',
   stroke: SENS.blueBright, strokeWidth: 1.5, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const,
@@ -1140,7 +1163,7 @@ const LEAKS: Array<{ t: string; s: string; mark: React.ReactNode }> = [
 
 function LeaksSection() {
   return (
-    <section style={{ padding: '104px 80px', background: '#ffffff' }}>
+    <section id="leaks" style={{ padding: '104px 80px', background: '#ffffff' }}>
       <div className="max-w-[1280px] mx-auto">
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
           The leaks we stop
@@ -1175,15 +1198,21 @@ function LeaksSection() {
 function RawScreen({ src, alt, caption }: { src: string; alt: string; caption: string }) {
   return (
     <figure style={{ margin: '14px 0 0', width: '100%' }}>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        style={{
-          width: '100%', display: 'block', borderRadius: 12,
-          border: `1px solid ${SENS.rule}`, boxShadow: '0 24px 60px -30px rgba(11,21,48,0.45)',
-        }}
-      />
+      {/* A screen on white reads as pasted; on the brand ground it reads as designed. */}
+      <div className="sh-ink-card">
+        <div aria-hidden className="sh-ink-dots"><HeroResolutionField /></div>
+        {/* The screens are never cropped: the card letterboxes on ink instead. */}
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          style={{
+            display: 'block', width: '100%', height: 'auto', maxWidth: '100%',
+            objectFit: 'contain', objectPosition: 'center', margin: '0 auto',
+            borderRadius: 12,
+          }}
+        />
+      </div>
       <figcaption style={{
         marginTop: 10, fontFamily: "'JetBrains Mono', ui-monospace, monospace",
         fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
@@ -1202,11 +1231,11 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
       caption="Referral network &middot; ranked by net loss" />,
   },
   {
-    n: '02', t: 'Daily KPI monitoring, with the root cause',
-    s: 'Every morning against expected. When a number moves, the reason, the accounts behind it, and where each one went.',
+    n: '02', t: 'KPI monitoring, with the root cause',
+    s: 'Against expected. When a number moves, the reason, the accounts behind it, and where each one went.',
     art: <RawScreen src="/screenshots/film/kpi-root-cause.webp"
       alt="Deposits by hour against the expected line, with the cause and the accounts behind it"
-      caption="Deposits &middot; yesterday vs expected &middot; the cause, the customers, the actions" />,
+      caption="Deposits &middot; vs expected &middot; the cause, the customers, the actions" />,
   },
   {
     n: '03', t: 'In the chat your team already uses',
@@ -1242,7 +1271,7 @@ const CAPABILITIES = [
 function WhatItDoesSection() {
   const [active, setActive] = useState(0)
   return (
-    <section id="how-it-works" style={{ padding: '110px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
+    <section style={{ padding: '110px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
       <div className="max-w-[1280px] mx-auto">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 12 }}>
           <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
@@ -1334,29 +1363,6 @@ const MarkUntrusted = () => (
   </svg>
 )
 
-// The page's missing explanation, straight from the film's aggregation card.
-// No paragraph, no button: one sentence and the picture of it.
-function WhatLeaksSection() {
-  return (
-    <section style={{ padding: '84px 80px', background: SENS.bg }}>
-      <div className="max-w-[1280px] mx-auto">
-        <div className="sh-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
-          <h2 style={{ margin: 0, fontSize: 34, fontWeight: 600, letterSpacing: -0.8, lineHeight: 1.28, color: SENS.ink, maxWidth: 470 }}>
-            Every customer generates a revenue stream. Together, the streams are your revenue.
-            Unwatched, it leaks.
-          </h2>
-          <ProductShot
-            style={{ maxWidth: 520, justifySelf: 'end' }}
-            src="/screenshots/film/revenue-two-futures.png"
-            alt="The whole base plotted over twelve weeks, with and without Sensai"
-            caption="The whole base &middot; two futures &middot; illustrative"
-          />
-        </div>
-      </div>
-    </section>
-  )
-}
-
 // Four quotes in the voice of what we hear. Role and operator type only, never a name and never
 // a company. The list is one array of {text, role} so AA can edit or extend it in place.
 const OPERATOR_QUOTES: Array<{ text: string; role: string }> = [
@@ -1373,8 +1379,8 @@ const OPERATOR_QUOTES: Array<{ text: string; role: string }> = [
     role: 'VIP Director, casino operator',
   },
   {
-    text: 'Thirty dashboards and one question: why did deposits drop yesterday? Nobody answers it before the next day drops too.',
-    role: 'CRM Director, sportsbook and casino',
+    text: 'Every KPI has an alert on it, so I get two hundred a day and read none of them. When deposits really drop, I hear it from finance.',
+    role: 'Chief Revenue Officer, sportsbook and casino',
   },
 ]
 
@@ -1408,12 +1414,34 @@ function ProblemSection() {
           <h2 style={{ margin: '0 auto', fontSize: 46, fontWeight: 600, letterSpacing: -1.1, lineHeight: 1.12, color: SENS.ink, maxWidth: 840 }}>
             Even the best operators leak revenue they&rsquo;ve already paid for.
           </h2>
+        </div>
+
+        {/* The stream idea, then the picture of it. Two sentences and nothing else. */}
+        <div className="sh-2col" style={{ marginTop: 52, display: 'grid', gridTemplateColumns: '0.85fr 1.15fr', gap: 48, alignItems: 'center' }}>
+          <p style={{ margin: 0, fontSize: 17, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 430 }}>
+            Every customer is a stream of future revenue, and your revenue is the sum of the streams.
+            A stream that stops early is revenue you&rsquo;ve already paid to acquire.
+          </p>
+          <Streams />
+        </div>
+
+        {/* AA's own benchmarks, verbatim. The only numbers on the page besides "4 weeks". */}
+        <div style={{ marginTop: 22, maxWidth: 760 }}>
           <div style={{
-            marginTop: 26, fontSize: 12.5, color: SENS.muted,
-            letterSpacing: '0.1em', textTransform: 'uppercase',
-          }}>
-            What we hear from the people who own the revenue line
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12,
+            letterSpacing: '0.12em', textTransform: 'uppercase', color: SENS.muted, marginBottom: 10,
+          }}>What we see across operators</div>
+          <div style={{ fontSize: 14, lineHeight: 1.7, color: SENS.inkSoft }}>
+            In gaming it is common for the top 10% of customers to generate 90% of lifetime revenue.
+            <br />Operators who don&rsquo;t watch for abuse give 2&ndash;4% of NGR to abusers.
           </div>
+        </div>
+
+        <div style={{
+          marginTop: 44, fontSize: 12.5, color: SENS.muted,
+          letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'center',
+        }}>
+          What we hear from the people who own the revenue line
         </div>
 
         <div
@@ -1421,7 +1449,7 @@ function ProblemSection() {
           onMouseLeave={() => setPaused(false)}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          style={{ margin: '22px auto 0', maxWidth: 780 }}
+          style={{ margin: '18px auto 0', maxWidth: 780 }}
         >
           <blockquote
             aria-live="polite"
@@ -2212,18 +2240,41 @@ function HowItWorks() {
   )
 }
 
-export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Compliance', 'Other'], nodeCaption = 'WATCHING EVERY PLAYER' }: { animate?: boolean; outputs?: string[]; nodeCaption?: string }) {
+export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case manager', 'Risk tools', 'BI', 'Compliance', 'Other'], nodeCaption = 'WATCHING EVERY PLAYER', onInk = false }: { animate?: boolean; outputs?: string[]; nodeCaption?: string; onInk?: boolean }) {
+  // On the ink band the whole diagram inverts: chips are outlines rather than cards, the lines
+  // run white, and the source side names the warehouses we can actually prove. The logos in
+  // public/logos are white monochrome, so they only work on ink.
+  const ink = {
+    chipFill: onInk ? 'rgba(255,255,255,0.04)' : '#ffffff',
+    chipStroke: onInk ? 'rgba(255,255,255,0.20)' : SENS.rule,
+    text: onInk ? '#dfe7f8' : SENS.ink,
+    head: onInk ? '#8fa8e0' : SENS.blueBright,
+    caption: onInk ? 'rgba(223,231,248,0.55)' : SENS.muted,
+    conn: onInk ? 'url(#conn-ink)' : 'url(#conn)',
+    connOut: onInk ? 'url(#conn-ink)' : 'url(#conn-out)',
+    pip: onInk ? '#dfe7f8' : SENS.blueBright,
+  }
   // Source tables → (read access) → sensAi inside the player base → (actions out) → the teams' systems.
-  const sources = [
-    { name: 'Players', glyph: 'person' },
-    { name: 'Deposits & payments', glyph: 'card' },
-    { name: 'Gaming activity', glyph: 'dice' },
-    { name: 'Sports data', glyph: 'ball' },
-    { name: 'Bonuses & promos', glyph: 'gift' },
-    { name: 'Sessions', glyph: 'clock' },
-    { name: 'Other', glyph: 'dots' },
-  ]
-  const srcYs = [84, 158, 232, 306, 380, 454, 528]
+  const sources = onInk
+    ? [
+        { name: 'Snowflake', glyph: 'logo', logo: '/logos/snowflake.svg' },
+        { name: 'BigQuery', glyph: 'logo', logo: '/logos/googlebigquery.svg' },
+        { name: 'PostgreSQL', glyph: 'logo', logo: '/logos/postgresql.svg' },
+        { name: 'MySQL', glyph: 'logo', logo: '/logos/mysql.svg' },
+        { name: 'Other', glyph: 'dots' },
+      ]
+    : [
+        { name: 'Players', glyph: 'person' },
+        { name: 'Deposits & payments', glyph: 'card' },
+        { name: 'Gaming activity', glyph: 'dice' },
+        { name: 'Sports data', glyph: 'ball' },
+        { name: 'Bonuses & promos', glyph: 'gift' },
+        { name: 'Sessions', glyph: 'clock' },
+        { name: 'Other', glyph: 'dots' },
+      ]
+  const srcYs = onInk
+    ? sources.map((_, i) => 320 - ((sources.length - 1) * 74) / 2 + i * 74)
+    : [84, 158, 232, 306, 380, 454, 528]
   const outYs = outputs.length === 6 ? [120, 194, 268, 342, 416, 490] : outputs.map((_, i) => 320 - ((outputs.length - 1) * 74) / 2 + i * 74)
   // Ball + node centered between the chip columns (left edge 252, right edge 872)
   const cx = 562, gy = 320, R = 148
@@ -2251,15 +2302,16 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
       }
     }
   }
-  const glyph = (kind: string, x: number, y: number) => {
-    const stroke = { stroke: SENS.inkSoft, strokeWidth: 1.5, fill: 'none', opacity: 0.9 } as const
+  const glyph = (kind: string, x: number, y: number, light = false) => {
+    const gc = light ? '#dfe7f8' : SENS.inkSoft
+    const stroke = { stroke: gc, strokeWidth: 1.5, fill: 'none', opacity: 0.9 } as const
     switch (kind) {
       case 'person': return <g {...stroke}><circle cx={x + 10} cy={y - 4} r="4" /><path d={`M ${x + 2} ${y + 9} c 0 -5 4 -7 8 -7 s 8 2 8 7`} /></g>
       case 'card': return <g {...stroke}><rect x={x} y={y - 7} width="20" height="14" rx="2.5" /><path d={`M ${x} ${y - 2} h 20`} /></g>
       case 'dice': return <g {...stroke}><rect x={x + 1} y={y - 8} width="17" height="17" rx="3.5" /><circle cx={x + 6} cy={y - 3} r="1" fill={SENS.inkSoft} /><circle cx={x + 13} cy={y + 4} r="1" fill={SENS.inkSoft} /></g>
       case 'ball': return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 1} ${y} h 16 M ${x + 9} ${y - 8} c 4 5 4 11 0 16 M ${x + 9} ${y - 8} c -4 5 -4 11 0 16`} /></g>
       case 'gift': return <g {...stroke}><rect x={x} y={y - 3} width="20" height="11" rx="2" /><path d={`M ${x} ${y - 3} h 20 M ${x + 10} ${y - 3} v 11 M ${x + 5} ${y - 3} c -1 -6 5 -7 5 -1 M ${x + 15} ${y - 3} c 1 -6 -5 -7 -5 -1`} /></g>
-      case 'dots': return <g fill={SENS.inkSoft} opacity="0.9"><circle cx={x + 3} cy={y} r="1.6" /><circle cx={x + 10} cy={y} r="1.6" /><circle cx={x + 17} cy={y} r="1.6" /></g>
+      case 'dots': return <g fill={gc} opacity="0.9"><circle cx={x + 3} cy={y} r="1.6" /><circle cx={x + 10} cy={y} r="1.6" /><circle cx={x + 17} cy={y} r="1.6" /></g>
       default: return <g {...stroke}><circle cx={x + 9} cy={y} r="8" /><path d={`M ${x + 9} ${y - 4} v 4 l 3 2`} /></g>
     }
   }
@@ -2271,6 +2323,10 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
           <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.22" />
           <stop offset="100%" stopColor="#1a44a8" stopOpacity="0" />
         </radialGradient>
+        <linearGradient id="conn-ink" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0.40" />
+        </linearGradient>
         <linearGradient id="conn" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.12" />
           <stop offset="100%" stopColor="#1a44a8" stopOpacity="0.55" />
@@ -2282,33 +2338,33 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
       </defs>
 
       {/* zone labels */}
-      <text x={(252 + nodeL) / 2} y="30" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
+      <text x={(252 + nodeL) / 2} y="30" textAnchor="middle" fill={ink.head} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">READ ACCESS IN</text>
-      <text x={(nodeR + 872) / 2} y="30" textAnchor="middle" fill={SENS.blueBright} fontSize="12" fontWeight="600"
+      <text x={(nodeR + 872) / 2} y="30" textAnchor="middle" fill={ink.head} fontSize="12" fontWeight="600"
         letterSpacing="0.16em">ACTIONS OUT</text>
 
       {/* connectors: source tables → node edge */}
       {srcYs.map((sy, i) => {
         const ty = nodeY - 27 + i * 9
         return <path key={`in${i}`} d={`M 252 ${sy} C 360 ${sy}, 370 ${ty}, ${nodeL} ${ty}`}
-          stroke="url(#conn)" strokeWidth="1.4" fill="none" />
+          stroke={ink.conn} strokeWidth="1.4" fill="none" />
       })}
       {/* connectors: node edge → systems */}
       {outYs.map((oy, i) => {
         const sy2 = nodeY - 22 + i * 9
         return <path key={`out${i}`} d={`M ${nodeR} ${sy2} C 760 ${sy2}, 770 ${oy}, 872 ${oy}`}
-          stroke="url(#conn-out)" strokeWidth="1.4" fill="none" />
+          stroke={ink.connOut} strokeWidth="1.4" fill="none" />
       })}
       {/* flow pulses: every pipe, brisk pace */}
       {animate && srcYs.map((sy, i) => (
-        <circle key={`pin${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
+        <circle key={`pin${i}`} r="2.2" fill={ink.pip} opacity="0">
           <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.32) % 2.1}s`}
             path={`M 252 ${sy} C 360 ${sy}, 370 ${nodeY - 27 + i * 9}, ${nodeL} ${nodeY - 27 + i * 9}`} />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(i * 0.32) % 2.1}s`} />
         </circle>
       ))}
       {animate && outYs.map((oy, i) => (
-        <circle key={`pout${i}`} r="2.2" fill={SENS.blueBright} opacity="0">
+        <circle key={`pout${i}`} r="2.2" fill={ink.pip} opacity="0">
           <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${(0.55 + i * 0.37) % 2.1}s`}
             path={`M ${nodeR} ${nodeY - 22 + i * 9} C 760 ${nodeY - 22 + i * 9}, 770 ${oy}, 872 ${oy}`} />
           <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.1s" repeatCount="indefinite" begin={`${(0.55 + i * 0.37) % 2.1}s`} />
@@ -2325,7 +2381,7 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
       </circle>
       <circle cx={cx - 84} cy={gy + 30} r="3" fill={SENS.blue} />
       <circle cx={cx + 8} cy={gy + 88} r="2.8" fill={SENS.blue} />
-      <text x={cx} y={gy + R + 40} textAnchor="middle" fill={SENS.muted} fontSize="11.5"
+      <text x={cx} y={gy + R + 40} textAnchor="middle" fill={ink.caption} fontSize="11.5"
         letterSpacing="0.14em" style={{ textTransform: 'uppercase' }}>THE CUSTOMER BASE · EVERY DOT A CUSTOMER</text>
 
       {/* source-table chips */}
@@ -2333,9 +2389,11 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
       {sources.map((s, i) => (
         <g key={s.name}>
           <rect x="30" y={srcYs[i] - 26} width="222" height="52" rx="12"
-            fill="#ffffff" stroke={SENS.rule} />
-          {glyph(s.glyph, 48, srcYs[i])}
-          <text x="84" y={srcYs[i] + 5} fill={SENS.ink} fontSize="14" fontWeight="500">{s.name}</text>
+            fill={ink.chipFill} stroke={ink.chipStroke} />
+          {'logo' in s && s.logo
+            ? <image href={s.logo} x="46" y={srcYs[i] - 11} width="22" height="22" preserveAspectRatio="xMidYMid meet" />
+            : glyph(s.glyph, 48, srcYs[i], onInk)}
+          <text x="84" y={srcYs[i] + 5} fill={ink.text} fontSize="14" fontWeight="500">{s.name}</text>
         </g>
       ))}
 
@@ -2355,14 +2413,14 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
       {outputs.map((o, i) => (
         <g key={o}>
           <rect x="872" y={outYs[i] - 26} width="198" height="52" rx="12"
-            fill="#ffffff" stroke={SENS.rule} />
+            fill={ink.chipFill} stroke={ink.chipStroke} />
           {o === 'Other' ? (
             <>
-              {glyph('dots', 916, outYs[i])}
-              <text x="950" y={outYs[i] + 5} fill={SENS.ink} fontSize="14" fontWeight="500">Other</text>
+              {glyph('dots', 916, outYs[i], onInk)}
+              <text x="950" y={outYs[i] + 5} fill={ink.text} fontSize="14" fontWeight="500">Other</text>
             </>
           ) : (
-            <text x="971" y={outYs[i] + 5} textAnchor="middle" fill={SENS.ink} fontSize="14" fontWeight="500">{o}</text>
+            <text x="971" y={outYs[i] + 5} textAnchor="middle" fill={ink.text} fontSize="14" fontWeight="500">{o}</text>
           )}
         </g>
       ))}
@@ -2370,9 +2428,49 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
   )
 }
 
+// B7 — what a regulated operator's security reviewer asks, answered plainly. No certifications:
+// SOC 2 is budgeted, not held, and the page does not get ahead of that.
+function TrustSection() {
+  const lines = [
+    'Read-only access to your data.',
+    'Pseudonymised. No PII.',
+    'Encrypted in transit and at rest.',
+    'Nothing is armed without your confirmation.',
+    'It never contacts a player.',
+    'Runs through your systems. Nothing new to adopt.',
+  ]
+  const tick = (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={SENS.blueBright}
+      strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 12.5 9.5 18 20 6.5" />
+    </svg>
+  )
+  return (
+    <section style={{ padding: '92px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12,
+          letterSpacing: '0.12em', textTransform: 'uppercase', color: SENS.muted, marginBottom: 16,
+        }}>Built for regulated operators</div>
+        <h2 style={{ margin: 0, fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
+          Nothing leaves your control.
+        </h2>
+        <div className="sh-grid-2" style={{ marginTop: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 56, rowGap: 18 }}>
+          {lines.map(l => (
+            <div key={l} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <span style={{ flexShrink: 0, marginTop: 1 }}>{tick}</span>
+              <span style={{ fontSize: 15, lineHeight: 1.5, color: SENS.inkSoft }}>{l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function PartnershipSection() {
   return (
-    <section style={{ padding: '100px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
+    <section id="partnership" style={{ padding: '100px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
       <div className="max-w-[1280px] mx-auto" style={{ textAlign: 'center', maxWidth: 760 }}>
         <div style={{
           color: SENS.blueBright, fontSize: 13, fontWeight: 500,
@@ -2400,6 +2498,135 @@ function PartnershipSection() {
 }
 
 // Integration band, modus's "enterprise-grade by default" slot.
+// B3 — the page saying "this is your P&L" out loud. Three lines, no sub-copy.
+function OutcomesStrip() {
+  const items = [
+    { mark: <MarkOffer />, t: 'Bonus budget spent on real players.' },
+    { mark: <MarkChurn />, t: 'VIPs kept before they\u2019re gone.' },
+    { mark: <MarkFailure />, t: 'Customers hit by a product failure, in your CRM before they leave.' },
+  ]
+  return (
+    <section style={{ padding: '72px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
+      <div className="max-w-[1280px] mx-auto">
+        <div style={{
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12,
+          letterSpacing: '0.12em', textTransform: 'uppercase', color: SENS.muted, marginBottom: 26,
+        }}>What changes for you</div>
+        <div className="sh-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 40 }}>
+          {items.map(it => (
+            <div key={it.t} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+              <span style={{ flexShrink: 0, marginTop: 2 }}>{it.mark}</span>
+              <span style={{ fontSize: 17, fontWeight: 600, color: SENS.ink, letterSpacing: -0.2, lineHeight: 1.35 }}>{it.t}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// B5 — the ink band. The dots field returns mid-page, which is where the white run used to be.
+const StepConnect = () => (
+  <svg {...bandMark}>
+    <ellipse cx="9" cy="6.5" rx="6.5" ry="2.6" />
+    <path d="M2.5 6.5v8c0 1.4 2.9 2.6 6.5 2.6s6.5-1.2 6.5-2.6v-8" />
+    <path d="M22 11h-5.5M19.4 8.4 22 11l-2.6 2.6" />
+  </svg>
+)
+const StepWatch = () => (
+  <svg {...bandMark}>
+    {[4, 9, 14, 19].map(x => [5, 10, 15, 20].map(y => (
+      <circle key={`${x}-${y}`} cx={x} cy={y} r="1" opacity={x === 14 && y === 10 ? 1 : 0.32} />
+    )))}
+    <circle cx="14" cy="10" r="3.4" />
+  </svg>
+)
+const StepAct = () => (
+  <svg {...bandMark}>
+    <path d="M2 12h6M5.4 9 8 12l-2.6 3" />
+    <rect x="13" y="3" width="8" height="5" rx="1.4" />
+    <rect x="13" y="9.5" width="8" height="5" rx="1.4" />
+    <rect x="13" y="16" width="8" height="5" rx="1.4" />
+  </svg>
+)
+
+const StepLearn = () => (
+  <svg {...bandMark}>
+    <path d="M20 12a8 8 0 1 1-2.4-5.7" />
+    <path d="M21 3v4.2h-4.2" />
+  </svg>
+)
+
+function HowItWorksBand() {
+  const { ref, inView } = useInView()
+  const reduced = useReducedMotion()
+  const steps = [
+    { w: 'Connect', s: 'Read-only access to your source tables. Nothing moves, nothing changes.', m: <StepConnect /> },
+    { w: 'Watch', s: 'Every customer, against what it should look like.', m: <StepWatch /> },
+    { w: 'Act', s: 'Cases, lists, triggers and rules, into your CRM, case manager and risk tools. Your team approves.', m: <StepAct /> },
+    { w: 'Learn', s: 'sensAi finds new behavioural patterns and proposes them. Once your team approves, they’re added.', m: <StepLearn /> },
+  ]
+  return (
+    <section id="how-it-works" style={{ padding: '104px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>
+      <div aria-hidden className="sh-band-dots" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <HeroResolutionField />
+      </div>
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse 70% 76% at 50% 42%, rgba(11,21,48,0.92) 0%, rgba(11,21,48,0.66) 55%, rgba(11,21,48,0) 100%)',
+      }} />
+      <div className="max-w-[1280px] mx-auto" style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', maxWidth: 780, marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12,
+            letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8fa8e0', marginBottom: 18,
+          }}>How it works</div>
+          <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.12, color: '#fff' }}>
+            Connect. Watch. Act. Learn.
+          </h2>
+          <p style={{ margin: '18px auto 0', fontSize: 17, lineHeight: 1.6, color: '#b6c1dd', maxWidth: 660 }}>
+            Read access in, every customer watched, actions out through the systems you already run.
+          </p>
+        </div>
+
+        <div className="sh-band-tiles" style={{ marginTop: 48, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
+          {steps.map(st => (
+            <div key={st.w} style={{
+              border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16, padding: '26px 24px 28px',
+            }}>
+              <div style={{ color: '#8fa8e0', marginBottom: 16 }}>{st.m}</div>
+              <div style={{ fontSize: 19, fontWeight: 600, color: '#fff', letterSpacing: -0.3 }}>{st.w}</div>
+              <div style={{ marginTop: 9, fontSize: 14.5, lineHeight: 1.55, color: '#b6c1dd' }}>{st.s}</div>
+            </div>
+          ))}
+        </div>
+
+        <div ref={ref} style={{ marginTop: 56, maxWidth: 1100, marginLeft: 'auto', marginRight: 'auto' }}>
+          <IntegrationDiagram
+            animate={inView && !reduced}
+            outputs={['CRM', 'Case manager', 'Risk tools', 'BI', 'Other']}
+            nodeCaption="WATCHING EVERY CUSTOMER"
+            onInk
+          />
+        </div>
+
+        <div style={{ marginTop: 26, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {['Read-only access', 'Pseudonymised, no PII', 'Encrypted in transit and at rest', 'Nothing armed without your approval'].map(chip => (
+            <span key={chip} style={{
+              border: '1px solid rgba(255,255,255,0.18)', background: 'transparent', borderRadius: 999,
+              padding: '9px 18px', fontSize: 13, fontWeight: 500, color: '#dfe7f8',
+            }}>{chip}</span>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 34, textAlign: 'center', fontSize: 22, fontWeight: 600, letterSpacing: -0.4, color: '#fff' }}>
+          Live within 4 weeks.
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function IntegrationSection() {
   const { ref, inView } = useInView()
   const reduced = useReducedMotion()
@@ -2443,71 +2670,6 @@ function IntegrationSection() {
           }}>{chip}</span>
         ))}
       </div>
-      </div>
-    </section>
-  )
-}
-
-// MCP is the most differentiated thing about the product, so it gets a block, not a caption.
-// The assistant is named here and in the screenshot: concrete beats coy (round 4, §4).
-function WhereItLivesSection() {
-  return (
-    <section style={{ padding: '96px 80px', background: SENS.bg, borderTop: `1px solid ${SENS.rule}` }}>
-      <div className="max-w-[1280px] mx-auto">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.15fr', gap: 56, alignItems: 'center' }}>
-          <div>
-            <div style={{
-              color: SENS.blueBright, fontSize: 12.5, fontWeight: 600,
-              letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16,
-              display: 'flex', alignItems: 'center', gap: 10,
-            }}>
-              <span style={{ width: 24, height: 1.5, background: SENS.blueBright }} />
-              Where it lives
-            </div>
-            <h2 style={{ margin: 0, fontSize: 36, fontWeight: 600, letterSpacing: -0.9, lineHeight: 1.2, color: SENS.ink, maxWidth: 460 }}>
-              It works in the assistant your team already uses.
-            </h2>
-            <p style={{ margin: '18px 0 0', fontSize: 16, lineHeight: 1.62, color: SENS.inkSoft, maxWidth: 470 }}>
-              Claude or ChatGPT, through a standard connector. Your team asks in plain language and gets
-              the accounts, the reason and the action.
-            </p>
-            <div style={{
-              marginTop: 18, fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-              fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: SENS.muted,
-            }}>Connected over MCP</div>
-          </div>
-          <ProductShot
-            src="/screenshots/film/chat-surface.png"
-            alt="Sensai answering inside the chat assistant, with the accounts and the reason"
-            caption="Sensai, in the chat &middot; values transformed, accounts masked"
-          />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Both facts are required on the page verbatim (source-of-truth §10), stated forward rather
-// than as a denial, with the screen that proves them instead of asserting them.
-function ControlSection() {
-  return (
-    <section style={{ padding: '96px 80px', background: '#ffffff' }}>
-      <div className="max-w-[1280px] mx-auto">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 56, alignItems: 'center' }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: 34, fontWeight: 600, letterSpacing: -0.8, lineHeight: 1.28, color: SENS.ink, maxWidth: 470 }}>
-              It works through your teams&rsquo; systems. It never contacts a player.
-            </h2>
-            <p style={{ margin: '18px 0 0', fontSize: 16.5, lineHeight: 1.62, color: SENS.inkSoft, maxWidth: 470 }}>
-              Your team stays in control: nothing is armed without your confirmation.
-            </p>
-          </div>
-          <ProductShot
-            src="/screenshots/film/proposed-rule.png"
-            alt="A proposed rule waiting for approval, with the actions already completed listed above it"
-            caption="Proposed rule &middot; awaiting CRM approval &middot; values transformed"
-          />
-        </div>
       </div>
     </section>
   )
@@ -2871,8 +3033,12 @@ function Footer() {
     <footer style={{ borderTop: `1px solid ${SENS.rule}`, padding: '14px 80px', background: '#ffffff' }}>
       <div className="max-w-[1280px] mx-auto flex justify-between items-center" style={{ minHeight: 34 }}>
         <Logo className="text-base font-semibold" />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        {/* B10. Two of the four items AA listed are not here yet and should not be invented:
+            getsensai.co has no MX records, so a contact@getsensai.co address would bounce, and
+            there is no LinkedIn company page on record. Both are one line to add. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 12.5, color: SENS.inkSoft }}>Stops the revenue leaks in your customer base.</span>
+          <a href="/privacy" style={{ fontSize: 12.5, color: SENS.inkSoft, textDecoration: 'none' }}>Privacy</a>
         </div>
       </div>
     </footer>
@@ -2937,6 +3103,9 @@ function ClosingBand() {
           >
             Talk to us <ArrowRight className="w-4 h-4" />
           </button>
+          <div style={{ marginTop: 18, fontSize: 15, lineHeight: 1.6, color: SENS.muted }}>
+            Thirty minutes. We show it on synthetic data; you tell us which leak you&rsquo;d want first.
+          </div>
         </div>
       </div>
     </section>
@@ -2946,7 +3115,7 @@ function ClosingBand() {
 export function SensaiHome() {
   return (
     /* `sensai-page` brings the /sense stylesheet, `sensai-home` the film + home-only rules. */
-    <div className="sensai-page sensai-home" style={{ background: SENS.ink, color: '#fff', width: '100%', minHeight: '100vh' }}>
+    <div className="sensai-page sensai-home sensai-cro" style={{ background: SENS.ink, color: '#fff', width: '100%', minHeight: '100vh' }}>
       {/*
         ─── DEFINED BUT NOT RENDERED (deliberate, do not re-add without AA) ───
         <TurnSection />   : "Your base, now in high resolution", a transition we no longer need.
@@ -2957,17 +3126,16 @@ export function SensaiHome() {
                             as one quiet sentence at the end of the partnership section.
         <SocialProof /> <Walkthrough /> <Why /> <ApproachSection /> <HowItWorks /> : already parked.
         <Founders />           : deleted in round 6, replaced by <ClosingBand />. No names anywhere.
-        <WhatLeaksSection />   : "Every customer generates a revenue stream", folded into §4 (round 5).
-        <WhereItLivesSection /> : the MCP block, now row 04 of "What it does", with the screen.
-        <ControlSection />     : "It works through your teams' systems", now row 06, with the screen.
       */}
       <VisitTracking page="home" />
       <Nav />
       <Hero />
       <ProblemSection />
+      <OutcomesStrip />
       <LeaksSection />
+      <HowItWorksBand />
       <WhatItDoesSection />
-      <IntegrationSection />
+      <TrustSection />
       <PartnershipSection />
       <ClosingBand />
       <Footer />
