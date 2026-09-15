@@ -2560,7 +2560,7 @@ function HowItWorksBand() {
     { w: 'Connect', s: 'Read-only access to your source tables. Nothing moves, nothing changes.', m: <StepConnect /> },
     { w: 'Watch', s: 'Every customer, against what it should look like.', m: <StepWatch /> },
     { w: 'Act', s: 'Cases, lists, triggers and rules, into your CRM, case manager and risk tools. Your team approves.', m: <StepAct /> },
-    { w: 'Learn', s: 'What your team confirms becomes the logic. It proposes the rule; your CRM team approves.', m: <StepLearn /> },
+    { w: 'Learn', s: 'sensAi finds new behavioural patterns and proposes them. Once your team approves, they’re added.', m: <StepLearn /> },
   ]
   return (
     <section id="how-it-works" style={{ padding: '104px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>

@@ -60,7 +60,7 @@ The band gets a fourth tile and the H2 becomes **Connect. Watch. Act. Learn.**
 
 | Tile | Line | Mark |
 |---|---|---|
-| **Learn** | What your team confirms becomes the logic. It proposes the rule; your CRM team approves. | a loop arrow closing on itself |
+| **Learn** | sensAi finds new behavioural patterns and proposes them. Once your team approves, they're added. | a loop arrow closing on itself |
 
 Four equal tiles on desktop, 2×2 at tablet, stacked on phones. Row 5 of "What it does" already
 says the same thing with the screen; that's the point, the two agree.
