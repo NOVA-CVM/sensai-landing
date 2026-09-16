@@ -48,3 +48,30 @@ changes. Leave the `<video>` element alone — it already points at `/film/sensa
 - `grep -rn "57-second" components app` returns nothing.
 - `next build` clean. Commit the comment fix as `R8 addendum 7: film v32 on the site`; the two
   media commits deploy as they are.
+
+---
+
+## Amendment, same day: the wordmark (film v33 replaces v32)
+
+You flagged that the film's own type said "Sensai" while the page says "sensAi". AA's ruling:
+**`sensAi` in prose, everywhere.** The film's two prose instances are fixed and
+`public/film/sensai-45.mp4` is now **v33**:
+
+- the second card reads *"sensAi finds the leaks / and you keep the revenue"* (~4.5s)
+- the delivery beat reads *"What sensAi finds / is pushed into the systems / you already run"* (~38s)
+
+Only those two shots were re-rendered. Duration is still 55.8s, frame 0 is still the poster (mean
+difference against `poster-45.webp` unchanged at 1.85/255), the delayed third line on the
+aggregate beat and the Approve click are the same files you verified. Posters unchanged — they
+already read `sensAi`.
+
+**Two places still read "Sensai" and are deliberately not changed:**
+
+- the chips inside the product panels (`Sensai · referral link – suspended`, `Sensai · watchlist`)
+  are baked into the screen-recording master — the same category as the round-6 chrome note. They
+  change when the product UI changes, not in the edit.
+- the film's corner watermark is lowercase `sensai`. That is the mark's quiet treatment, not prose,
+  and it is on every frame; leave it.
+
+Nothing else in the addendum changes. Re-run only the frame-0 check and a grab at 4.5s and 38s,
+then push everything together — one deploy, not two.
