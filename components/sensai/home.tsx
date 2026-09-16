@@ -464,7 +464,7 @@ export function HeroResolutionField() {
 // ─── The film (salvaged from the round-1/2 page, src-per-cut kept) ───
 // Both cuts stay in the markup so CSS picks one without a layout shift, but only the cut
 // actually shown gets a `src`, otherwise a phone range-fetches the 16:9 film it never plays.
-// The page plays the 57-second cut, at every width. The 113-second film is a sales-conversation
+// The page plays the 56-second cut, at every width. The 113-second film is a sales-conversation
 // asset, not a cold-page asset. When the 16:9 rendering of the short cut lands, flip this to true
 // and desktop plays it wide again. One line, nothing else to change.
 // Round 6 deleted the 16:9 film and its poster from public/film (they were shipping on every
