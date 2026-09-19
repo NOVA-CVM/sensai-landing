@@ -6,10 +6,14 @@ import { NextResponse, type NextRequest } from 'next/server'
 // Deliberately narrow: only known routes are rescued, so no legitimate path can be rewritten.
 const KNOWN_ROUTES = new Set(['/', '/sense', '/book', '/apply', '/v2', '/chat'])
 
-// novacvm.net keeps the page it has always served; getsensai.co is the repositioned site.
-// Both domains are one Vercel project, so the split happens here, on the Host header.
-// A rewrite, not a redirect: the URL stays novacvm.net/ and nobody is bounced to another domain.
+// novacvm.net is retired. Its homepage now sends people to the Nova CVM practice page on
+// novacvm.com, and everything else follows the site to getsensai.co on the same path, query
+// intact — so the coded links that went out as novacvm.net/sense?r=XXXX still land on the page
+// they were sent for, and still carry their code into the analytics.
+// The legacy one-pager stays in the repo at /legacy; nothing serves it any more.
 const LEGACY_HOSTS = new Set(['novacvm.net', 'www.novacvm.net'])
+const NOVA_HOME = 'https://www.novacvm.com/'
+const SENSAI_ORIGIN = 'https://www.getsensai.co'
 
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl
@@ -22,10 +26,12 @@ export function middleware(req: NextRequest) {
   }
 
   const host = (req.headers.get('host') || '').split(':')[0].toLowerCase()
-  if (pathname === '/' && LEGACY_HOSTS.has(host)) {
-    const legacy = req.nextUrl.clone()
-    legacy.pathname = '/legacy'
-    return NextResponse.rewrite(legacy)
+  if (LEGACY_HOSTS.has(host) && !pathname.startsWith('/_next') && !pathname.startsWith('/api')) {
+    // The homepage goes to the practice page; every other path keeps its shape on getsensai.co.
+    const target = pathname === '/'
+      ? NOVA_HOME
+      : `${SENSAI_ORIGIN}${pathname}${search}`
+    return NextResponse.redirect(target, 308)
   }
 
   let decoded = pathname
