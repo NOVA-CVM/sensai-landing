@@ -469,7 +469,7 @@ function Hero() {
             margin: '22px auto 0', fontSize: 15.5, lineHeight: 1.6, color: '#b6c1dd',
             maxWidth: 560,
           }}>
-            sensAi gives you a digital customer manager on every player: it analyzes value,
+            SensAi gives you a digital customer manager on every player: it analyzes value,
             risk, churn and engagement continuously, and pushes the actions into the systems
             your teams already use.
           </p>
@@ -1527,7 +1527,7 @@ function TurnSection() {
           Your base, now in high resolution.
         </h2>
         <p style={{ margin: '22px auto 0', fontSize: 17, lineHeight: 1.65, color: '#b6c1dd', maxWidth: 700 }}>
-          sensAi holds the full 360 of every account: deposits, play, bonuses, sessions,
+          SensAi holds the full 360 of every account: deposits, play, bonuses, sessions,
           risk signals. It keeps tuning to your business logic, so when something changes
           there are no data tickets and no waiting. The analysis adapts on its own.
           A million players stop being a blur. Every single one comes into focus.
@@ -1841,7 +1841,7 @@ function AskSensAi() {
             How it works
           </div>
           <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 560 }}>
-            Speak with sensAi in your own words.
+            Speak with SensAi in your own words.
           </h2>
 
           <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, maxWidth: 1020 }}>
@@ -2213,7 +2213,7 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
   }
   return (
     <svg viewBox="0 0 1100 600" style={{ width: '100%', height: 'auto', display: 'block' }}
-      aria-label="Source tables flowing into sensAi at the center of the player base, with actions pushed out to the teams' systems">
+      aria-label="Source tables flowing into SensAi at the center of the player base, with actions pushed out to the teams' systems">
       <defs>
         <radialGradient id="globe-glow" cx="50%" cy="42%" r="60%">
           <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.22" />
@@ -2329,8 +2329,8 @@ function PartnershipSection() {
           We onboard selected operators.
         </h2>
         <p style={{ margin: '18px auto 0', fontSize: 16, lineHeight: 1.6, color: SENS.inkSoft, maxWidth: 620 }}>
-          We onboard a selected group of operators as design partners. They get sensAi
-          early, and sensAi learns their operation first. Partners shape the roadmap,
+          We onboard a selected group of operators as design partners. They get SensAi
+          early, and SensAi learns their operation first. Partners shape the roadmap,
           work directly with the founders, and lock early terms.
         </p>
         <div style={{ marginTop: 30 }}>

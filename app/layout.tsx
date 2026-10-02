@@ -14,14 +14,14 @@ export const viewport: Viewport = {
   maximumScale: 5,
 }
 
-const TITLE = 'sensAi · stops the revenue leaks, so you can focus on growth'
-const DESC = 'Bonus abuse, silent VIP churn, customers lost to product failures. sensAi finds them and actions them through the systems your teams already run.'
+const TITLE = 'SensAi · stops the revenue leaks, so you can focus on growth'
+const DESC = 'Bonus abuse, silent churn, customers lost to product failures. SensAi finds them and actions them through the systems your teams already run.'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.getsensai.co'),
   title: TITLE,
   description: DESC,
-  openGraph: { title: TITLE, description: DESC, images: ['/og-home.png'], siteName: 'Sensai', type: 'website', url: 'https://www.getsensai.co' },
+  openGraph: { title: TITLE, description: DESC, images: ['/og-home.png'], siteName: 'SensAi', type: 'website', url: 'https://www.getsensai.co' },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESC, images: ['/og-home.png'] },
   icons: {
     icon: [

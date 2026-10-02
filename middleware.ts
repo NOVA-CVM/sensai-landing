@@ -4,13 +4,13 @@ import { NextResponse, type NextRequest } from 'next/server'
 // which WhatsApp and mail clients do routinely. That was a 404 for someone we had sent the page to.
 // Anything that cleans up to a route we actually serve gets redirected there, query string intact.
 // Deliberately narrow: only known routes are rescued, so no legitimate path can be rewritten.
-const KNOWN_ROUTES = new Set(['/', '/sense', '/book', '/apply', '/v2', '/chat'])
+const KNOWN_ROUTES = new Set(['/', '/sense', '/book', '/apply', '/v2'])
 
 // novacvm.net is retired. Its homepage now sends people to the Nova CVM practice page on
 // novacvm.com, and everything else follows the site to getsensai.co on the same path, query
 // intact — so the coded links that went out as novacvm.net/sense?r=XXXX still land on the page
 // they were sent for, and still carry their code into the analytics.
-// The legacy one-pager stays in the repo at /legacy; nothing serves it any more.
+// The legacy one-pager is retired (round 9); /legacy 308s to / in next.config.
 const LEGACY_HOSTS = new Set(['novacvm.net', 'www.novacvm.net'])
 const NOVA_HOME = 'https://www.novacvm.com/'
 const SENSAI_ORIGIN = 'https://www.getsensai.co'

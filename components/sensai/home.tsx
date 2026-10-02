@@ -464,7 +464,7 @@ export function HeroResolutionField() {
 // ─── The film (salvaged from the round-1/2 page, src-per-cut kept) ───
 // Both cuts stay in the markup so CSS picks one without a layout shift, but only the cut
 // actually shown gets a `src`, otherwise a phone range-fetches the 16:9 film it never plays.
-// The page plays the 56-second cut, at every width. The 113-second film is a sales-conversation
+// The page plays the 59-second cut (v41), at every width. The 113-second film is a sales-conversation
 // asset, not a cold-page asset. When the 16:9 rendering of the short cut lands, flip this to true
 // and desktop plays it wide again. One line, nothing else to change.
 // Round 6 deleted the 16:9 film and its poster from public/film (they were shipping on every
@@ -565,12 +565,12 @@ function Hero() {
             <div style={{ color: '#7d89a8', fontSize: 12, fontWeight: 500, letterSpacing: '0.14em', marginBottom: 22 }}>FOR GAMING OPERATORS</div>
             {/* Two lines, breaking after "leaks," */}
             <h1 style={{ margin: 0, fontSize: 52, lineHeight: 1.1, letterSpacing: -1.5, fontWeight: 600, color: '#fff', maxWidth: 880 }}>
-              sensAi stops the <span style={{ color: '#8fa8e0' }}>revenue leaks</span>,{' '}
+              SensAi stops the <span style={{ color: '#8fa8e0' }}>revenue leaks</span>,{' '}
               <br className="sh-h1-break" />so you can focus on growth.
             </h1>
             {/* Names the category in one glance: three nouns, no verbs. */}
             <div style={{ margin: '22px 0 0', maxWidth: 560, fontSize: 16, lineHeight: 1.6, color: '#c3cde6' }}>
-              Bonus abuse. Silent VIP churn. Customers lost to product failures.
+              Bonus abuse. Silent churn. Customers lost to product failures.
             </div>
             <div className="sensai-hero-ctas" style={{ marginTop: 32, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
               <button
@@ -1116,12 +1116,15 @@ const MarkChurn = () => (
     <path d="M12 14.3c3.6 1.4 5.2 3.9 9.5 4.8" strokeDasharray="3 2.6" />
   </svg>
 )
-// a seed, and the line it could grow into
-const MarkEarlyValue = () => (
+// a funnel, three narrowing strokes, and one customer falling out of the middle step
+const MarkFunnel = () => (
   <svg {...markProps}>
-    <circle cx="4.2" cy="19.8" r="2" />
-    <path d="M6.6 17.4 20 5" />
-    <path d="M14 4.5h6.5V11" />
+    <path d="M2.5 4.5h19" />
+    <path d="M6 12h11" />
+    <path d="M9.5 19.5h5" />
+    {/* below and outside the middle step's end, so it reads as dropped, not as a bullet */}
+    <path d="M17 12c1.7.2 2.6 1.4 3 3.1" strokeDasharray="1.8 2" />
+    <circle cx="20.2" cy="17.6" r="1.3" fill={SENS.blueBright} stroke="none" />
   </svg>
 )
 // bars, one of them broken
@@ -1162,8 +1165,8 @@ const MarkClosed = () => (
 // the product screens all live in "What it does" below.
 const LEAKS: Array<{ t: string; s: string; mark: React.ReactNode }> = [
   { mark: <MarkRings />, t: 'Fraud rings take your bonuses', s: 'Rings, syndicates and multi-accounting, taking promotional money from a budget that runs 10–20% of your revenue.' },
-  { mark: <MarkChurn />, t: 'VIPs quietly churn', s: 'The signals are in the play weeks before the revenue moves.' },
-  { mark: <MarkEarlyValue />, t: 'Valuable players identified too late', s: 'Tomorrow’s VIPs, visible in their first weeks, while nurturing still changes the outcome.' },
+  { mark: <MarkChurn />, t: 'Your best customers leave unnoticed', s: 'The signals are in the play weeks before the revenue moves.' },
+  { mark: <MarkFunnel />, t: 'New customers slip away before their first deposit', s: 'Sign-ups that stall at one step, on one device or one payment method. The total looks steady, so nobody sees it.' },
   { mark: <MarkFailure />, t: 'Customers drop after product failures', s: 'A failed deposit, a payment error, a disconnection. The error gets fixed; the customers it hit don’t get actioned.' },
   { mark: <MarkOffer />, t: 'Wrong offers to the wrong players', s: 'Over-bonused players who would have played anyway; under-bonused players who were worth keeping.' },
   { mark: <MarkClosed />, t: 'Accounts closed or restricted without you knowing', s: 'Fraud closing too many accounts, or adding too much friction, lands on your revenue line.' },
@@ -1249,8 +1252,8 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
     n: '03', t: 'In the chat your team already uses',
     s: 'Claude or ChatGPT, through a standard connector (MCP). Ask in plain language; get the accounts, the reason and the action.',
     art: <RawScreen src="/screenshots/film/chat-only.webp"
-      alt="sensAi answering inside the chat assistant, with the accounts and the reason"
-      caption="sensAi, in the chat &middot; no new tool" />,
+      alt="SensAi answering inside the chat assistant, with the accounts and the reason"
+      caption="SensAi, in the chat &middot; no new tool" />,
   },
   {
     n: '04', t: 'Actions through the systems you already run',
@@ -1271,7 +1274,7 @@ const DOES: Array<{ n: string; t: string; s: string; art: React.ReactNode }> = [
 
 // The film's capability card, in the page's own register.
 const CAPABILITIES = [
-  'Bonus abuse prevention', 'Account linkage', 'VIP identification', 'Churn signals',
+  'Bonus abuse prevention', 'Account linkage', 'Early value signals', 'Churn signals',
   'Behavioural triggers', 'Bonus allocation', 'Funnel analysis', 'Root-cause analysis',
   'Business KPI monitoring',
 ]
@@ -2340,7 +2343,7 @@ export function IntegrationDiagram({ animate = true, outputs = ['CRM', 'Case man
   }
   return (
     <svg viewBox="0 0 1100 600" style={{ width: '100%', height: 'auto', display: 'block' }}
-      aria-label="Source tables flowing into sensAi at the center of the player base, with actions pushed out to the teams' systems">
+      aria-label="Source tables flowing into SensAi at the center of the player base, with actions pushed out to the teams' systems">
       <defs>
         <radialGradient id="globe-glow" cx="50%" cy="42%" r="60%">
           <stop offset="0%" stopColor="#1a44a8" stopOpacity="0.22" />
@@ -2525,7 +2528,7 @@ function PartnershipSection() {
 function OutcomesStrip() {
   const items = [
     { mark: <MarkOffer />, t: 'Bonus budget spent on real players.' },
-    { mark: <MarkChurn />, t: 'VIPs kept before they\u2019re gone.' },
+    { mark: <MarkChurn />, t: 'Churn caught while there\u2019s still time.' },
     { mark: <MarkFailure />, t: 'Customers hit by a product failure, in your CRM before they leave.' },
     { mark: <MarkLibrary />, t: 'Dozens of known gaming patterns watching your base from day one.' },
   ]
@@ -2590,7 +2593,7 @@ function HowItWorksBand() {
     { w: 'Connect', s: 'Read-only access to your source tables. Nothing moves, nothing changes.', m: <StepConnect /> },
     { w: 'Watch', s: 'Every customer, against what it should look like.', m: <StepWatch /> },
     { w: 'Act', s: 'Cases, lists, triggers and rules, into your CRM, case manager and risk tools. Your team approves.', m: <StepAct /> },
-    { w: 'Learn', s: 'Starts with dozens of known gaming patterns, built over years of operator work. sensAi finds new ones and proposes them; once your team approves, they’re added.', m: <StepLearn /> },
+    { w: 'Learn', s: 'Starts with dozens of known gaming patterns, built over years of operator work. SensAi finds new ones and proposes them; once your team approves, they’re added.', m: <StepLearn /> },
   ]
   return (
     <section id="how-it-works" style={{ padding: '104px 80px', background: SENS.ink, position: 'relative', overflow: 'hidden' }}>

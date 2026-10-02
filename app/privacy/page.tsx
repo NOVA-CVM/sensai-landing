@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 const SENS = { ink: '#0b1530', inkSoft: '#475069', rule: '#dfe4ee' } as const
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | sensAi',
+  title: 'Privacy Policy | SensAi',
   robots: { index: false, follow: false },
 }
 
