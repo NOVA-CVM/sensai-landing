@@ -347,7 +347,7 @@ function Nav() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
           {/* A CRO who is not ready to talk needs somewhere to go. */}
           <a className="sh-nav-link" href="#how-it-works" style={{ fontSize: 14, color: '#c3cde6', textDecoration: 'none' }}>How it works</a>
-          <a className="sh-nav-link" href="#partnership" style={{ fontSize: 14, color: '#c3cde6', textDecoration: 'none' }}>Partnership</a>
+          <a className="sh-nav-link" href="#partnership" style={{ fontSize: 14, color: '#c3cde6', textDecoration: 'none' }}>Work with us</a>
         <button
           onClick={() => goBook('nav')}
           style={{
@@ -1174,7 +1174,9 @@ const LEAKS: Array<{ t: string; s: string; mark: React.ReactNode }> = [
 
 function LeaksSection() {
   return (
-    <section id="leaks" style={{ padding: '104px 80px', background: '#ffffff' }}>
+    // The top rule used to sit on the outcomes strip above; with the strip gone (round 10) it moves
+    // here, so this white-to-white join has a divider like every other one on the page.
+    <section id="leaks" style={{ padding: '104px 80px', background: '#ffffff', borderTop: `1px solid ${SENS.rule}` }}>
       <div className="max-w-[1280px] mx-auto">
         <h2 style={{ margin: 0, fontSize: 44, fontWeight: 600, letterSpacing: -1, lineHeight: 1.1, color: SENS.ink, maxWidth: 720 }}>
           The leaks we stop
@@ -2501,7 +2503,7 @@ function PartnershipSection() {
         <div style={{
           color: SENS.blueBright, fontSize: 13, fontWeight: 500,
           letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 18,
-        }}>Design partnership</div>
+        }}>Working with us</div>
         <h2 style={{ margin: '0 auto', fontSize: 40, fontWeight: 600, letterSpacing: -1, lineHeight: 1.15, color: SENS.ink }}>
           Design partnerships open now.
         </h2>
@@ -3167,12 +3169,12 @@ export function SensaiHome() {
                             as one quiet sentence at the end of the partnership section.
         <SocialProof /> <Walkthrough /> <Why /> <ApproachSection /> <HowItWorks /> : already parked.
         <Founders />           : deleted in round 6, replaced by <ClosingBand />. No names anywhere.
+        <OutcomesStrip />      : repeated the leaks section beside it (AA, 2 Oct).
       */}
       <VisitTracking page="home" />
       <Nav />
       <Hero />
       <ProblemSection />
-      <OutcomesStrip />
       <LeaksSection />
       <HowItWorksBand />
       <WhatItDoesSection />
